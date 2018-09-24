@@ -1,0 +1,65 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+# Serverless.yml is the configuration the CLI
+# uses to deploy your code to your provider of choice
+
+# The `service` block is the name of the service
+service: serverless-auth
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  # Configuration variables
+  secrets: ${file(secrets.json)}
+  # Configuration stage for developer
+  serverless-offline:
+    port: 4000
+    # babelOptions:
+    #   presets: ["es2015", "stage-2"]
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+# The `provider` block defines where your service will be deployed
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: us-east-1
+  environment:
+    JWT_SECRET: ${self:custom.secrets.jwtSecret}
+    DB_DATABASE: postgres
+    DB_USER_NAME: postgres
+    DB_PASSWORD: minhtri1911
+    DB_PORT: 5432
+    DB_HOST: localhost
+
+# The `functions` block defines what code to deploy
+functions:
+  authorize:
+    handler: functions/authorize.handler
+  register:
+    handler: functions/authentication/Register.register
+    events:
+      - http:
+          path: register
+          method: post
+          cors: true
+  login:
+    handler: functions/authentication/Login.login
+    events:
+      - http:
+          path: login
+          method: post
+          cors: true
+  getListAccount:
+    handler: functions/account/GetListAccount.getListAccount
+    events:
+      - http:
+          path: accounts/index
+          method: get
+          cors: true
+          authorizer: authorize
