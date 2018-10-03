@@ -49,5 +49,9 @@
   "dramatic": "演劇",
   "dance": "舞踊",
   "btn_stop_register": "利用登録中止",
-  "not_select": "未選択"
+  "not_select": "未選択",
+  "enter_space": "苗字と名前の間にスペースを入れてください。",
+  "remove_space": "苗字と名前の間にスペースを入れないでください。",
+  "enter_dash": "ハイフォンで区切ってください。",
+  "remove_dash": "ハイフォンで区切らず、続けて入力して下さい。"
 }

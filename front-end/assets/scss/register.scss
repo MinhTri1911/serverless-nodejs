@@ -1,11 +1,5 @@
 @import "~assets/scss/variables";
 .register-step-1 {
-
-  // .error {
-  //   padding: 10px 100px 0 100px;
-  //   display: none;
-  // }
-
   .alert {
     text-align: center;
   }
@@ -129,7 +123,7 @@
 
     .block-action {
       padding: $pad-th-tbl 0 0px 0;
-      height: 70px;
+      height: 100px;
 
       button {
         margin-top: 15px;

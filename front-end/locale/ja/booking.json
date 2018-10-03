@@ -1,0 +1,21 @@
+{
+  "title" : "公演情報",
+  "lb_show_name" : "公演名",
+  "lb_show_date" : "公演日表示",
+  "lb_hall" : "会場",
+  "btn_show_detail" : "公演詳細",
+  "lb_reception_period_name" :  "受付期間名",
+  "lb_reception_period" : "受付期間",
+  "lb_payment_receipt_method" : "支払受取方法備考",
+  "lb_seat_type_name" : "席種名",
+  "lb_ticket_type_name" : "券種名",
+  "lb_seat_name" : "座席名",
+  "lb_price" : "金額",
+  "lb_number_ticket" : "枚数",
+  "lb_sum_number_ticket" : "合計枚数",
+  "lb_sum_money" : "合計金額",
+  "lb_bill_information_type" : "席種・券種情報",
+  "lb_reservation_information" : "予約情報",
+  "btn_next" : "次へ",
+  "btn_back" : "戻る"
+}

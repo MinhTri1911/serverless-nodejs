@@ -75,8 +75,10 @@ const initPage = async (event, context, callback) => {
   let serviceModel = new ServiceModel(DatabaseConfig);
   let registerBusiness = new RegisterBusiness(serviceModel.getDb());
 
+  let clientId = event.queryStringParameters.clientId;
+
   try {
-    return registerBusiness.initPageRegister('test1')
+    return registerBusiness.initPageRegister(clientId)
       .then(data => {
         return serviceModel.createSuccessCallback(HttpCode.SUCCESS, data);
       })

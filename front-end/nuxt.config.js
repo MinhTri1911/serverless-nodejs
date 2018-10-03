@@ -41,7 +41,7 @@ module.exports = {
     { src: '~/plugins/i18n.js', ssr: false },
     { src: '~/plugins/localStorage.js', ssr: false },
     { src: '~/plugins/api.js', ssr: false },
-    { src: '~/plugins/vee-validate.js' }
+    { src: '~/plugins/vee-validate.js', ssr: false }
   ],
 
   /*

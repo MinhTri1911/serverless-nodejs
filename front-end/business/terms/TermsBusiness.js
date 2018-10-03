@@ -1,3 +1,5 @@
+import constant from '@/constant';
+
 export default {
   middleware: 'guest',
   data: () => ({
@@ -34,7 +36,8 @@ export default {
 
       // Redirect to page 120 register infomation customer
       let path = this.$router.resolve({
-        name: 'register-input',
+        name: constant.router.REGISTER_INPUT,
+        params: { client_id: this.$route.params.client_id }
       });
 
       this.$router.push(path.href);

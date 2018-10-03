@@ -167,7 +167,7 @@ class RegisterBusiness {
           handlerResult = data;
 
           // Return data after all query is done
-          resolve({ gener: gener, listCity: listCity, flgHandler: handlerResult });
+          resolve({ genre: gener, listCity: listCity, flgHandler: handlerResult });
         })
         .catch(err => {
 
