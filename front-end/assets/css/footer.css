@@ -1,0 +1,33 @@
+/* フッタ */
+div#Footer {
+	max-width: 1200px;
+	margin: 0 auto;
+	height: 125px;
+	padding-top: 25px;
+	background: #666;
+	text-align:center;
+}
+/* フッタ　リストメニュー */
+#Footer li {
+	display:inline;
+	padding-left:10px;
+	padding-right:5px;
+	color: #ccc;
+}
+#Footer li.first {
+	border-left:none;
+}
+#FooterMenu {
+	padding-bottom: 30px;
+}
+#FooterMenu a {
+	color: #ccc;
+}
+#FooterMenu a:hover {
+	color: darkorange;
+}
+
+/* フッタ　コピーライト */
+#Footer p {
+	color: #ccc;	
+}

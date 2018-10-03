@@ -1,0 +1,29 @@
+{
+  "btn_next": "次へ",
+  "btn_back": "戻る",
+	"links": {
+		"help": "ご利用ガイド",
+		"search": "公演検索",
+		"list_show": "公演一覧",
+		"register": "利用登録",
+		"login" : "ログイン",
+		"logout" : "ログアウト",
+		"faq" : "よくあるご質問（FAQ）",
+		"cart" : "カート",
+		"my_page" : "私のページ"
+	},
+	"home": {
+		"title": "パストラーレチケットサイト",
+		"introduction": "This is an introduction in English."
+	},
+	"footer" : {
+		"title" : "Copyright c PASTORALE CO., LTD."
+	},
+	"about": {
+		"title": "About",
+		"introduction": "This page is made to give you more informations."
+	},
+	"require": "（必須）",
+	"require_1": "（必須※1）",
+	"enter_full_size": "全角で入力してください"
+}

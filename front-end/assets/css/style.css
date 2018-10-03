@@ -1,0 +1,8 @@
+/* CSS Document */
+
+@import url(header.css) screen;
+@import url(contents.css) screen;
+@import url(footer.css) screen;
+@import url(global.css) screen;
+@import url(color.css) screen;
+@import url(font.css) screen;

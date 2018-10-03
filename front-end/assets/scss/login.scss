@@ -1,0 +1,203 @@
+/* LOGIN 専用 */
+
+.container {
+  clear: both;
+
+  .Login {
+    display: block;
+    max-height: 400px;
+    width: 100%;
+    margin: 15px auto;
+    padding: 0px 0px 0px 0px;
+    background-color: #fff;
+    border-left: solid #ddd 1px;
+    border-right: solid #ddd 1px;
+
+    .LoginHead {
+      font-size: 1.3em;
+      text-align: center;
+      color: #fff;
+      background-color: #686859;
+      border-color: white;
+      box-shadow: none;
+      padding: 3px 0px 0px 20px;
+      margin-bottom: 15px;
+    }
+
+    .center-align {
+      margin-left: 24%;
+      margin-right: 24%;
+      width: 52%;
+
+      h3 {
+        font-style: normal;
+        font-weight:normal;
+        font-size: 1em;
+        padding: 0px 0px 0px 0px;
+        margin:  0px 0px 0px 0px;
+      }
+
+      a {
+        color: blue;
+      }
+      a:hover {
+        color: hotpink !important;
+      }
+      a:visited {
+        color: blue;
+      }
+
+      form {
+        padding-bottom: 1px;
+
+        table {
+          border: 1px solid;
+          margin: 10px 0px 1px 0px;
+          float: "left";
+
+          .ErrorMessenger {
+            color: red;
+            padding-top: 10px;
+            text-align: center;
+            font-size: 1.0em;
+          }
+          td {
+            padding: 0px 10px 0px 20px;
+            width: 25%;
+            font-size: 1.2em;
+
+            input {
+              padding-left: 8px;
+              font-size: 22px;
+              width: 350px;
+              height: 30px;
+              border: 1px solid #888;
+            }
+
+
+            button {
+              color: #f1f1ed;
+              display: block;
+              width: 176px;
+              height: 46px;
+              margin: 10px auto;
+              font-size: 1.0em;
+              border: none;
+              background: #174A52;
+            }
+
+            button:hover {
+              display: block;
+              width: 176px;
+              height: 46px;
+              margin: 10px auto;
+              font-size: 1.0em;
+              border: none;
+              background: green;
+            }
+          }
+        }
+      }
+    }
+
+
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .container {
+
+    .Login {
+      height: auto;
+      width: auto;
+      margin: 3% 0% 2% 0%;
+      padding: 0px 0px 0px 0px;
+      border-left: solid #ddd 0.1%;
+      border-right: solid #ddd 0.1%;
+
+      .LoginHead {
+        display: block;
+        font-size: 65%;
+        text-align: center;
+        color: #fff;
+        background-color: #686859;
+        border-color: white;
+        box-shadow: none;
+        padding-top: 1.5%;
+        padding-left: 25%;
+        padding-right: 25%;
+        padding-bottom: 1.2%;
+        margin-top: 0px;
+        margin-bottom: 0.83%;
+      }
+      .center-align {
+        margin: 0% 5% 0% 5%;
+        padding: 0% 0% 0% 0%;
+        width: 90%;
+
+        a {
+          color: blue;
+        }
+
+        a:visited {
+          color: blue;
+        }
+        h3 {
+          font-style: normal;
+          font-weight:normal;
+          font-size: 60%;
+          padding: 0px 0px 0px 0px;
+          margin:  0px 0px 0px 0px;
+        }
+        form {
+
+          table {
+            display: block;
+            width: 100%;
+
+            .ErrorMessenger {
+              color: red;
+              padding-top: 0.83%;
+              text-align: center;
+              font-size: 20%;
+            }
+
+            td {
+              padding: 0px 0.83% 0px 1.6%;
+              font-size: 60%;
+
+              input {
+              padding-top: 2%;
+              font-size: 15% !important;
+              width: 90%;
+              height: 1%;
+              border: 5% solid #888;
+              padding-bottom: 2%;
+            }
+                button {
+                color: #f1f1ed;
+                display: block;
+                width: 37%;
+                height: 15%;
+                margin: 1% auto;
+                font-size: 0.3em;
+                border: none;
+                background: #174A52;
+              }
+
+                button:hover {
+                display: block;
+                width: 37%;
+                height: 10%;
+                margin: 1% auto;
+                font-size: 0.3em;
+                border: none;
+                background: green;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

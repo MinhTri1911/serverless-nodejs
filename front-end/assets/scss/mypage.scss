@@ -1,0 +1,67 @@
+/* マイページ専用 */
+#mainC {
+	min-height: 100%;
+	height: 100
+}
+#ContentsPane {
+	
+	height: 100;
+}
+h1 {
+	margin-bottom: 0;
+}
+#MyLeftMenu {
+	float: left;
+	top: 10px;
+	width: 200px;
+}
+#MyLeftMenu li {
+	list-style: none;
+	margin-bottom: 10px;
+}
+#MyLeftMenu li a {
+	display: block;
+	padding: 5px;
+	text-decoration: none;
+	background: #777;
+	color: #fff;
+}
+#MyLeftMenu li a:hover {
+	color: #fff;
+}
+.fas fa-angle-right {
+	padding-right: 15px;
+}
+
+/* 右コンテンツ */
+#MyRightContents {
+	float: left;
+	margin-top: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
+	padding-bottom: 50px;
+  width : -webkit-calc(100% - 240px) ;
+  width : calc(100% - 240px);
+}
+
+.myTable {
+	border-collapse: collapse;
+	border: 1px solid #333;
+	margin: 20px 0 40px;
+}
+
+.myTable th, .myTable td {
+	padding: 10px;
+	margin: 0;
+	border: none;
+	text-align: left;
+	vertical-align: top;
+}
+.myTable th {
+}
+.myTable th, .myTable td {
+	border-bottom: 1px solid #333;
+}
+.myTable tr:last-child th, .myTable tr:last-child td {
+	border-bottom: none;
+}

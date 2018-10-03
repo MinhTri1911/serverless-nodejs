@@ -1,0 +1,58 @@
+/* 各部配色 */
+
+/* 全体の両サイド コンテンツ文字色 */
+body {
+	background-color: #f7f7f8;
+	color: #333;
+}
+
+/* ヘッダ部両脇 */
+#HeadWrap {
+	background-color: #fff;
+}
+
+/* ヘッダ部背景色（ログイン背景色も同色） */
+#Header, #LoginOuterWrap {
+	background-color: #F0F0F7;
+}
+
+/* ヘッダ部メニューマウスオーバー及びボタン色 */
+#TmenuGR li a:hover,#TmenuGR li.select a, .submit input, span.linkBtn, .submit button {
+	background-color: #16183F;
+	color: #F0F0F7;
+}
+
+
+/* ヘッダ部テキストリンク色 */
+#Header a, #LoginWrap, #LoginWrap a{
+	color: #174A52;
+}
+#Header a:hover {
+	color: crimson
+}
+/* H1 背景色 */
+h1 {
+	background: #575C6A;
+}
+/* コンテンツ部テキストリンク色 */
+#MainC a {
+	color: #00468C;
+}
+#MainC a:hover, #LoginWrap a:hover {
+	color: darkorange;
+}
+
+/* 公演一覧ページネーションマウスオーバー */
+#MainC div.pagination ul li a:hover {
+    background: #16183F;
+	color: #F0F0F7;
+}
+
+/* ハンバーガーアイコン線色 */
+.menu-trigger span {
+  background-color: #16183F;
+}
+/* ページトップボタン */
+.scrollup {
+	color: #aaa;
+}

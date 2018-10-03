@@ -1,0 +1,75 @@
+@import "variables";
+@import "mixins/button";
+
+.show-list {
+  .show-item {
+    display: block;
+    margin: 10px 0;
+    background-color: #dfe7f0;
+    clear: both;
+    padding: 5px;
+    .col-show {
+      padding: 5px;
+      float: left;
+      min-width: 100px;
+    }
+    .row-show {
+      clear: both;
+    }
+    .show-top {
+      padding: 10px 0;
+    }
+    .show-body {
+      padding: 5px;
+      border: 1px solid #bec8d4;
+    }
+    .show-main-tt{
+      width: 30%;
+    }
+    .show-date{
+      width: 15%;
+    }
+    .show-type{
+      width: 10%;
+    }
+    .show-status{
+      width: 10%;
+    }
+    .show-hall{
+      width: 15%;
+    }
+    .show-button{
+      width: 150px;
+    }
+    .show-desc{
+      width: calc(100% - 150px);
+    }
+    .show-accept-item {
+      border: 1px solid #ccc;
+      margin: 5px 0;
+      clear: both;
+      .show-main-tt{
+        width: 50%;
+      }
+      .show-date{
+        width: 25%;
+      }
+      .show-status{
+        width: 25%;
+      }
+    }
+    .slot-seat {
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+      padding: 0px 8px;
+      border: 2px solid #47499d;
+      border-radius: 5px;
+      background: #ffffff;
+      font: italic normal normal 14px arial;
+      color: #5456b9;
+      text-decoration: none;
+      padding: 2px 3px;
+    }
+  }
+}

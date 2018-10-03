@@ -1,0 +1,88 @@
+/*****************************************/
+/** Define color for app
+/*****************************************/
+// Background color
+$bg-color-body: #f7f7f8;
+
+// Color black
+$color-black-dark:                  #333333;
+
+// Color plain white
+$color-white:                       #ffffff;
+
+// Color white opaque
+$color-white-opaque-1:              #f1f1ed;
+
+// Color dark green
+$color-green-dark:                  #174A52;
+
+// Color red
+$color-red-plain:                   #DC143C;
+
+// Color h1 back ground
+$bg-color-h1:                       #686859;
+
+// Color anchor link
+$color-anchor-main:                 #00468C;
+
+// Color anchor link main hover
+$color-anchor-main-hover:           #FF8C00;
+
+// Color dark silver
+$color-silver-dark:                 #aaaaaa;
+
+// Background color h2
+$bg-color-h2:                       #cecebf;
+
+// Color error text
+$color-error:                     #ad1600;
+
+/*****************************************/
+/** Define dimension
+/*****************************************/
+// Font size og application
+$font-size-base:                    100%;
+
+// Line height text
+$line-height-base:                  1.2;
+
+// Max width main
+$width-main:                        1200px;
+
+// Width of section left of header
+$width-hd-left:                     370px;
+
+// Width of section right of header
+$width-hd-right:                    calc(100% - #{$width-hd-left});
+
+// Height of top header page
+$height-header:                     100px;
+
+// Padding of tag th, td of table
+$pad-th-tbl:                        5px;
+
+// Width and height dimension of control form such as text box, select box, text area, etc...
+$width-form-control:                400px;
+$height-form-control:               30px;
+
+// Width and height of x-large button
+$width-xl-btn:                      200px;
+$height-xl-btn:                     50px;
+
+// Width and height of large button
+$width-l-btn:                       176px;
+$height-l-btn:                      46px;
+
+// Width and height of medium button
+$width-m-btn:                       92px;
+$height-m-btn:                      35px;
+
+// Width and height of small button
+$width-s-btn:                       92px;
+$height-s-btn:                      35px;
+
+// Width and height of x-small button
+$width-xs-btn:                      50px;
+$height-xs-btn:                     35px;
+
+

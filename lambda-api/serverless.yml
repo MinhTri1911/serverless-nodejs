@@ -1,0 +1,124 @@
+# Service Name
+service: ticket-service
+
+# plugins
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: us-east-1
+  profile: ${file(env.yml):profile}
+  environment: ${file(env.yml):environment}
+
+# custom
+custom:
+  serverless-offline:
+    port: 4000
+  webpack:
+    webpackConfig: ./webpack.config.js
+#    includeModules: true
+  webpackIncludeModules:
+      forceInclude:
+        - pg
+
+functions:
+  authorize:
+    handler: middleware/Authentication.handler
+
+  getAllMembers:
+    handler: controller/MemberController.getAllMembers
+    name: getAllMembers
+    events:
+      - http:
+          path: member
+          method: get
+
+  postMember:
+    handler: controller/MemberController.postMember
+    name : postMember
+    events:
+      - http:
+          path: member
+          method: post
+
+  deleteMember:
+    handler: controller/MemberController.deleteMember
+    name: deleteMember
+    events:
+      - http:
+          path: member/{Id}
+          method: delete
+
+  updateMember:
+    handler: controller/MemberController.updateMember
+    name: updateMember
+    events:
+      - http:
+          path: member/{Id}
+          method: put
+
+  # This is Login API to check email and password valid
+  login:
+    handler: controller/login/LoginController.login
+    name: login
+    events:
+      - http:
+          path: login
+          method: post
+          cros: true
+  # Check token everytime client send request to API
+  getInfUserByToken:
+    handler: controller/login/LoginController.getInfUserByToken
+    name: getUserInfo
+    events:
+      - http:
+          path: User/info
+          method: get
+          cors: true
+
+  searchPostCode:
+    handler: controller/RegisterController.searchPostCode
+    name: searchPostCode
+    events:
+      - http:
+          path: search-post-code
+          method: get
+          cros: true
+
+  initRegister:
+    handler: controller/RegisterController.initPage
+    name: initRegister
+    events:
+      - http:
+          path: init-page
+          method: get
+          cros: true
+
+  getListAccount:
+    handler: controller/AccountController.getListAccount
+    name: getListAccount
+    events:
+      - http:
+          path: accounts/index
+          method: get
+          cors: true
+#          authorizer: authorize
+  testApi:
+    handler: controller/MemberController.testApi
+    name: testApi
+    events:
+      - http:
+          path: test-api
+          method: get
+  getListShow:
+    handler: controller/ShowController.getListShow
+    name: getListShow
+    events:
+      - http:
+          path: shows
+          method: get
+          cors: true

@@ -1,0 +1,183 @@
+/* Main Contents CSS */
+#MainC {
+  display: block;
+  min-height: 500px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-left: solid #ddd 1px;
+  border-right: solid #ddd 1px;
+}
+
+#MainC a {
+  text-decoration: underline;
+}
+
+/* ページタイトル */
+//h1 {
+//	display: block;
+//	width: 100%;
+//	height: 60px;
+//	color: #fff;
+//	font-weight: 500;
+//	margin: 0;
+//	padding: 10px 0 0 0;
+//	box-shadow: 0 2px 2px rgba(0,0,0,0.4) inset;
+//}
+
+//h1 span#Pagetitle {
+//	margin-left: 30px;
+//	font-size: 1.5rem;
+//}
+
+/* コンテンツ見出しh2 */
+
+//#MainC h2 {
+//	display: block;
+//	height: 40px;
+//	background: #cecebf;
+//	color: #333;
+//	font-size: 1.3rem;
+//	margin: 15px 0;
+//	padding: 6px 10px 0;
+//}
+
+/* コンテンツ見出しh3 */
+
+#MainC h3 {
+  color: #333;
+  padding: 6px 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+/* コンテンツ見出しh4 */
+
+#MainC h4 {
+  padding: 6px 10px 0;
+}
+
+/* コンテンツ本文 */
+
+#MainC p {
+  padding: 6px 10px 0;
+}
+
+/* 上部コンテンツ */
+#UpperContents {
+  width: auto;
+  margin: 30px 30px 50px;
+}
+
+/* 下部コンテンツ */
+#LowerContents {
+  width: auto;
+  margin: 30px 30px 0;
+}
+
+/* シングルコンテンツ */
+#SingleContents {
+  width: auto;
+  margin: 30px 30px 0;
+  padding-bottom: 30px;
+}
+
+/* お知らせリスト */
+dl#Info {
+  margin-left: 10px;
+}
+
+dl#Info dt {
+  font-weight: bold;
+}
+
+dl#Info dd {
+  padding: 0;
+  margin: 0 0 10px 0;
+
+}
+
+p.goto {
+  text-align: right;
+}
+
+/* 公演一覧ページネーション */
+//.pagination {
+//    overflow: hidden;
+//}
+//
+//.pagination ul {
+//    list-style: none;
+//    position: relative;
+//    left: 50%;
+//    float: left;
+//}
+//
+//.pagination ul li {
+//    margin: 0 1px;
+//    position: relative;
+//    left: -50%;
+//    float: left;
+//}
+//
+//.pagination ul li span,
+//.pagination ul li a {
+//    display: block;
+//    font-size: 12px;
+//    padding: 0.6em 1em;
+//    border-radius: 3px;
+//}
+//
+//.pagination ul li a {
+//    background: #EEE;
+//    color: #000;
+//    text-decoration: none;
+//}
+//
+//.pagination ul li a:hover {
+//}
+//.pagination ul li.current {
+//	font-weight: bold;
+//	color: #000;
+//}
+
+/* 公演一覧テーブル */
+//@media screen and (max-width: 1000px) {
+//  #eventListWrap {
+//    overflow: auto;
+//  }
+//}
+
+//table.eventList {
+//	margin-left: 10px;
+//	border: none;
+//}
+//table.eventList th, table.eventList td {
+//	border: none;
+//}
+//table.eventList th {
+//	background-color: #cecebf;
+//	padding: 5px;
+//}
+//table.eventList td.eventTitle {
+//	width: auto;
+//}
+//table.eventList td.genre {
+//	width: 100px;
+//	padding: 5px;
+//}
+//table.eventList td.term {
+//	width: 20%;
+//	padding: 5px;
+//	font-weight: bold;
+//}
+//table.eventList td.controll {
+//	width: 92px;
+//	padding: 5px;
+//}
+//table.eventList td {
+//	border-bottom: 1px dotted #555;
+//}
+.eventThum {
+  float: left;
+  margin: 0 10px 10px 0;
+}

@@ -1,0 +1,154 @@
+@import "~assets/scss/variables";
+.register-step-1 {
+
+  // .error {
+  //   padding: 10px 100px 0 100px;
+  //   display: none;
+  // }
+
+  .alert {
+    text-align: center;
+  }
+
+  .container {
+    font-size: 100%;
+    padding: 20px 100px 0 100px;
+
+    .head-msg-fullsize {
+      margin-left: -15px;
+      margin-right: -5px;
+    }
+  }
+
+  #RegForm {
+    table {
+      tr {
+        th {
+          width: 30% !important;
+
+          label {
+            float: left;
+          }
+        }
+
+        td {
+          input {
+            width: 70%;
+            display: block;
+          }
+
+          .extension {
+            float: left;
+          }
+
+          select {
+            width: 30%;
+          }
+        }
+
+        .flex-block {
+          display: flex;
+          input[type=text] {
+            width: 10%;
+          }
+
+          input[type=radio] {
+            width: 10%;
+            height: 25px;
+          }
+
+          .between {
+            margin: $pad-th-tbl;
+          }
+
+          button {
+            margin: 2px 0 0 15px;
+          }
+        }
+      }
+    }
+  }
+
+  .block {
+    padding: 10px;
+    margin-top: 5px;
+    background-color: #dfe7f0;
+
+    .area-input {
+      margin-top: 5px;
+
+      input[type=text] {
+        height: 35px;
+        border: 1px solid #888;
+        font-size: 1.2em;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .block-input {
+    margin-top: 20px;
+
+    .inline {
+      display: flex;
+      padding: $pad-th-tbl 0 0px 0;
+
+      .label-inf {
+        width: 30%;
+      }
+
+      .label-checkbox {
+        width: 115px;
+      }
+
+      .content {
+        width: 70%;
+
+        .content-inner {
+          position: relative;
+          margin-top: 2px;
+          width: 146px;
+          margin-right: 30px;
+
+          input[type=radio] {
+            position: absolute;
+            right: 10px;
+          }
+        }
+
+        input {
+          width: 25px;
+          height: 25px;
+        }
+      }
+
+      .content-flex {
+        display: flex;
+      }
+    }
+
+    .block-action {
+      padding: $pad-th-tbl 0 0px 0;
+      height: 70px;
+
+      button {
+        margin-top: 15px;
+      }
+
+      .block-left {
+        float: left;
+      }
+
+      .block-right {
+        float: right;
+      }
+    }
+  }
+
+}
+
+@media only screen and (max-width: 414px) {
+  .container {
+    padding: 0px !important;
+  }
+}

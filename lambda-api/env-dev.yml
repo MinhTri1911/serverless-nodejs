@@ -1,0 +1,9 @@
+profile: thiennb
+environment:
+  JWT_SECRET: secretkey
+  DB_DATABASE: postgres
+  DB_USER_NAME: ticket2
+  DB_PASSWORD: Yj)3Xl@ePC4&
+  DB_PORT: 5432
+  DB_HOST: ticket-dev1.c2l38m0lvhk7.ap-northeast-1.rds.amazonaws.com
+  DB_SCHEMA: ticket1
