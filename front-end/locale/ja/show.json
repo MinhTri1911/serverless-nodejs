@@ -1,0 +1,9 @@
+{
+  "title": "公演一覧",
+  "lbl_h_message": "お知らせ",
+  "lbl_h_show": "公演一覧",
+  "lbl_able_seat": "座席選択可能",
+  "btn_select": "選択",
+  "lbl_record_num": "{record}の公演があります。",
+  "lbl_record_zero": "検索結果が0件です"
+}

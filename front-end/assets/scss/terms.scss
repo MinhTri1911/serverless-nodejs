@@ -2,9 +2,7 @@
   max-height: 500px !important;
 
   #ContentsPane {
-    height: -webkit-fill-available;
-    height: -moz-available;
-    height: fill-available;
+    min-height: 500px;
     position: relative;
 
     .accept-inf-link {
@@ -60,7 +58,7 @@
   }
 }
 
-@media only screen and (max-width: 414px) {
+@media only screen and (max-width: 424px) {
   .terms {
     max-height: 600px !important;
 
@@ -75,6 +73,13 @@
 
     .accept-input {
       padding-left: 40px !important;
+    }
+
+    .accept-action {
+      button {
+        width: 100px;
+        height: 40px;
+      }
     }
   }
 }

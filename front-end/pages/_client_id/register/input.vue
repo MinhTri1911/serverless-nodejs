@@ -2,18 +2,42 @@
   <div id="MainC" class="register-step-1">
     <main id="ContentsPane">
       <div class="container">
-        {{ $t('message.msg009_explain_input_inf.msg_1_head.dot') }}
-        <span class="head-msg-fullsize require" v-html="$t('common.require_1')"></span>
-        {{ $t('message.msg009_explain_input_inf.msg_1') }}
-        <br />
-        {{ $t('message.msg009_explain_input_inf.msg_2') }}
+        <div class="block">
+          {{ $t('message.msg009_explain_input_inf.msg_1_head.dot') }}
+          <span class="head-msg-fullsize require" v-html="$t('common.require_1')"></span>
+          {{ $t('message.msg009_explain_input_inf.msg_1') }}
+          <br />
+          {{ $t('message.msg009_explain_input_inf.msg_2') }}
+        </div>
       </div>
 
-      <div class="container" v-if="flagValidate">
-        <div class="error" :style="flagValidate ? 'display: block;' : ''">
-          <div class="alert alert-danger" v-if="flagValidate">
-            <span>{{ errors.first('mail') }}</span><br />
-            <span>{{ errors.first('confirmed_mail') }}</span>
+      <div class="container" v-if="flagValidate || !flagRequiredWith">
+        <div class="error" :style="flagValidate || !flagRequiredWith ? 'display: block;' : ''">
+          <div class="alert alert-danger" v-if="flagValidate || !flagRequiredWith">
+            <label>{{ errors.first('mail') }}</label>
+            <label>{{ errors.first('confirmed_mail') }}</label>
+            <label>{{ errors.first('full_name') }}</label>
+            <label>{{ errors.first('furigana') }}</label>
+            <label v-if="flagRequiredWith">
+              <label>{{ errors.first('phone_number') }}</label>
+              <label>{{ errors.first('cell_phone') }}</label>
+            </label>
+            <label v-if="!flagRequiredWith">
+              {{ $t('validation.required_with', {
+                  field_1: $t('register.lb_phone_number'),
+                  field_2: $t('register.lb_cell_phone')
+                })
+              }}
+            </label>
+            <label>{{ errors.first('post_code') }}</label>
+            <label>{{ errors.first('city') }}</label>
+            <label>{{ errors.first('district') }}</label>
+            <label>{{ errors.first('address') }}</label>
+            <label>{{ errors.first('building_room') }}</label>
+            <label>{{ errors.first('birthday') }}</label>
+            <label>{{ errors.first('password') }}</label>
+            <label>{{ errors.first('confirmed_password') }}</label>
+            <label>{{ errors.first('member_code') }}</label>
           </div>
         </div>
       </div>
@@ -22,237 +46,299 @@
         <table>
           <tbody>
             <tr>
-              <th scope="row">
-                <label>{{ $t('register.mail') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td>
-                <input type="email" data-vv-delay="100" v-validate="'required|email|confirmed:confirmed_mail'" name="mail" />
+              <td class="td-head" scope="row">
+                <label>{{ $t('register.lb_mail') }}<span class="require">{{ $t('common.require') }}</span></label>
+              </td>
+              <td class="td-content">
+                <input type="email"
+                  v-validate="'required|max:200|email|confirmed:confirmed_mail|existsMail:' + dataInit.clientId"
+                  name="mail" v-model="model.mail"
+                  :data-vv-as="$t('register.lb_mail')"/>
               </td>
             </tr>
             <tr>
-              <th scope="row">
-                <label>{{ $t('register.confirm_mail') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td>
-                <input type="email" name="confirmed_mail" ref="confirmed_mail" v-validate="'required|email'" :data-vv-as="$t('register.confirm_mail')" />
+              <td class="td-head" scope="row">
+                <label>{{ $t('register.lb_confirm_mail') }}<span class="require">{{ $t('common.require') }}</span></label>
               </td>
-            </tr>
-
-            <tr>
-              <th scope="row">
-                <label>{{ $t('register.full_name') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td>
-                <input type="text" v-model="model.fullName" name="full_name"
-                  v-validate="statusInputName == 2 ? 'spaceFullSize:model.fullName' : 'spaceFullSize:222'"/>
-                <label>{{ errors.first('full_name') }}</label>
-                <label class="extension">{{ $t('register.extension') }}</label>
-                <label class="extension" v-if="statusInputName == 1">{{ $t('register.enter_space') }}</label>
-                <label class="extension" v-if="statusInputName == 2">{{ $t('register.remove_space') }}</label>
-              </td>
-
-            </tr>
-            <tr>
-              <th>
-                <label>{{ $t('register.furigana') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td>
-                <input type="text" />
-                <label class="extension">{{ $t('register.extension') }}</label>
-                <label class="extension" v-if="statusInputName == 1">{{ $t('register.enter_space') }}</label>
-                <label class="extension" v-if="statusInputName == 2">{{ $t('register.remove_space') }}</label>
+              <td class="td-content">
+                <input type="email" name="confirmed_mail" ref="confirmed_mail"
+                  v-validate="'required|max:200|email'"
+                  :data-vv-as="$t('register.lb_confirm_mail')"
+                  v-model="model.confirmedMail"/>
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.phone_number') }}<span class="require">{{ $t('common.require_1') }}</span></label>
-              </th>
-              <td>
-                <input type="text" />
-                <label class="extension" v-if="statusInputPhoneNumber == 1">{{ $t('register.enter_dash') }}</label>
-                <label class="extension" v-if="statusInputPhoneNumber == 2">{{ $t('register.remove_dash') }}</label>
+              <td class="td-head" scope="row">
+                <label>{{ $t('register.lb_full_name') }}<span class="require">{{ $t('common.require') }}</span></label>
+              </td>
+              <td class="td-content">
+                <input type="text" name="full_name"
+                  v-validate="'required|max:200|' + (
+                    statusInputName == 1 ? 'spaceFullSize:1' : (statusInputName == 2 ? 'spaceFullSize:2' : 'fullsize')
+                  )" :data-vv-as="$t('register.lb_full_name')"
+                  v-model="model.fullName"/>
+                <label class="extension">{{ $t('register.lb_extension') }}</label>
+                <label class="extension" v-if="statusInputName == 1">{{ $t('register.lb_enter_space') }}</label>
+                <label class="extension" v-if="statusInputName == 2">{{ $t('register.lb_remove_space') }}</label>
+              </td>
+
+            </tr>
+            <tr>
+              <td class="td-head">
+                <label>{{ $t('register.lb_furigana') }}<span class="require">{{ $t('common.require') }}</span></label>
+              </td>
+              <td class="td-content">
+                <input type="text" name="furigana"
+                  v-validate="'required|max:200|' + (
+                    statusInputName == 1 ? 'spaceFullSize:1' : (statusInputName == 2 ? 'spaceFullSize:2' : 'fullsize')
+                  )" :data-vv-as="$t('register.lb_furigana')"
+                  v-model="model.furigana"/>
+                <label class="extension">{{ $t('register.lb_extension') }}</label>
+                <label class="extension" v-if="statusInputName == 1">{{ $t('register.lb_enter_space') }}</label>
+                <label class="extension" v-if="statusInputName == 2">{{ $t('register.lb_remove_space') }}</label>
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.cell_phone') }}<span class="require">{{ $t('common.require_1') }}</span></label>
-              </th>
-              <td>
-                <input type="text" />
-                <label class="extension" v-if="statusInputPhoneNumber == 1">{{ $t('register.enter_dash') }}</label>
-                <label class="extension" v-if="statusInputPhoneNumber == 2">{{ $t('register.remove_dash') }}</label>
+              <td class="td-head">
+                <label>{{ $t('register.lb_phone_number') }}<span class="require">{{ $t('common.require_1') }}</span></label>
+              </td>
+              <td class="td-content">
+                <input type="text" v-model="model.phoneNumber" ref="phone_number" name="phone_number"
+                  v-validate="'phoneNumber:' + statusInputPhoneNumber" :data-vv-as="$t('register.lb_phone_number')"/>
+                <label class="extension" v-if="statusInputPhoneNumber == 1">{{ $t('register.lb_enter_dash') }}</label>
+                <label class="extension" v-if="statusInputPhoneNumber == 2">{{ $t('register.lb_remove_dash') }}</label>
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.zipcode') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td class="flex-block">
-                <input type="text" v-model="model.post_code_1"/>
+              <td class="td-head">
+                <label>{{ $t('register.lb_cell_phone') }}<span class="require">{{ $t('common.require_1') }}</span></label>
+              </td>
+              <td class="td-content">
+                <input type="text" ref="cell_phone" v-model="model.cellPhone" name="cell_phone"
+                  v-validate="'phoneNumber:' + statusInputPhoneNumber"/>
+                <label class="extension" v-if="statusInputPhoneNumber == 1">{{ $t('register.lb_enter_dash') }}</label>
+                <label class="extension" v-if="statusInputPhoneNumber == 2">{{ $t('register.lb_remove_dash') }}</label>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="td-head">
+                <label>{{ $t('register.lb_zipcode') }}<span class="require">{{ $t('common.require') }}</span></label>
+              </td>
+              <td class="td-content flex-block">
+                <input type="hidden" v-model="model.postCode" name="post_code"
+                  v-validate="'numeric|required|length:7'" :data-vv-as="$t('register.lb_zipcode')"/>
+                <input type="text" v-model="model.postCode1" name="post_code_1"
+                  @change="watchPostCode()"
+                  v-validate="'length:3'"/>
                 <span class="between">-</span>
-                <input type="text" v-model="model.post_code_2" />
-                <button class="rs-btn btn-green-dark btn-auto" @click.prevent="searchPostCode(model.post_code_1, model.post_code_2)">
+                <input type="text" v-model="model.postCode2"
+                  @change="watchPostCode()" name="post_code_2"
+                  v-validate="'length:4'"/>
+                <button class="rs-btn btn-green-dark btn-auto" @click.prevent="searchPostCode(model.postCode1, model.postCode2)">
                   {{ $t('register.btn_search_zipcode') }}
                 </button>
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.city') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td>
-                <select v-model="model.slbCity">
-                  <option value="0">{{ $t('register.not_select') }}</option>
+              <td class="td-head">
+                <label>{{ $t('register.lb_city') }}<span class="require">{{ $t('common.require') }}</span></label>
+              </td>
+              <td class="td-content">
+                <select v-model="model.slbCity" v-validate="'required'" name="city" :data-vv-as="$t('register.lb_city')">
+                  <option value="">{{ $t('register.lb_not_select') }}</option>
                   <option v-for="item in dataInit.city" :value="item.code_no" >{{ item.code_nm }}</option>
                 </select>
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.district') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td>
-                <input type="text" v-model="model.district" />
+              <td class="td-head">
+                <label>{{ $t('register.lb_district') }}<span class="require">{{ $t('common.require') }}</span></label>
+              </td>
+              <td class="td-content">
+                <input type="text" v-model="model.district" name="district"
+                  v-validate="'required|max:200|fullsize'"
+                  :data-vv-as="$t('register.lb_district')"/>
                 <label class="extension">{{ $t('common.enter_full_size') }}</label>
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.detail_address') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td>
-                <input type="text" v-model="model.address"/>
+              <td class="td-head">
+                <label>{{ $t('register.lb_detail_address') }}<span class="require">{{ $t('common.require') }}</span></label>
+              </td>
+              <td class="td-content">
+                <input type="text" v-model="model.address" name="address"
+                  v-validate="'required|max:400|fullsize'"
+                  :data-vv-as="$t('register.lb_detail_address')"/>
                 <label class="extension">{{ $t('common.enter_full_size') }}</label>
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.building_room') }}</label>
-              </th>
-              <td>
-                <input type="text"/>
-                <label class="extension">{{ $t('register.enter_if_have_address') }}</label>
+              <td class="td-head">
+                <label>{{ $t('register.lb_building_room') }}</label>
+              </td>
+              <td class="td-content">
+                <input type="text" v-model="model.buildingRoom" name="building_room"
+                  v-validate="'max:400|fullsize'"
+                  :data-vv-as="$t('register.lb_building_room')"/>
+                <label class="extension">{{ $t('message.msg017_enter_building_room') }}</label>
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.birthday') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td class="flex-block">
-                <label class="between">{{ $t('register.calendar') }}</label>
-                <input type="text"/>
-                <label class="between">{{ $t('register.year') }}</label>
-                <input type="text"/>
-                <label class="between">{{ $t('register.month') }}</label>
-                <input type="text"/>
-                <label class="between">{{ $t('register.day') }}</label>
+              <td class="td-head">
+                <label>{{ $t('register.lb_birthday') }}<span class="require">{{ $t('common.require') }}</span></label>
+              </td>
+              <td class="td-content flex-block">
+                <input type="hidden"
+                  v-model="model.birthday"
+                  v-validate="'required|date_format:YYYY-MM-DD|after:1900-01-01'"
+                  name="birthday"
+                  :data-vv-as="$t('register.lb_birthday')"/>
+                <label class="between">{{ $t('register.lb_calendar') }}</label>
+                <input type="text"
+                  v-model="model.year"
+                  @change="watchBirthday()"
+                  v-validate="'numeric|length:4'"
+                  name="year"
+                  :data-vv-as="$t('register.lb_year')"/>
+                <label class="between">{{ $t('register.lb_year') }}</label>
+                <input type="text"
+                  v-model="model.month"
+                  @change="watchBirthday()"
+                  v-validate="'numeric|length:2'"
+                  name="month"
+                  :data-vv-as="$t('register.lb_month')"/>
+                <label class="between">{{ $t('register.lb_month') }}</label>
+                <input type="text"
+                  v-model="model.day"
+                  @change="watchBirthday()"
+                  v-validate="'numeric|length:2'"
+                  name="day"
+                  :data-vv-as="$t('register.lb_day')"/>
+                <label class="between">{{ $t('register.lb_day') }}</label>
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.gender') }}</label>
-              </th>
-              <td class="flex-block">
-                <span class="between">{{ $t('register.male') }}
+              <td class="td-head">
+                <label>{{ $t('register.lb_gender') }}</label>
+              </td>
+              <td class="td-content flex-block gender">
+                <span class="between">{{ $t('register.lb_male') }}
                 </span>
-                <input type="radio" name="gender" value="male" checked />
-                <span class="between">{{ $t('register.female') }}
+                <input type="radio" v-model="model.gender" name="gender" value="male" checked />
+                <span class="between">{{ $t('register.lb_female') }}
                 </span>
-                <input type="radio" name="gender" value="female">
+                <input type="radio" v-model="model.gender" name="gender" value="female">
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.password') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td>
-                <input type="password"/>
-                <label>{{ $t('register.extension_password.msg_1') }}</label><br />
-                <label>{{ $t('register.extension_password.msg_2') }}</label>
+              <td class="td-head">
+                <label>{{ $t('register.lb_password') }}<span class="require">{{ $t('common.require') }}</span></label>
+              </td>
+              <td class="td-content">
+                <input type="password"
+                  v-model="model.password"
+                  v-validate="'required|min:8|max:16|confirmed:confirmed_password|passwordRegex'"
+                  name="password"
+                  :data-vv-as="$t('register.lb_password')"/>
+                <label>{{ $t('message.msg018_enter_password.msg_1') }}</label><br />
+                <label>{{ $t('message.msg018_enter_password.msg_2') }}</label>
               </td>
             </tr>
 
             <tr>
-              <th>
-                <label>{{ $t('register.confirm_password') }}<span class="require">{{ $t('common.require') }}</span></label>
-              </th>
-              <td>
-                <input type="password"/>
+              <td class="td-head">
+                <label>{{ $t('register.lb_confirm_password') }}<span class="require">{{ $t('common.require') }}</span></label>
+              </td>
+              <td class="td-content">
+                <input type="password"
+                  name="confirmed_password"
+                  ref="confirmed_password"
+                  v-validate="'required|min:8|max:16'"
+                  :data-vv-as="$t('register.lb_confirm_password')"
+                  v-model="model.confirmedPassword"/>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="container">
-        <label v-if="flagShowMemberCode">{{ $t('register.lbl_explant_code_member') }}</label>
-        <div class="block" v-if="flagShowMemberCode">
+        <label v-if="model.flagShowMemberCode">{{ $t('register.lb_explant_code_member') }}</label>
+        <div class="block" v-if="model.flagShowMemberCode">
           <div class="message">
-            <label>{{ $t('register.lbl_.line_1') }}</label><br />
-            <label>{{ $t('register.lbl_.line_2') }}</label><br />
-            <label>{{ $t('register.lbl_.line_3') }}</label>
+            <label>{{ $t('register.lb_extension_member_code.line_1') }}</label><br />
+            <label>{{ $t('register.lb_extension_member_code.line_2') }}</label><br />
+            <label>{{ $t('register.lb_extension_member_code.line_3') }}</label>
           </div>
           <div class="area-input">
-            <label>{{ $t('register.member_code') }}</label>
-            <input type="text" />
+            <label>{{ $t('register.lb_member_code') }}</label>
+            <input type="text"
+              name="member_code"
+              v-validate="'max:16|textNumberHaftSize|existsMemberCode:' +
+                `${dataInit.clientId},${model.fullName},${model.furigana},${model.cellPhone},${model.phoneNumber}`"
+              v-model="model.memberCode"
+              :data-vv-as="$t('register.lb_member_code')"
+              />
           </div>
         </div>
 
-        <div class="block-input" v-if="flagShowMagazineMail">
-          <div class="inline">
+        <div class="block-input">
+          <div class="inline" v-if="model.flagShowMagazineMail">
             <div class="label-inf">
-              <label>{{ $t('register.magazine_mail') }}</label>
+              <label>{{ $t('register.lb_magazine_mail') }}</label>
             </div>
             <div class="content content-flex">
               <div class="content-inner">
-                <label class="label-radio">{{ $t('register.get') }}</label>
-                <input type="radio" name="magazine-mail" checked/>
+                <label class="label-radio">{{ $t('register.lb_get') }}</label>
+                <input type="radio" name="magazine-mail" checked value="1" v-model="model.magazineMail"/>
               </div>
               <div class="content-inner">
-                <label class="label-radio">{{ $t('register.not_get') }}</label>
-                <input type="radio" name="magazine-mail" />
+                <label class="label-radio">{{ $t('register.lb_not_get') }}</label>
+                <input type="radio" name="magazine-mail" value="0" v-model="model.magazineMail"/>
               </div>
             </div>
           </div>
-          <div class="inline" v-if="flagShowDirectMail">
+          <div class="inline" v-if="model.flagShowDirectMail">
             <div class="label-inf">
-              <label>{{ $t('register.direct_mail') }}</label>
+              <label>{{ $t('register.lb_direct_mail') }}</label>
             </div>
             <div class="content content-flex">
               <div class="content-inner">
-                <label class="label-radio">{{ $t('register.get') }}</label>
-                <input type="radio" name="direct-mail" checked />
+                <label class="label-radio">{{ $t('register.lb_get') }}</label>
+                <input type="radio" v-model="model.directMail" name="direct-mail" value="1" checked/>
               </div>
               <div class="content-inner">
-                <label class="label-radio">{{ $t('register.not_get') }}</label>
-                <input type="radio" name="direct-mail" />
+                <label class="label-radio">{{ $t('register.lb_not_get') }}</label>
+                <input type="radio" v-model="model.directMail" name="direct-mail" value="0"/>
               </div>
             </div>
           </div>
-          <div class="inline" v-if="flagShowGenre">
+          <div class="inline" v-if="model.flagShowGenre">
             <div class="label-inf">
-              <label>{{ $t('register.favorite_genres') }}</label>
+              <label>{{ $t('register.lb_favorite_genres') }}</label>
             </div>
             <div class="content">
               <div class="inline" v-for="line in dataInit.countLineGenre">
-                <div class="inline" v-for="genre in dataInit.listGenre[line - 1]">
-                  <input type="checkbox" name="vehicle1" :value="genre.genre_no">
-                  <label class="label-checkbox">{{ genre.genre_nm }}</label>
+                <div class="inline" v-for="(genre, index) in dataInit.listGenre[line - 1]" :key="index">
+                  <input type="checkbox" :id="genre.genre_no" :value="genre.genre_no" v-model="model.genre">
+                  <label :for="genre.genre_no" class="label-checkbox">{{ genre.genre_nm }}</label>
                 </div>
               </div>
             </div>
           </div>
           <div class="block-action">
-            <button class="rs-btn btn-large btn-green-dark block-left">
+            <button class="rs-btn btn-large btn-green-dark block-left"
+              data-toggle="modal" data-target="#confirm-stop-register">
               {{ $t('register.btn_stop_register') }}
             </button>
             <button class="rs-btn btn-large btn-green-dark block-right" @click.prevent="goToNextPage()">
@@ -261,200 +347,38 @@
           </div>
         </div>
       </div>
-
     </main>
+
+    <div class="modal fade" id="confirm-stop-register"
+      tabindex="-1" role="dialog"
+      aria-labelledby="title-stop"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="title-stop">{{ $t('register.lb_confirm_stop_register') }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {{ $t('message.msg_confirm_stop_register') }}
+          </div>
+          <div class="modal-footer">
+            <div class="block-action">
+              <button type="button" class="rs-btn btn-small btn-secondary block-left" data-dismiss="modal" @click.prevent="goToTop()">
+                {{ $t('register.btn_yes') }}
+              </button>
+              <button type="button" class="rs-btn btn-small btn-primary block-right" data-dismiss="modal">{{ $t('register.btn_no') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script>
-import constant from '@/constant';
-import { get } from '@/plugins/api';
-
-const DEFAULT_GENRE_INLINE = 4;
-const ENTER_SPACE = 1;
-const REMOVE_SPACE = 2;
-const ENTER_DASH = 1;
-const REMOVE_DASH = 2;
-
-export default {
-  middleware: 'guest',
-  data: () => ({
-    message: '',
-    dataInit: {
-      city: [],
-      listGenre: [],
-      countLineGenre: 0,
-      indexLineGenre: DEFAULT_GENRE_INLINE - 1,
-    },
-    flagShowGener: false,
-    flagShowMemberCode: 0,
-    flagShowMagazineMail: 0,
-    flagShowDirectMail: 0,
-    statusInputName: ENTER_SPACE,
-    statusInputPhoneNumber: ENTER_DASH,
-    model: {
-      slbCity: 0,
-      post_code_1: '',
-      post_code_2: '',
-      district: '',
-      address: '',
-      fullName: ''
-    },
-    flagValidate: false
-  }),
-  created() {
-    if (!!localStorage.getItem('is_checked_both') === false) {
-      // Redirect to page 110 terms register
-      let path = this.$router.resolve({
-        name: 'terms',
-      });
-
-      this.$router.push(path.href);
-    }
-
-    this.renderMsgErr();
-    this.initPage();
-  },
-  methods: {
-    /**
-     * Function init page get list city
-     *
-     * @returns {Array}
-     */
-    initPage: function () {
-      get(constant.api.GET_LIST_CITY, { clientId: this.$route.params.client_id })
-        .then(result => {
-          this.dataInit.city = result.data.data.listCity;
-
-          if (result.data.data.genre.length) {
-            this.flagShowGenre = true;
-
-            this.dataInit.countLineGenre = Math.round(parseFloat(result.data.data.genre.length / DEFAULT_GENRE_INLINE));
-
-            let data = result.data.data.genre;
-            let from = 0;
-            let to = DEFAULT_GENRE_INLINE - 1;
-            let arrGenre = [];
-            let obj = [];
-
-            // Loop every genre and add to array
-            data.forEach((element, index) => {
-              // If in the line is not full genre then add genre to sub array
-              if (from <= index && index < to) {
-                obj.push(element);
-              } else if (index == to && index < data.length - 1) {
-                // If in the line is full genre then add sub array to array
-
-                // Reset from, to
-                from = to + 1;
-                to = to + DEFAULT_GENRE_INLINE;
-
-                // Push element to sub array
-                obj.push(element);
-
-                // Push sub array to array
-                arrGenre.push(obj);
-
-                // Reset sub array
-                obj = [];
-              }
-
-              // Push sub array to array if element is end of genre
-              if (index == data.length - 1) {
-                arrGenre.push(obj);
-              }
-            });
-
-            this.dataInit.listGenre = arrGenre;
-          }
-
-          let hanlderResult = result.data.data.flgHandler;
-
-          if (hanlderResult.length) {
-            this.flagShowMagazineMail = hanlderResult[0].mail_send_disp_kb == 1;
-            this.flagShowDirectMail = hanlderResult[0].post_send_disp_kb == 1;
-            this.flagShowMemberCode = hanlderResult[0].member_id_input_disp_kb == 1;
-            this.statusInputName = hanlderResult[0].member_nm_kb;
-            this.statusInputName = hanlderResult[0].member_nm_kb;
-            this.statusInputPhoneNumber = hanlderResult[0].tel_no_kb;
-          }
-        })
-        .catch(err => {
-          // Will be redirect to page error 570 later
-        });
-    },
-
-    /**
-     * Function search post code get address
-     *
-     * @param {string} code_1
-     * @param {string} code_2
-     * @returns {Array|null}
-     */
-    searchPostCode: function (code_1, code_2) {
-      get(constant.api.SEARCH_POST_CODE, { post_code_1: code_1, post_code_2: code_2 })
-        .then(res => {
-          let result = res.data.data;
-
-          // Api response have result
-          if (result.errors === undefined && result.listAddress.length) {
-            let city = this.dataInit.city.find(element => element.code_nm === result.listAddress[0].todofuken_nm);
-
-            this.model.slbCity = city.code_no;
-            this.model.district = result.listAddress[0].shikuchoson_nm;
-            this.model.address = result.listAddress[0].choiki_nm;
-          } else {
-            // Api response empty result
-            this.model.slbCity = 0;
-            this.model.district = '';
-          }
-        })
-        .catch(err => {
-          this.model.slbCity = 0;
-          this.model.district = '';
-        });
-    },
-
-    /**
-     * Function handler and do to next page
-     *
-     * @returns {void}
-     */
-    goToNextPage: function () {
-      this.$validator.validate().then(result => {
-        if (!result) {
-          this.flagValidate = true;
-        }
-      });
-    },
-
-    /**
-     * Function overider message validator
-     *
-     * @returns {void}
-     */
-    renderMsgErr: function () {
-      const dict = {
-        custom: {
-          mail: {
-            required: this.$t('validation.required', { field: this.$t('register.mail') }),
-            email: this.$t('validation.email', { field: this.$t('register.mail') }),
-            confirmed: this.$t('validation.confirmed', { field: this.$t('register.mail') }),
-          },
-          confirmed_mail: {
-            required: this.$t('validation.required', { field: this.$t('register.confirm_mail') }),
-            email: this.$t('validation.email', { field: this.$t('register.confirm_mail') }),
-          },
-          full_name: {
-            spaceFullSize: 'TRIHNM'
-          }
-        }
-      }
-
-      this.$validator.localize('ja', dict);
-    }
-  }
-}
+<script src="@@/business/register/InputBusiness.js">
 </script>
 
 <style lang="scss" scoped>

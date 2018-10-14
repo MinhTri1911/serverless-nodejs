@@ -1,20 +1,31 @@
 import constant from '../constant';
-import { isNull } from 'util';
+
 export default function ({ store, redirect, route }) {
-  //call this function to check token of user
-	store.dispatch('auth/initAuth')
-	//check if user has already login, redirect to Home page
-    if (store.state.auth.authenticated && !!localStorage.getItem('token')) {
-			if (route.name == 'login') {
-				return redirect('/')
-			}
-		}
-		//store if user are visit SELECT_TICKET to go it when Login successful
-    if (route.name === constant.router.SELECT_TICKET) {
-			localStorage.setItem('redirect_url', route.name);
-			}
-		//if user to to another page we delete this redirect_url
-		if (route.name !== constant.router.SELECT_TICKET && route.name !== 'login') {
-			localStorage.removeItem('redirect_url');
-    }
+  // Check if user has already login, redirect to Home page
+  if (store.state.auth.authenticated
+    && !!localStorage.getItem('token')
+    && route.name == 'client_id-login'
+  ) {
+    return redirect('/' + route.params.client_id);
+  }
+
+  // Store if user are visit SELECT_TICKET to go it when Login successful
+  if (route.name === constant.router.SELECT_TICKET_NAME
+    || route.name === constant.router.SELECT_SEAT_NAME
+  ) {
+    store.dispatch('auth/setUrl', route.name);
+  }
+
+  // Check user to to another page we delete this redirect_url
+  if (route.name !== constant.router.SELECT_TICKET_NAME
+    && route.name !== constant.router.LOGIN_NAME
+    && route.name !== constant.router.SELECT_SEAT_NAME
+  ) {
+    store.dispatch('auth/removeUrl');
+  }
+
+  // Set URL is error page
+  if (route.name === constant.router.ERROR_NAME) {
+    store.dispatch('auth/removeUrl');
+  }
 }

@@ -10,19 +10,19 @@
                             {{ $t('booking.lb_show_name') }}
                         </div>
                         <div>
-                            Yelloon Berwartz & Christian Schmidt
+                            {{this.dataTicket.show_nm}}
                         </div>
                     </div>
 
                 </div>
                 <div class="d-md-flex justify-content-md-between info border-bottom">
                     <div class="d-flex ">
-                    <div class="info__title--medium">
-                        {{ $t('booking.lb_show_date') }}
-                    </div>
-                    <div>
-                        09 - 02 - 2019
-                    </div>
+                        <div class="info__title--medium">
+                            {{ $t('booking.lb_show_date') }}
+                        </div>
+                        <div>
+                            {{this.dataTicket.show_date}}
+                        </div>
                     </div>
                 </div>
                 <div class="d-flex info">
@@ -30,7 +30,7 @@
                         {{ $t('booking.lb_hall') }}
                     </div>
                     <div class="d-flex align-items-center col " style="padding-left: 0px;">
-                        AAA
+                        {{this.dataTicket.hall_nm}}
                     </div>
                     <div class=" d-none d-md-block d-lg-block ">
                         <button type="button" class="btn btn-primary">
@@ -49,13 +49,14 @@
         <section id="Info-Reception">
 
             <div id="InfoReception" class="collapse show info--paddingX pt-2">
-                <div class="d-md-flex justify-content-md-between info border-bottom">
+                <!--Not have seat map-->
+                <div v-if="!seatType" class="d-md-flex justify-content-md-between info border-bottom">
                     <div class="d-flex info__mobile">
                         <div class="info__title--medium">
                             {{ $t('booking.lb_reception_period_name') }}
                         </div>
                         <div>
-                            AAA
+                            {{this.dataTicket.sales_nm}}
                         </div>
                     </div>
                     <div class="d-flex info__mobile">
@@ -63,16 +64,37 @@
                             {{ $t('booking.lb_reception_period') }}
                         </div>
                         <div>
-                            29 - 03 - 2019
+                            {{this.dataTicket.sales_term}}
                         </div>
                     </div>
                 </div>
+
+                <!--Have seat map-->
+                <div v-if="seatType">
+                    <div class="d-flex info border-bottom">
+                        <div class="info__title--medium">
+                            {{ $t('booking.lb_reception_period_name') }}
+                        </div>
+                        <div>
+                            {{this.dataTicket.sales_nm}}
+                        </div>
+                    </div>
+                    <div class="d-flex info border-bottom">
+                        <div class="info__title--medium">
+                            {{ $t('booking.lb_reception_period') }}
+                        </div>
+                        <div>
+                            {{this.dataTicket.sales_term}}
+                        </div>
+                    </div>
+                </div>
+
                 <div class="d-flex info">
                     <div class="info__title--medium">
                         {{ $t('booking.lb_payment_receipt_method') }}
                     </div>
                     <div>
-                        AAA
+                        {{this.dataTicket.sales_explanation}}
                     </div>
                 </div>
             </div>
@@ -83,7 +105,16 @@
 
 <script>
 export default {
-  name: "ticket-info"
+  name: "ticket-info",
+  props: {
+    seatType: {
+      default: false,
+      type: Boolean
+    },
+    dataTicket:{
+      type : Object
+    }
+  }
 }
 </script>
 

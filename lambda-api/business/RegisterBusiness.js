@@ -6,6 +6,9 @@
  * @author Rikkei.TriHNM
  * @date 2018-10-01
  */
+
+import { Helper } from '../common/Helper';
+
 class RegisterBusiness {
 
   /**
@@ -16,6 +19,7 @@ class RegisterBusiness {
    */
   constructor(db) {
     this.db = db;
+    this.helper = new Helper();
 
     return this;
   }
@@ -28,7 +32,7 @@ class RegisterBusiness {
    */
   getListCity() {
     return new Promise((resolve, reject) => {
-      let sql = 'select code_no, code_nm, disp_seq from m_code where code_type_cd = $code_type order by disp_seq';
+      let sql = this.helper.loadSql('SQL001.sql');
 
       this.db.query(sql, { bind: { code_type: '0001' }, type: this.db.QueryTypes.SELECT })
         .then(result => {
@@ -49,18 +53,7 @@ class RegisterBusiness {
    */
   getListGener(clientId) {
     return new Promise((resolve, reject) => {
-      let sql = `select
-          client_id
-          , genre_no
-          , genre_nm
-          , genre_rk
-          , disp_seq
-        from
-         m_genre
-        where
-          client_id = $client_id
-        order by
-        disp_seq`;
+      let sql = this.helper.loadSql('SQL002.sql');
 
       this.db.query(sql, { bind: { client_id: clientId }, type: this.db.QueryTypes.SELECT })
         .then(result => {
@@ -81,44 +74,7 @@ class RegisterBusiness {
    */
   handlerCommonInitPage(clientId) {
     return new Promise((resolve, reject) => {
-      let sql = `select
-          client_id
-          , client_nm
-          , client_kn
-          , homepage_address
-          , inquiry_nm
-          , inquiry_tel_no
-          , inquiry_url
-          , inquiry_notes
-          , send_mail_address
-          , apply_start_date
-          , apply_end_date
-          , enable_kb
-          , client_logo_image_kb
-          , send_nm
-          , system_type
-          , guide
-          , privacy
-          , specified
-          , terms
-          , copyright
-          , disp_member_nm
-          , color1
-          , color2
-          , color3
-          , member_nm_kb
-          , tel_no_kb
-          , mail_send_disp_kb
-          , post_send_disp_kb
-          , member_id_input_text
-          , member_id_input_disp_kb
-          /*, member_terms_url*/
-        from
-          m_client
-        where
-          client_id = $client_id
-          and enable_kb = '1'
-          and to_char(now(), 'yyyymmdd') between apply_start_date and apply_end_date`;
+      let sql = this.helper.loadSql('SQL060.sql');
 
       this.db.query(sql, { bind: { client_id: clientId }, type: this.db.QueryTypes.SELECT })
         .then(result => {
@@ -139,7 +95,7 @@ class RegisterBusiness {
    */
   initPageRegister(clientId) {
     return new Promise((resolve, reject) => {
-      let gener = null;
+      let genre = null;
       let listCity = null;
       let handlerResult = null;
 
@@ -155,7 +111,7 @@ class RegisterBusiness {
       // Async function get list gener
       this.getListGener(clientId)
         .then(data => {
-          gener = data;
+          genre = data;
         })
         .catch(err => {
           reject(new Error(`Error function getListGener: ${err}`));
@@ -167,10 +123,10 @@ class RegisterBusiness {
           handlerResult = data;
 
           // Return data after all query is done
-          resolve({ genre: gener, listCity: listCity, flgHandler: handlerResult });
+          resolve({ genre: genre, listCity: listCity, flgHandler: handlerResult });
         })
         .catch(err => {
-
+          reject(new Error(`Error function handlerCommonInitPage: ${err}`));
         });
     });
   }
@@ -185,16 +141,162 @@ class RegisterBusiness {
    */
   searchPostCode(post_no_1, post_no_2) {
     return new Promise((resolve, reject) => {
-      let sql = "select post_no, todofuken_nm, shikuchoson_nm, choiki_nm from m_post_code where post_no = $post_no";
+      let sql = this.helper.loadSql('SQL009.sql');
       let post_code = post_no_1 + post_no_2;
 
-      this.db.query(sql, { bind: { post_no: post_code },type: this.db.QueryTypes.SELECT })
+      this.db.query(sql, { bind: { post_no: post_code }, type: this.db.QueryTypes.SELECT })
         .then(result => {
           resolve(result);
         })
         .catch(err => {
-          reject(new Error(`Somethign Went Wrong ${err}`));
+          reject(new Error(`Error function searchPostCode: ${err}`));
         });
+    });
+  }
+
+  /**
+   * Function check exists mail when register
+   *
+   * @param {String} mail
+   * @param {String} clientId
+   * @memberof RegisterBusiness
+   * @returns {Object}
+   */
+  checkExistsMail(mail, clientId) {
+    return new Promise((resolve, reject) => {
+      let sql = this.helper.loadSql('SQL008.sql');
+
+      this.db.query(sql, { bind: { mail: mail, client_id: clientId }, type: this.db.QueryTypes.SELECT })
+        .then(data => {
+          // Data return one record kbn
+          resolve(data[0]);
+        })
+        .catch(err => {
+          reject(new Error(`Error function checkExistsMail: ${err}`));
+        });
+    });
+  }
+
+  /**
+   * Function check exists member code
+   *
+   * @param {Object} data
+   * @returns {Object}
+   */
+  checkExistsMemberCode(data) {
+    return new Promise((resolve, reject) => {
+      let { code, clientId, memberNm, memberKn, mobileNo, telNo } = data;
+      let sql = this.helper.loadSql('SQL010.sql');
+      let condition = null;
+
+      if (mobileNo != '' && telNo != '') {
+        condition = `and (
+            replace (a.tel_no, '-', '') = replace ($tel_no, '-', '')
+            or replace (a.mobile_no, '-', '') = replace ($mobile_no, '-', '')
+          )`;
+      }
+
+      if (mobileNo == '' && telNo != '') {
+        condition = `/*%if form.tel_no != "" and form.mobile_no == "" */
+          and replace (a.tel_no, '-', '') = replace ($tel_no, '-', '')
+          /*%end*/`;
+      }
+
+      if (mobileNo != '' && telNo == '') {
+        condition = `/*%if form.tel_no == "" and form.mobile_no != "" */
+          and replace (a.mobile_no, '-', '') = replace ($mobile_no, '-', '')
+          /*%end*/`;
+      }
+
+      // Replace parameter $condition to string
+      sql = sql.replace("$condition", condition);
+
+      this.db.query(sql, {
+        bind: {
+          code: code,
+          client_id: clientId,
+          member_nm: memberNm,
+          member_kn: memberKn,
+          mobile_no: mobileNo,
+          tel_no: telNo
+        }, type: this.db.QueryTypes.SELECT
+      }).then(data => {
+
+          // Data return one record macth_flg
+          resolve(data[0]);
+        })
+        .catch(err => {
+          reject(new Error(`Error function checkExistsMemberCode: ${err}`));
+        });
+    });
+  }
+
+  /**
+   * Function get id member by numbering_cd
+   *
+   * @param {String} clientId
+   * @param {String} numberingCd
+   * @returns {Object}
+   * @memberof RegisterBusiness
+   */
+  getIdMemberAndUpdate(clientId, numberingCd) {
+    // return new Promise((resolve, reject) => {
+      let sqlSelect = this.helper.loadSql('SQL052.sql');
+      let sqlUpdate = this.helper.loadSql('SQL053.sql');
+      let member = null;
+
+      return this.db.query(sqlSelect, { bind: { client_id: clientId, numbering_cd: numberingCd }, type: this.db.QueryTypes.SELECT })
+        .then(data => {
+          member = data[0];
+
+          let dataUpdate = this.db.query(sqlUpdate, {
+            bind: {
+              id_now: parseInt(member.id_now)  + 1,
+              upd_pg_id: 'P0240CustomerRegist',
+              upd_client_id: clientId,
+              upd_employee_cd: 'test' + ' ' + (parseInt(member.id_now) + 1),
+              client_id: clientId,
+              numbering_cd: numberingCd
+            },
+          }).spread((results, metadata) => {
+            console.log(results, metadata);
+
+            return results;
+          });
+
+          return {
+            member: member,
+            dataUpdate: dataUpdate
+          };
+        })
+        .catch(err => {
+          throw new Error(err);
+        });
+  }
+
+  createUser(clientId, numberingCd) {
+    return new Promise((reslove, reject) => {
+      // Create transaction
+      this.db.transaction(t => {
+        let memberId = this.getIdMemberAndUpdate(clientId, numberingCd)
+          .then(data => {
+            return data;
+          });
+
+        return memberId;
+      })
+      .then(data => {
+        // Commit transaction
+        console.log(data);
+
+        reslove(data);
+      })
+      .catch(err => {
+        // Rollback transaction
+        console.log(err);
+
+        reject(new Error(`Error function createUser: ${err}`));
+      });
     });
   }
 }

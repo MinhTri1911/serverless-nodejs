@@ -3,7 +3,7 @@ import * as types from './mutation-type'
 import axios from 'axios'
 
 export const setPosts = ({ commit }, posts) => {
-    commit(types.SET_POST, posts)
+    // commit(types.SET_POST, posts)
 }
 
 export const addPost = ({ commit }, addPost) => {

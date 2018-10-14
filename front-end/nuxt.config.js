@@ -9,20 +9,20 @@ module.exports = {
   head: {
     title: pkg.name,
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      {charset: 'utf-8'},
+      {name: 'viewport', content: 'width=device-width, initial-scale=1'},
+      {hid: 'description', name: 'description', content: pkg.description}
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: "https://use.fontawesome.com/releases/v5.1.0/css/all.css" }
+      {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
+      // { rel: 'stylesheet', href: "https://use.fontawesome.com/releases/v5.1.0/css/all.css" }
     ]
   },
 
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#3B8070' },
+  loading: {color: '#3B8070'},
 
   /*
   ** Global CSS
@@ -35,22 +35,23 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~/plugins/nuxt-client-init.js', ssr: false },
-    { src: '~/plugins/beforeEnter.js', ssr: false },
-    { src: '~/plugins/bootstrap.js', ssr: false },
-    { src: '~/plugins/i18n.js', ssr: false },
-    { src: '~/plugins/localStorage.js', ssr: false },
-    { src: '~/plugins/api.js', ssr: false },
+    {src: '~/plugins/nuxt-client-init.js', ssr: false},
+    {src: '~/plugins/beforeEnter.js', ssr: false},
+    // { src: '~/plugins/bootstrap.js', ssr: false },
+    {src: '~/plugins/i18n.js', ssr: false},
+    {src: '~/plugins/localStorage.js', ssr: false},
+    {src: '~/plugins/api.js', ssr: false},
     { src: '~/plugins/vee-validate.js', ssr: false }
   ],
 
   /*
   ** Nuxt.js modules
   */
-  modules: [
-  ],
+  modules: [],
   env: {
-    baseUrl: 'http://localhost:4000'
+    baseUrl: 'http://localhost:4000',
+    clientUrl: 'http://localhost:3000',
+    baseS3Url: "https://s3-ap-northeast-1.amazonaws.com/ticket-data-dev"
   }
 
   ,
@@ -64,14 +65,21 @@ module.exports = {
     extend(config, ctx) {
 
     },
-      vendor: ['jquery','bootstrap'],
-      plugins: [
-        // set shortcuts as global for bootstrap
-        new webpack.ProvidePlugin({
-          '$': 'jquery',
-          'jQuery': 'jquery',
-          'window.jQuery': 'jquery'
-        })
-      ]
+    plugins: [
+      // set shortcuts as global for bootstrap
+      new webpack.ProvidePlugin({
+        '$': 'jquery',
+        'jQuery': 'jquery',
+        'window.jQuery': 'jquery'
+      })
+    ],
+    vendor: [
+      'jquery',
+      'bootstrap',
+      '@/static/js/build-diagram-seat.js',
+      '@fortawesome/fontawesome',
+      '@fortawesome/fontawesome-free-solid',
+      '@fortawesome/fontawesome-free-brands'
+    ]
   }
 }

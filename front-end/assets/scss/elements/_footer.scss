@@ -1,33 +1,48 @@
-/* フッタ */
-div#Footer {
-	max-width: 1200px;
-	margin: 0 auto;
-	height: 125px;
-	padding-top: 25px;
-	background: #666;
-	text-align:center;
-}
-/* フッタ　リストメニュー */
-#Footer li {
-	display:inline;
-	padding-left:10px;
-	padding-right:5px;
-	color: #ccc;
-}
-#Footer li.first {
-	border-left:none;
-}
-#FooterMenu {
-	padding-bottom: 30px;
-}
-#FooterMenu a {
-	color: #ccc;
-}
-#FooterMenu a:hover {
-	color: darkorange;
-}
+@import "../variables";
+//colors
+$color_storm_dust_approx: #666;
+$color_celeste_approx: #ccc;
+$color_pizazz_approx: darkorange;
 
-/* フッタ　コピーライト */
-#Footer p {
-	color: #ccc;	
+#mainFooter {
+  &.rs-fixed {
+    min-height: $height-footer;
+    .containerFooter {
+      position: fixed;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+    }
+  }
+  #Footer {
+    li {
+      display: inline;
+      padding-left: 10px;
+      padding-right: 5px;
+      color: $color_celeste_approx;
+      &.first {
+        border-left: none;
+      }
+    }
+    p {
+      color: $color_celeste_approx;
+    }
+  }
+  #FooterMenu {
+    padding-bottom: 30px;
+    a {
+      color: $color_celeste_approx;
+      &:hover {
+        color: $color_pizazz_approx;
+      }
+    }
+  }
+  div#Footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: $height-footer;
+    padding-top: 25px;
+    background: $color_storm_dust_approx;
+    text-align: center;
+  }
 }

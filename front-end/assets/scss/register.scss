@@ -2,11 +2,16 @@
 .register-step-1 {
   .alert {
     text-align: center;
+
+    label {
+      display: block;
+    }
   }
 
   .container {
     font-size: 100%;
-    padding: 20px 100px 0 100px;
+    width: auto;
+    padding: 30px 30px 0px 30px;
 
     .head-msg-fullsize {
       margin-left: -15px;
@@ -16,47 +21,57 @@
 
   #RegForm {
     table {
-      tr {
-        th {
-          width: 30% !important;
+      display: table;
+      table-layout: fixed;
 
-          label {
-            float: left;
+      tbody {
+        tr {
+          td{
+            width: auto;
           }
-        }
+          .td-head {
+            width: 30% !important;
 
-        td {
-          input {
-            width: 70%;
-            display: block;
-          }
-
-          .extension {
-            float: left;
+            label {
+              float: left;
+              font-weight: 700;
+            }
           }
 
-          select {
-            width: 30%;
-          }
-        }
+          .td-content {
+            input {
+              width: 70%;
+              display: block;
+            }
 
-        .flex-block {
-          display: flex;
-          input[type=text] {
-            width: 10%;
-          }
+            .extension {
+              float: left;
+            }
 
-          input[type=radio] {
-            width: 10%;
-            height: 25px;
-          }
-
-          .between {
-            margin: $pad-th-tbl;
+            select {
+              width: 30%;
+            }
           }
 
-          button {
-            margin: 2px 0 0 15px;
+          .flex-block {
+            display: flex;
+            input[type=text] {
+              width: 10%;
+            }
+
+            input[type=radio] {
+              width: 18px;
+              height: 24px;
+              margin: 4px;
+            }
+
+            .between {
+              margin: $pad-th-tbl;
+            }
+
+            button {
+              margin: 2px 0 0 15px;
+            }
           }
         }
       }
@@ -106,13 +121,13 @@
 
           input[type=radio] {
             position: absolute;
-            right: 10px;
+            right: 20px;
           }
         }
 
         input {
-          width: 25px;
-          height: 25px;
+          width: 18px;
+          height: 24px;
         }
       }
 
@@ -139,10 +154,195 @@
     }
   }
 
+  .modal-footer {
+    .block-action {
+      width: 100%;
+
+      button {
+        margin-top: 15px;
+      }
+
+      .block-left {
+        float: left;
+      }
+
+      .block-right {
+        float: right;
+      }
+    }
+  }
 }
 
-@media only screen and (max-width: 414px) {
+.register-step-2 {
   .container {
-    padding: 0px !important;
+    font-size: 100%;
+    width: auto;
+    padding: 30px 30px 0px 30px;
+
+    .row {
+      .col-md-3 {
+        label {
+          font-weight: 700;
+        }
+      }
+    }
+
+    .block {
+      padding: 10px;
+      margin-top: 5px;
+      background-color: #dfe7f0;
+
+      .msg-inline {
+        width: 96%;
+      }
+    }
+
+    .flex-block {
+      display: flex;
+
+      input[type=radio] {
+        width: 10%;
+        height: 18px;
+        margin-right: 5px;
+        margin-top: 2px;
+      }
+
+      .between {
+        margin-right: $pad-th-tbl;
+      }
+    }
+
+    .block-action {
+      padding: $pad-th-tbl 0 0px 0;
+      height: 100px;
+      width: 100%;
+
+      button {
+        margin-top: 15px;
+      }
+
+      .block-left {
+        float: left;
+      }
+
+      .block-right {
+        float: right;
+      }
+    }
+
+    .inline {
+      display: flex;
+      padding: $pad-th-tbl 0 0px 0;
+
+      .label-checkbox {
+        margin-right: 10px;
+      }
+
+      input {
+        width: 18px;
+        height: 24px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .register-step-1 {
+    .block-input {
+      .inline {
+        .label-checkbox {
+          width: 75px;
+        }
+      }
+    }
+  }
+
+  .register-step-2 {
+    .container {
+      .row {
+        .lbl-inf {
+          max-width: 40%;
+        }
+
+        .lbl-content {
+          max-width: 60%;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 562px) {
+  .register-step-1 {
+    #RegForm {
+      table {
+        tbody {
+          tr {
+            .td-content {
+              input[type=text], input[type=email], input[type=password] {
+                width: 100%;
+              }
+
+              select {
+                width: 100% !important;
+              }
+            }
+
+            .gender {
+              display: flex !important;
+            }
+
+            .flex-block {
+              display: block;
+
+              input[type=text] {
+                width: 100%;
+              }
+
+              button {
+                margin-left: 0px;
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .block-input {
+      .inline {
+        .label-checkbox {
+          width: 38px;
+        }
+
+        .content-flex {
+          .content-inner {
+            margin-right: 0px;
+
+            .label-radio {
+              width: 70%;
+            }
+          }
+        }
+      }
+
+      .block-action {
+        button {
+          width: 115px;
+          height: 40px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 420px) {
+  .register-step-2 {
+    .container {
+      .rs-btn.btn-large {
+        width: 58px;
+        height: 40px;
+      }
+    }
   }
 }

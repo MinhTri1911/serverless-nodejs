@@ -1,113 +1,168 @@
 /* フォーム要素 */
 
-#RegForm table, #RegForm table td, #RegForm table th {
-	width: 100%;
-	border: none;
-	padding: 5px;
-	margin: 0;
-}
-#RegForm table td, #RegForm table th {
-	border-bottom: 1px solid #ccc;
-	color: #333;
-}
-#RegForm table th {
-	width: 20%;
-	background: #dedede;
-}
-#RegForm input, .myTable input {
-	width: 300px;
-	height: 35px;
-	border: 1px solid #888;
-	font-size: 1.2em;
-}
-/* ラジオボタン調整 */
-#RegForm input#gender1, #RegForm input#gender2,
-.myTable input#gender1, .myTable input#gender2{
-	border: none;
-	width: auto;
-	height: auto;
-	vertical-align: baseline;
-}
-/* 郵便番号長さ調整 */
-#RegForm input#postal-code,
-.myTable input#postal-code{
-	width: 100px;
-	font-size: 1.2em;
-}
-/* 住所3と4長さ調整 */
-#RegForm input#address-level3,
-#RegForm input#address-level4,
-.myTable input#address-level3,
-.myTable input#address-level4{
-	width: 400px;
-	font-size: 1.2em;
-}
-/* プルダウン文字サイズ調整 */
-#RegForm select,
-.myTable select{
-	font-size: 1.2em;
-}
-/* ボタンサイズ（色はcolor.css） */
-#RegForm .submit input,
-.submit input{
-	display: inline-block;
-	width: 176px;
-	height: 46px;
-	margin: 10px;
-	font-size: 1.0em;
-	border: none;
-	cursor: pointer;
-}
-.submit button {
-	display: inline-block;
-    font-size: 1.0em;
-	width: 176px;
-	height: 46px;
-	margin: 10px;
+#RegForm {
+  table {
+    width: 100%;
     border: none;
-	cursor: pointer;
-}
-/* ボタンマウスオーバー */
-.submit input:hover,
-.submit button:hover{
-  opacity: 0.7;
-  filter: alpha(opacity=70);
-  -ms-filter: "alpha(opacity=70)";
+    padding: 5px;
+    margin: 0;
+    .td-content, .td-head {
+      width: 100%;
+      border: none;
+      padding: 5px;
+      margin: 0;
+    }
+    .td-content {
+      border-bottom: 1px solid #ccc;
+      color: #333;
+    }
+    .td-head {
+      border-bottom: 1px solid #ccc;
+      color: #333;
+      width: 20%;
+      background: #dedede;
+    }
+  }
+  input {
+    width: 300px;
+    height: 35px;
+    border: 1px solid #888;
+    font-size: 1.2em;
+  }
 }
 
+.myTable input {
+  width: 300px;
+  height: 35px;
+  border: 1px solid #888;
+  font-size: 1.2em;
+}
+
+/* ラジオボタン調整 */
+
+#RegForm input {
+  &#gender1, &#gender2 {
+    border: none;
+    width: auto;
+    height: auto;
+    vertical-align: baseline;
+  }
+}
+
+.myTable input {
+  &#gender1, &#gender2 {
+    border: none;
+    width: auto;
+    height: auto;
+    vertical-align: baseline;
+  }
+}
+
+/* 郵便番号長さ調整 */
+
+#RegForm input#postal-code, .myTable input#postal-code {
+  width: 100px;
+  font-size: 1.2em;
+}
+
+/* 住所3と4長さ調整 */
+
+#RegForm input {
+  &#address-level3, &#address-level4 {
+    width: 400px;
+    font-size: 1.2em;
+  }
+}
+
+.myTable input {
+  &#address-level3, &#address-level4 {
+    width: 400px;
+    font-size: 1.2em;
+  }
+}
+
+/* プルダウン文字サイズ調整 */
+
+#RegForm select, .myTable select {
+  font-size: 1.2em;
+}
+
+/* ボタンサイズ（色はcolor.css） */
+
+#RegForm .submit input {
+  display: inline-block;
+  width: 176px;
+  height: 46px;
+  margin: 10px;
+  font-size: 1.0em;
+  border: none;
+  cursor: pointer;
+}
+
+.submit {
+  input {
+    display: inline-block;
+    width: 176px;
+    height: 46px;
+    margin: 10px;
+    font-size: 1.0em;
+    border: none;
+    cursor: pointer;
+  }
+  button {
+    display: inline-block;
+    font-size: 1.0em;
+    width: 176px;
+    height: 46px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  input:hover, button:hover {
+    opacity: 0.7;
+    filter: alpha(opacity = 70);
+    -ms-filter: "alpha(opacity=70)";
+  }
+}
+
+/* ボタンマウスオーバー */
+
 /* 一般フォーム */
+
 .Ltextinput {
-	
-	width: 500px;
-	height: 35px;
-	border: 1px solid #888;
+  width: 500px;
+  height: 35px;
+  border: 1px solid #888;
 }
+
 .Stextinput {
-	
-	width: 200px;
-	height: 35px;
-	border: 1px solid #888;
+  width: 200px;
+  height: 35px;
+  border: 1px solid #888;
 }
+
 .Mtextinput {
-	
-	width: 300px;
-	height: 35px;
-	border: 1px solid #888;
+  width: 300px;
+  height: 35px;
+  border: 1px solid #888;
 }
+
 .ksearchList li {
-	list-style: none;
-	display: inline-block;
-	text-align: justify;
+  list-style: none;
+  display: inline-block;
+  text-align: justify;
 }
+
 #Ksearch .submit input {
-	display: block;
-	width: 176px;
-	height: 46px;
-	margin: 10px auto;
-	font-size: 1.0em;
-	border: none;
+  display: block;
+  width: 176px;
+  height: 46px;
+  margin: 10px auto;
+  font-size: 1.0em;
+  border: none;
 }
+
 .change {
-	color: #c00;
-	font-weight: bold;
+  color: #c00;
+  font-weight: bold;
 }

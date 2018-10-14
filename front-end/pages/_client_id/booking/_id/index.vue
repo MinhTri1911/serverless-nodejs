@@ -3,18 +3,23 @@
     <div id="MainC">
         <!-- Main Contents -->
         <main id="ContentsPane">
-            <h1 class="d-flex align-items-center pt-0"><span id="Pagetitle">BookTicket</span></h1>
+            <h1 class="d-flex align-items-center pt-0"><span id="Pagetitle">{{$t('booking.header')}}</span></h1>
             <div id="SingleContents">
                 <div id="InfoContents">
                     <!--Notice-->
-                    <Warning></Warning>
+                    <Warning :seats="dataSeatType.seats"></Warning>
                     <!--Notice End-->
                     <!--Ticket Info -->
-                    <TicketInfo></TicketInfo>
+                    <TicketInfo :dataTicket="dataTicket"></TicketInfo>
 
                 </div>
-                    <TicketContent></TicketContent>
+                <!--Ticket Booking Content -->
+                <TicketContent :seats="dataSeatType.seats"></TicketContent>
+                <!--Ticket Booking Content End -->
 
+                <!--Ticket Summary -->
+                <TicketSummary></TicketSummary>
+                <!--Ticket Summary End-->
                 <!--Notice-->
                 <section id="Notice2">
                     <h2 class="mb-0">
@@ -42,7 +47,7 @@
     <!-- Main Contents end -->
 </template>
 <script src="@/business/booking/BookingBusiness.js"></script>
-<style lang="scss" >
+<style lang="scss">
     @import "./assets/scss/booking";
 </style>
 

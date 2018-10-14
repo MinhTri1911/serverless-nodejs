@@ -1,6 +1,8 @@
 {
   "btn_next": "次へ",
   "btn_back": "戻る",
+  "btn_close": "閉じる",
+  "btn_search": "検索",
 	"links": {
 		"help": "ご利用ガイド",
 		"search": "公演検索",
@@ -25,5 +27,14 @@
 	},
 	"require": "（必須）",
 	"require_1": "（必須※1）",
-	"enter_full_size": "全角で入力してください"
+	"enter_full_size": "全角で入力してください",
+
+  "modal_search": {
+    "title": "詳細検索ダイアログ",
+    "lbl_key": "検索ワード",
+    "lbl_key_placeholder": "公演名・アーティスト名で検索",
+    "lbl_show_date": "公演日",
+    "lbl_sales_date": "受付期間",
+    "lbl_genre_no": "ジャンル"
+  }
 }

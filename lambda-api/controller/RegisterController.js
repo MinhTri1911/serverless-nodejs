@@ -9,12 +9,13 @@
 import { AccountBussiness } from "../business/AccountBussiness";
 import { RegisterBusiness } from "../business/RegisterBusiness";
 import ServiceModel from "../models/ServiceModel";
-import { DatabaseConfig } from "../config/Constant";
+import config from "../config/Constant";
 import jwt from "jsonwebtoken";
 import HttpCode from "../config/HttpCode";
 import Timeout from "../config/Timeout";
 import Validator  from'validatorjs';
 import rules from '../validations/SearchPostCode';
+import { Helper } from '../common/Helper';
 
 const JWT_EXPIRATION_TIME = Timeout.JWT_SECRET;
 
@@ -64,7 +65,7 @@ const register = async (event, context, callback) => {
 }
 
 /**
- * Function init page input infomation customer
+ * Api init page input infomation customer
  *
  * @param {*} event
  * @param {*} context
@@ -72,7 +73,7 @@ const register = async (event, context, callback) => {
  * @return {Object}
  */
 const initPage = async (event, context, callback) => {
-  let serviceModel = new ServiceModel(DatabaseConfig);
+  let serviceModel = new ServiceModel(config.DatabaseConfig);
   let registerBusiness = new RegisterBusiness(serviceModel.getDb());
 
   let clientId = event.queryStringParameters.clientId;
@@ -97,7 +98,7 @@ const initPage = async (event, context, callback) => {
 }
 
 /**
- * Funtion search address by post code
+ * Api search address by post code
  *
  * @param {*} event
  * @param {*} context
@@ -106,7 +107,7 @@ const initPage = async (event, context, callback) => {
  */
 const searchPostCode = async (event, context, callback) => {
   let param = event.queryStringParameters;
-  let serviceModel = new ServiceModel(DatabaseConfig);
+  let serviceModel = new ServiceModel(config.DatabaseConfig);
   let registerBusiness = new RegisterBusiness(serviceModel.getDb());
 
   try {
@@ -122,8 +123,121 @@ const searchPostCode = async (event, context, callback) => {
         return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { listAddress: result });
       });
   } catch (err) {
+    // Logg error
+    console.error(err);
+
     return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
   }
 }
 
-export { register, initPage, searchPostCode };
+/**
+ * Api check exists mail when register
+ *
+ * @param {*} event
+ * @param {*} context
+ * @param {*} callback
+ * @return {Object}
+ */
+const existsEmail = async (event, context, callback) => {
+  let param = event.queryStringParameters;
+  let serviceModel = new ServiceModel(config.DatabaseConfig);
+  let registerBusiness = new RegisterBusiness(serviceModel.getDb());
+
+  try {
+    return registerBusiness.checkExistsMail(param.mail, param.clientId)
+      .then(result => {
+        return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { existsMail: result });
+      });
+  } catch (err) {
+    // Logg error
+    console.error(err);
+
+    return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+  }
+}
+
+/**
+ * Api check exists member code when register
+ *
+ * @param {*} event
+ * @param {*} context
+ * @param {*} callback
+ * @returns {Object}
+ */
+const exsistsMemberCode = async (event, context, callback) => {
+  let param = event.queryStringParameters;
+  let serviceModel = new ServiceModel(config.DatabaseConfig);
+  let registerBusiness = new RegisterBusiness(serviceModel.getDb());
+
+  try {
+    return registerBusiness.checkExistsMemberCode(param)
+      .then(result => {
+        console.log(result);
+        return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { existsCode: result });
+      })
+      .catch(err => {
+        // Logg error
+        console.error(err);
+
+        return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+      });
+  } catch (err) {
+    // Logg error
+    console.error(err);
+
+    return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+  }
+}
+
+const createUser = async (event, context, callback) => {
+  let serviceModel = new ServiceModel(config.DatabaseConfig);
+  let registerBusiness = new RegisterBusiness(serviceModel.getDb());
+
+  try {
+    return registerBusiness.createUser('test1', '01')
+      .then(data => {
+        return serviceModel.createSuccessCallback(HttpCode, { result: data });
+      })
+      .catch(err => {
+        return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+      });
+  } catch (err) {
+    return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+  }
+}
+
+const demoSendMail = async (event, context, callback) => {
+  let serviceModel = new ServiceModel(config.DatabaseConfig);
+  try {
+    let helper = new Helper();
+    let html = null;
+    let mails = ['minhtri191195@gmail.com', 'trihnm@rikkeisoft.com', 'thiennb@rikkeisoft.com', 'dunglv@rikkeisoft.com'];
+
+    await helper.loadTemplate('example', { head: 'Successfull send mail', content: 'Hello everyone' })
+      .then(data => {
+        html = data;
+      })
+      .catch(err => {
+        console.log(err);
+
+        return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+      });
+
+    return helper.sendEmail('ducvn@rikkeisoft.com', mails, 'Example send mail', 'Content if not have template', html)
+      .then(res => {
+        return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { status: HttpCode.SUCCESS });
+      })
+      .catch(err => {
+        // Log error
+        console.log(err);
+
+        return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+      });
+  } catch (err) {
+    console.log(err);
+
+    return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+  }
+}
+
+export { register, initPage, searchPostCode, existsEmail, exsistsMemberCode, demoSendMail, createUser };

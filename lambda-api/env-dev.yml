@@ -1,9 +1,15 @@
-profile: thiennb
 environment:
   JWT_SECRET: secretkey
   DB_DATABASE: postgres
-  DB_USER_NAME: ticket2
-  DB_PASSWORD: Yj)3Xl@ePC4&
+  DB_USER_NAME: postgres
+  DB_PASSWORD: 123
   DB_PORT: 5432
-  DB_HOST: ticket-dev1.c2l38m0lvhk7.ap-northeast-1.rds.amazonaws.com
+  DB_HOST: localhost
+  SECRET_KEY: U0cA2N$g(1
   DB_SCHEMA: ticket1
+  URL_CLIENT: http://localhost:3000/
+  URL_API: http://localhost:4000/
+  MAIL_HOST: smtp.sendgrid.net
+  MAIL_PORT: 465
+  MAIL_USER: apikey
+  MAIL_PASS: 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

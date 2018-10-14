@@ -10,135 +10,118 @@
                 </h2>
             </div>
             <div id="TicketTypeDetail" class="collapse show info--paddingX pt-2">
-                <div class="d-flex flex-md-row flex-column pb-2 border-bottom ticket--marginT">
+                <div class="d-flex flex-md-row flex-column pb-2 border-bottom ticket--marginT"
+                     v-for="(seat, seatIndex) in seats">
                     <div class="d-flex align-items-center info__title--medium">
                         <div>
-                            Loai ghe A
+                            {{ seat.seat_type_nm}}
                         </div>
                     </div>
                     <div class="d-flex flex-column w-100">
-                        <div class="d-flex justify-content-between border py-3 ticket--paddingX ticket--marginY">
+                        <div class="d-flex justify-content-between border py-3 ticket--paddingX ticket--marginY"
+                             v-for="(ticket, ticketIndex) in seat.tickets">
                             <div class="d-flex align-items-center col">
-                                <div class="pr-5">
-                                    Loai ve A
+                                <div class="pr-5 col-4">
+                                    {{ ticket.ticket_type_nm}}
                                 </div>
-                                <div class="d-flex">
-                                    <div class="pr-3">
-                                        So tien
-                                    </div>
-                                    <div>
-                                        100000
+                                <div class=" col-4">
+                                    {{ ticket.ticket_price}}
+                                </div>
+                                <div class="d-flex col-4 float-right">
+                                    <select class="form-control pull-right" style="width:80px;"
+                                            @change="onChangeTicket($event.target.value,seat,ticket)"
+                                            v-if="ticket.net_zan_maisu >= ticket.ticket_unit"
+                                            :key="number_ticket[seat.seat_type_nm+'_'+ticket.ticket_type_nm]">
+                                        <option v-bind:value="0">{{$t('booking.lb_please_select')}}</option>
+                                        <option v-for="ticketNumber  in (ticket.net_zan_maisu *1) "
+                                                v-bind:value="ticketNumber"
+                                                v-if="ticketNumber % ticket.ticket_unit ===0"
+                                                :selected="loadMyTicket(seat.seat_type_no ,ticket.ticket_type_no ,ticketNumber )">
+                                            {{ticketNumber}}
+                                        </option>
+
+                                    </select>
+                                    <div v-if="ticket.net_zan_maisu == 0|| ticket.net_zan_maisu < ticket.ticket_unit">
+                                        {{$t('booking.lb_sold_out')}}
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <select class="form-control" >
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                </select>
-                            </div>
+
                         </div>
-                        <div class="d-flex justify-content-between border py-3 ticket--paddingX ticket--marginY">
-                            <div class="d-flex align-items-center col">
-                                <div class="pr-5">
-                                    Loai ve B
-                                </div>
-                                <div class="d-flex">
-                                    <div class="pr-3">
-                                        So tien
-                                    </div>
-                                    <div>
-                                        200000
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <select class="form-control" >
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                </select>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
-                <div class="d-flex flex-md-row flex-column pb-2 ticket--marginT">
-                    <div class="d-flex align-items-center info__title--medium">
-                        <div>
-                            Loai ghe B
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column w-100">
-                        <div class="d-flex justify-content-between border py-3 ticket--paddingX ticket--marginY">
-                            <div class="d-flex align-items-center col">
-                                <div class="pr-5">
-                                    Loai ve A
-                                </div>
-                                <div class="d-flex">
-                                    <div class="pr-3">
-                                        So tien
-                                    </div>
-                                    <div>
-                                        100000
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <select class="form-control" >
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </section>
         <!--Ticket Type End-->
-
-        <!--Total Ticket-->
-        <section id="Total-Ticket">
-            <div class="d-flex">
-                <h2 class="col mb-0">
-                    <a href="#TotalTicketDetail" data-toggle="collapse">
-                        {{ $t('booking.lb_reservation_information') }}
-                    </a>
-                </h2>
-            </div>
-            <div id="TotalTicketDetail" class="collapse show info info--paddingX py-2">
-                <div class="d-flex flex-md-row flex-column justify-content-between">
-                    <div class="d-flex info__mobile">
-                        <div class="info__title--medium">
-                            {{ $t('booking.lb_sum_number_ticket') }}
-                        </div>
-                        <div>
-                            200
-                        </div>
-                    </div>
-                    <div class="d-flex info__mobile">
-                        <div class="info__title--medium">
-                            {{ $t('booking.lb_sum_money') }}
-                        </div>
-                        <div>
-                            1000000
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!--Total Ticket End-->
 
     </div>
 </template>
 
 <script>
+
+import {mapGetters} from 'vuex'
+
 export default {
-  name: "ticket-content"
+  name: "ticket-content",
+  props: ['seats'],
+  data() {
+    return {
+      number_ticket: [],
+      ticket_price: 0,
+      ticket_type_no: 0,
+      seat_type_no: 0,
+      seat_kind: 0
+    }
+  },
+  computed: {
+    ...mapGetters({
+      myTickets: 'booking/myTickets'
+    }),
+
+  },
+
+  methods: {
+    /**
+     * Function init page get ticket info
+     *
+     * @returns {Array}
+     */
+    onChangeTicket: function (numTicket, seat, ticket) {
+
+      let ticketInfo = {
+        ticket_type_no: ticket.ticket_type_no,
+        ticket_type_nm: ticket.ticket_type_nm,
+        seat_type_no: seat.seat_type_no,
+        seat_type_nm: seat.seat_type_nm,
+        ticket_price: ticket.ticket_price,
+        number_ticket: numTicket,
+        seat_kind: 1, // TODO : kind of seat
+        show_group_id: this.$route.query.show_group_id,
+        show_no: this.$route.query.show_no
+
+      }
+
+      if (ticketInfo.number_ticket > 0) {
+        this.$store.dispatch("booking/addTicket", ticketInfo);
+      }
+      if (ticketInfo.number_ticket == 0) {
+        this.$store.dispatch("booking/deleteTicket", ticketInfo);
+      }
+    },
+    loadMyTicket(seat_type_no, ticket_type_no, ticketNumber) {
+      let result = false;
+      this.myTickets.forEach(function (el) {
+        if (el.seat_type_no == seat_type_no && el.ticket_type_no == ticket_type_no && el.number_ticket == ticketNumber) {
+          result = true;
+          return true;
+        }
+      });
+      return result;
+
+    }
+  }
 }
 </script>
 

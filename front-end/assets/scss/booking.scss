@@ -1,321 +1,304 @@
+//colors
+$color_mercury_approx: #dee2e6;
+$color_celeste_approx: #ccc;
+$color_sisal_approx: #cecebf;
+$color_blue_dianne_approx: #174a52;
+$color_mine_shaft_approx: #333;
+$white: #fff;
+$color_alto_approx: #ddd;
+$color_siam_approx: #686859;
+$black_40: rgba(0,0,0,0.4);
+$color_gallery_approx: #eee;
+$black: #000;
+$color_fuscous_gray_approx: #555;
+$red: #ff0000;
+
+//@extend-elements
+//original selectors
+//.pagination ul li span, .pagination ul li a
+%extend_1 {
+  display: block;
+  font-size: 12px;
+  padding: 0.6em 1em;
+
+  border-radius: 3px;
+}
+
+
 body {
   height: 100vh;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  margin: auto;
 }
 .tmenu__a--height {
   height: 50px !important;
 }
-
-ul#TmenuGR {
-  margin-top: 16px;
+#SingleContents {
+  width: auto;
+  margin: 30px 30px 0;
+  padding-bottom: 30px;
+  section {
+    border: 1px solid $color_celeste_approx;
+    margin-bottom: 15px;
+    h2 {
+      margin-top: 0 !important;
+    }
+  }
 }
-
-#SingleContents section {
-  border: 1px solid #ccc;
-  margin-bottom: 15px;
-}
-#SingleContents section h2{
-  margin-top: 0 !important;
-}
-
 .info {
   padding: 5px 0;
+  &:first-child {
+    padding-top: 0;
+  }
+  &:last-child {
+    border-bottom: none;
+  }
 }
-
-.info:first-child {
-  padding-top: 0;
-}
-
-.info:last-child {
-  border-bottom: none;
-}
-
 .info__title--medium {
   width: 10.5em;
 }
-
 .info__title--long {
   width: 15.5em;
 }
-
 .info--paddingX {
   padding: 0 10px;
 }
-
 .info__button {
-  background: #cecebf;
+  background: $color_sisal_approx;
   height: 40px;
   margin: 0 0 15px 0;
   padding: 0 10px;
+  button {
+    padding: 0 5px;
+  }
 }
-
-.info__button button {
-  padding: 0 5px;
-}
-
 .btn {
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
   border-radius: 0;
 }
-
 .ticket--paddingX {
   padding-right: 10px;
 }
-
 .ticket--marginY {
   margin: 5px 0;
 }
-
-.ticket--marginT:first-child {
-  margin-top: 0;
-}
 .ticket--marginT {
   margin-top: 8px;
+  &:first-child {
+    margin-top: 0;
+  }
 }
-
-.btn-primary{
-  background-color: #174A52;
-  border-color: #174A52;
+.btn-primary {
+  background-color: $color_blue_dianne_approx;
+  border-color: $color_blue_dianne_approx;
 }
-h2>a {
-  color: #333 !important;
-  text-decoration: none !important;
-}
-/* Main Contents CSS */
 #MainC {
   display: block;
   min-height: 500px;
   max-width: 1200px;
   margin: 0 auto;
-  background-color: #fff;
-  border-left: solid #ddd 1px;
-  border-right: solid #ddd 1px;
+  background-color: $white;
+  border-left: solid $color_alto_approx 1px;
+  border-right: solid $color_alto_approx 1px;
+  a {
+    text-decoration: underline;
+    &:hover {
+      text-decoration: none;
+      opacity: 0.7;
+      filter: alpha(opacity=70);
+    }
+    span.linkBtn {
+      color: $white;
+      text-align: center;
+      width: auto;
+      padding: 10px;
+      margin: 10px;
+      text-decoration: none;
+    }
+  }
+  h2 {
+    display: block;
+    height: 40px;
+    background: $color_sisal_approx;
+    color: $color_mine_shaft_approx;
+    font-size: 1.3rem;
+    margin: 15px 0;
+    padding: 6px 10px 0;
+  }
 }
-#MainC a {
-  text-decoration: underline;
-}
-
-/* ページタイトル */
 h1 {
-  background: #686859;
+  background: $color_siam_approx;
   display: block;
   width: 100%;
   height: 60px;
-  color: #fff;
+  color: $white;
   font-weight: 500;
   margin: 0;
-  padding: 10px 0 0 0;
-  box-shadow: 0 2px 2px rgba(0,0,0,0.4) inset;
+  padding: 10px 0 0;
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: 0 2px 2px $black_40 inset;
+  span#Pagetitle {
+    margin-left: 30px;
+    font-size: 1.5rem;
+  }
 }
-h1 span#Pagetitle {
-  margin-left: 30px;
-  font-size: 1.5rem;
-}
-
-/* コンテンツ見出しh2 */
-
-#MainC h2 {
-  display: block;
-  height: 40px;
-  background: #cecebf;
-  color: #333;
-  font-size: 1.3rem;
-  margin: 15px 0;
-  padding: 6px 10px 0;
-}
-
-/* 上部コンテンツ */
 #UpperContents {
   width: auto;
   margin: 30px 30px 50px;
 }
-
-/* 下部コンテンツ */
 #LowerContents {
   width: auto;
   margin: 30px 30px 0;
 }
-/* シングルコンテンツ */
-#SingleContents {
-  width: auto;
-  margin: 30px 30px 0;
-  padding-bottom: 30px;
-}
-
-
-/* お知らせリスト */
-dl#Info {
-  margin-left: 10px;
-}
-dl#Info dt {
-  font-weight: bold;
-}
-dl#Info dd {
-  padding:0;
-  margin:0 0 10px 0;
-
-}
-p.goto {
-  text-align: right;
-}
-
-/* 公演一覧ページネーション */
 .pagination {
   overflow: hidden;
-}
-
-.pagination ul {
-  list-style: none;
-  position: relative;
-  left: 50%;
-  float: left;
-}
-
-.pagination ul li {
-  margin: 0 1px;
-  position: relative;
-  left: -50%;
-  float: left;
-}
-
-.pagination ul li span,
-.pagination ul li a {
-  display: block;
-  font-size: 12px;
-  padding: 0.6em 1em;
-  border-radius: 3px;
-}
-
-.pagination ul li a {
-  background: #EEE;
-  color: #000;
-  text-decoration: none;
-}
-
-.pagination ul li a:hover {
-}
-.pagination ul li.current {
-  font-weight: bold;
-  color: #000;
-}
-
-/* 公演一覧テーブル */
-@media screen and (max-width: 1000px) {
-  #eventListWrap{
-    overflow: auto;
+  ul {
+    list-style: none;
+    position: relative;
+    left: 50%;
+    float: left;
+    li {
+      margin: 0 1px;
+      position: relative;
+      left: -50%;
+      float: left;
+      span {
+        @extend %extend_1;
+      }
+      a {
+        @extend %extend_1;
+        background: $color_gallery_approx;
+        color: $black;
+        text-decoration: none;
+        &:hover {
+        }
+      }
+      &.current {
+        font-weight: bold;
+        color: $black;
+      }
+    }
   }
 }
-table.eventList {
-  margin-left: 10px;
-  border: none;
-}
-table.eventList th, table.eventList td {
-  border: none;
-}
-table.eventList th {
-  background-color: #cecebf;
-  padding: 5px;
-}
-table.eventList td.eventTitle {
-  width: auto;
-}
-table.eventList td.genre {
-  width: 100px;
-  padding: 5px;
-}
-table.eventList td.term {
-  width: 20%;
-  padding: 5px;
-  font-weight: bold;
-}
-table.eventList td.controll {
-  width: 92px;
-  padding: 5px;
-}
-table.eventList td {
-  border-bottom: 1px dotted #555;
+@media screen and(max-width: 1000px) {
+  #eventListWrap {
+    overflow: auto;
+  }
 }
 .eventThum {
   float: left;
   margin: 0 10px 10px 0;
 }
-/* CSS Document */
-body {
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
-  width: 100%;
-  margin: auto;
-}
-
-.clearfix:after {
-  content: ".";
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden;
-}
-
-/* テキスト配色 */
 a {
   text-decoration: none;
-}
-a:hover img,#MainC a:hover {
-  text-decoration: none;
-  opacity: 0.7;
-  filter: alpha(opacity=70);
-  -ms-filter: "alpha(opacity=70)";
+  &:hover img {
+    text-decoration: none;
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+  }
 }
 .red {
-  color: #ff0000;
+  color: $red;
 }
-/* ページトップボタン */
-.page_top{
+.page_top {
   width: 60px;
   height: 60px;
   position: fixed;
-  right: 50px ;
+  right: 50px;
   bottom: 30px;
   opacity: 0.6;
+  a {
+    width: 60px;
+    height: 60px;
+    font-size: 60px;
+    text-decoration: none;
+    &:before {
+      font-size: 60px;
+    }
+  }
 }
-.page_top a {
-  width: 60px;
-  height: 60px;
-  font-size: 60px;
-  text-decoration: none;
-}
-.page_top a:before{
-  font-size: 60px;
-}
-/* ボタン一般 */
-#MainC a span.linkBtn {
-  color: #fff;
-  text-align: center;
-  width: auto;
-  padding: 10px;
-  margin: 10px;
-  text-decoration: none;
-}
-
-/* 配置 */
 .centerfix {
   text-align: center;
 }
 .rightfix {
   text-align: right;
 }
-/* マージン */
 .marginBottomfix {
   margin-bottom: 25px;
 }
-
-/*Responsive*/
-@media only screen and (max-width : 768px) {
+@media only screen and(max-width : 768px) {
   .info__mobile {
-    padding: 5px 0 5px 0;
+    padding: 5px 0;
+    &:first-child {
+      padding-top: 0;
+      border-bottom: 1px solid $color_mercury_approx;
+    }
+    &:last-child {
+      padding-bottom: 0;
+    }
   }
-  .info__mobile:first-child {
-    padding-top: 0;
-    border-bottom: 1px solid #dee2e6;
+}
+ul#TmenuGR {
+  margin-top: 16px;
+}
+h2 > a {
+  color: $color_mine_shaft_approx !important;
+  text-decoration: none !important;
+}
+dl#Info {
+  margin-left: 10px;
+  dt {
+    font-weight: bold;
   }
-  .info__mobile:last-child {
-    padding-bottom: 0;
+  dd {
+    padding: 0;
+    margin: 0 0 10px 0;
   }
+}
+p.goto {
+  text-align: right;
+}
+.square {
+  float: left;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
+table.eventList {
+  margin-left: 10px;
+  border: none;
+  th {
+    border: none;
+    background-color: $color_sisal_approx;
+    padding: 5px;
+  }
+  td {
+    border: none;
+    border-bottom: 1px dotted $color_fuscous_gray_approx;
+    &.eventTitle {
+      width: auto;
+    }
+    &.genre {
+      width: 100px;
+      padding: 5px;
+    }
+    &.term {
+      width: 20%;
+      padding: 5px;
+      font-weight: bold;
+    }
+    &.controll {
+      width: 92px;
+      padding: 5px;
+    }
+  }
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
 }

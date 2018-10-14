@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import jwt from 'jsonwebtoken';
 import policy from './IAMPolicy';
-import { LoginBussiness } from "../business/login/LoginBussiness";
+import { LoginBusiness } from "../business/login/LoginBusiness";
 import ServiceModel from "../models/ServiceModel";
 import ServiceModelConfig from "../config/Constant";
 

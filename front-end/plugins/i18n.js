@@ -28,6 +28,7 @@ export default ({ app, store }) => {
 
     //always displays Japan if other translation is not available
     fallbackLocale: 'ja',
+    silentTranslationWarn: true,
     messages
   })
 }

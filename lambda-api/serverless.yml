@@ -61,7 +61,7 @@ functions:
           path: member/{Id}
           method: put
 
-  # This is Login API to check email and password valid
+  # This is Login API to check email and password valid - DucVN
   login:
     handler: controller/login/LoginController.login
     name: login
@@ -69,15 +69,65 @@ functions:
       - http:
           path: login
           method: post
-          cros: true
-  # Check token everytime client send request to API
+          cors: true
+  # Check token everytime client send request to API- DucVN
   getInfUserByToken:
     handler: controller/login/LoginController.getInfUserByToken
     name: getUserInfo
     events:
       - http:
-          path: User/info
+          path: user/info
           method: get
+          cors: true
+
+  # Verify user forgot password- DucVN
+  checkForgorPassword:
+    handler: controller/login/forgot-password/ForgotPasswordController.checkForgorPassword
+    name: checkForgorPassword
+    events:
+      - http:
+          path: forgot-password
+          method: post
+          cors: true
+
+  # Send email- DucVN
+  sendEmail:
+    handler: controller/login/email/EmailController.sendEmail
+    name: sendEmail
+    events:
+      - http:
+          path: sendmail
+          method: post
+          cors: true
+
+  # Get Client Info- DucVN
+  getClient:
+    handler: controller/login/client/ClientController.getClientInfo
+    name: getClient
+    events:
+      - http:
+          path: client
+          method: post
+          cors: true
+
+  # Get Setting Password - DucVN
+  settingPassword:
+    handler: controller/login/setting-password/SettingPasswordController.settingPassword
+    name: settingPassword
+    events:
+      - http:
+          path: setting-password
+          method: post
+          cors: true
+
+  # Check key to display setting password - DucVN
+  checkKey:
+    handler: controller/login/setting-password/SettingPasswordController.checkKey
+    name: checkKey
+    events:
+      - http:
+          path: check-key
+          method: post
           cors: true
 
   searchPostCode:
@@ -86,6 +136,24 @@ functions:
     events:
       - http:
           path: search-post-code
+          method: get
+          cros: true
+
+  existsEmail:
+    handler: controller/RegisterController.existsEmail
+    name: existsEmail
+    events:
+      - http:
+          path: exists-mail-register
+          method: get
+          cros: true
+
+  exsistsMemberCode:
+    handler: controller/RegisterController.exsistsMemberCode
+    name: exsistsMemberCode
+    events:
+      - http:
+          path: exists-member-code
           method: get
           cros: true
 
@@ -120,5 +188,39 @@ functions:
     events:
       - http:
           path: shows
-          method: get
+          method: post
           cors: true
+  getListGenre:
+    handler: controller/GenreController.getListGenre
+    name: getListGenre
+    events:
+    - http:
+        path: genres
+        method: post
+        cors: true
+  getListNotify:
+    handler: controller/NotifyController.getListNotify
+    name: getListNotify
+    events:
+    - http:
+        path: notifies
+        method: post
+        cors: true
+
+  demoSendMail:
+    handler: controller/RegisterController.demoSendMail
+    name: demoSendMail
+    events:
+    - http:
+        path: demo
+        method: post
+        cors: true
+
+  createUser:
+    handler: controller/RegisterController.createUser
+    name: createUser
+    events:
+    - http:
+        path: register
+        method: post
+        cors: true

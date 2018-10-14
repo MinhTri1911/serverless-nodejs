@@ -1,5 +1,6 @@
 const slsw = require("serverless-webpack");
 const nodeExternals = require("webpack-node-externals");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: slsw.lib.entries,
@@ -26,7 +27,17 @@ module.exports = {
         loader: "babel-loader",
         include: __dirname,
         exclude: /node_modules/
-      }
+      },
+      {
+        test: /\.ejs$/,
+        include: __dirname + '/templates',
+      },
     ]
-  }
+  },
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: 'templates', to: 'templates', toType: 'dir' },
+      { from: 'sql', to: 'sql', toType: 'dir' }
+    ])
+  ]
 };

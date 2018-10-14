@@ -13,6 +13,7 @@ import message from '@/locale/ja/message.json';
 import register from '@/locale/ja/register.json';
 import booking from '@/locale/ja/booking.json';
 import validation from '@/locale/ja/validation.json';
+import show from '@/locale/ja/show.json';
 
 export default {
   common,
@@ -21,5 +22,6 @@ export default {
   message,
   register,
   booking,
-  validation
+  validation,
+  show
 }

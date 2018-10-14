@@ -5,13 +5,13 @@
   max-width: 300px;
   max-height: 300px;
   overflow: hidden;
+  height: 100px;
+  width: 100px;
+  border: 1px solid $color-silver-dark;
+  background-color: $color-white-opaque-1;
   &.no-image{
     display: block;
     position: relative;
-    border: 1px solid $color-white-opaque-1;
-    background-color: #fff;
-    height: 100px;
-    width: 100px;
       &::before{
         content: "No Image";
         position: absolute;
@@ -28,7 +28,12 @@
         opacity: 0.6;
         filter: alpha(opacity=0.6);
         font-weight: bold;
+        z-index: 1;
       }
+    img{
+      position: relative;
+      z-index: 1;
+    }
   }
   img{
     width: 100%;

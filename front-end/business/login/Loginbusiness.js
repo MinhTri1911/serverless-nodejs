@@ -6,8 +6,8 @@
  * @date 2018-10-02
  */
 
-import { mapActions } from 'vuex'
-import constant from '../../constant';
+import { mapActions } from 'vuex';
+import constant from '@/constant';
 
 export default {
   name: 'Login',
@@ -17,29 +17,31 @@ export default {
       return {
         error: false,
 
-        // Variable to replace button "Listcongdien" with button "Back"
-        ManhinhChonghe: localStorage.getItem('redirect_url')?true:false,
-        mail : '',
-        password : '',
+        // Variable to replace button "List Perform" with button "Back"
+        selectChair: this.$store.state.auth.redirectURL?true:false,
+        mail: '',
+        password: '',
+        client_id: '',
       }
-	  },
+    },
     methods: {
       ...mapActions('auth', [
         'login',
         'logout'
       ]),
+
       /**
-       *
+       *Function go to Back page
        */
       back() {
         this.$router.go(-1);
       },
 
       /**
-       *
+       *Function go to Lits Perform  for login
        */
       list() {
-        this.$router.push('/listperform');
+        this.$router.push({name: constant.router.LISTPERFORM});
       },
 
       /**
@@ -51,22 +53,27 @@ export default {
         // Get user input
         let user = {
           mail: this.mail,
-          password: this.password
+          password: this.password,
+          client_id: this.$route.params.client_id
         }
 
         // Set the target url when we Login successful
-        var url = "/listperform";
-
+        let url = constant.router.BASE_URL_NAME;
         // Check stay in screen SELECT_TICKET we must change target URL
-        if ((localStorage.getItem('redirect_url')) == constant.router.SELECT_TICKET) {
-          url = localStorage.getItem('redirect_url');
+        if (this.$store.state.auth.redirectURL == constant.router.SELECT_TICKET_NAME
+          || this.$store.state.auth.redirectURL == constant.router.SELECT_SEAT_NAME) {
+          url = this.$store.state.auth.redirectURL;
         }
 
         // Call function login to Login
         this.login(user)
           .then((res) => {
+            // Redirect error page when Black_cd =1
+            if (this.$store.state.auth.redirectURL == constant.router.ERROR) {
+              url = constant.router.ERROR_BLACK_CD;
+            }
             // Redirect to the target URL
-            this.$router.push(url);
+            this.$router.push({name: url});
           })
           .catch(err => {
             this.error = true;

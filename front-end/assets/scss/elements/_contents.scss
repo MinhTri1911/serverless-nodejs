@@ -100,84 +100,19 @@ p.goto {
   text-align: right;
 }
 
-/* 公演一覧ページネーション */
-//.pagination {
-//    overflow: hidden;
-//}
-//
-//.pagination ul {
-//    list-style: none;
-//    position: relative;
-//    left: 50%;
-//    float: left;
-//}
-//
-//.pagination ul li {
-//    margin: 0 1px;
-//    position: relative;
-//    left: -50%;
-//    float: left;
-//}
-//
-//.pagination ul li span,
-//.pagination ul li a {
-//    display: block;
-//    font-size: 12px;
-//    padding: 0.6em 1em;
-//    border-radius: 3px;
-//}
-//
-//.pagination ul li a {
-//    background: #EEE;
-//    color: #000;
-//    text-decoration: none;
-//}
-//
-//.pagination ul li a:hover {
-//}
-//.pagination ul li.current {
-//	font-weight: bold;
-//	color: #000;
-//}
-
-/* 公演一覧テーブル */
-//@media screen and (max-width: 1000px) {
-//  #eventListWrap {
-//    overflow: auto;
-//  }
-//}
-
-//table.eventList {
-//	margin-left: 10px;
-//	border: none;
-//}
-//table.eventList th, table.eventList td {
-//	border: none;
-//}
-//table.eventList th {
-//	background-color: #cecebf;
-//	padding: 5px;
-//}
-//table.eventList td.eventTitle {
-//	width: auto;
-//}
-//table.eventList td.genre {
-//	width: 100px;
-//	padding: 5px;
-//}
-//table.eventList td.term {
-//	width: 20%;
-//	padding: 5px;
-//	font-weight: bold;
-//}
-//table.eventList td.controll {
-//	width: 92px;
-//	padding: 5px;
-//}
-//table.eventList td {
-//	border-bottom: 1px dotted #555;
-//}
 .eventThum {
   float: left;
   margin: 0 10px 10px 0;
+}
+
+@media screen and (max-width: 768px){
+  #UpperContents, #LowerContents{
+    margin: 15px;
+  }
+}
+
+@media screen and (max-width: 480px){
+  #UpperContents, #LowerContents{
+    margin: 5px;
+  }
 }

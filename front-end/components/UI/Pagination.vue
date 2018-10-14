@@ -83,7 +83,7 @@ export default {
     },
     pageChanged(pageNum) {
       // Action trickger when change page , emit event page-changed
-      history.pushState(null, null, '?page=' + pageNum);
+      // history.pushState(null, null, '?page=' + pageNum);
       this.currentPageTemp = pageNum
       // emit event for parent component
       this.$emit('page-changed', pageNum);
