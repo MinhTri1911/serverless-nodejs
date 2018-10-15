@@ -5,7 +5,6 @@
  * @author Rikkei.DucVN
  * @date 2018-10-05
  */
-import { ForgotPasswordBusiness } from "../../../business/login/forgot-password/ForgotPasswordBusiness";
 import ServiceModel from "../../../models/ServiceModel";
 import Constant from "../../../config/Constant";
 import _ from 'lodash';
@@ -23,7 +22,7 @@ const URL_RESET_PASSWORD = '/login/setting-password/';
  */
 const sendEmail = async (event, context, callback) => {
   let serviceModel = new ServiceModel(Constant.DatabaseConfig);
-  let account = new ForgotPasswordBusiness(serviceModel.getDb());
+
   // Get request parameter
   let req = JSON.parse(event.body);
 
@@ -82,7 +81,7 @@ const sendEmail = async (event, context, callback) => {
 
     const response = {
       statusCode: 200,
-      body: JSON.stringify('Hello from Lambda!'),
+      body: JSON.stringify('Send email successful'),
       headers: {
         "X-Requested-With":	'*'	,
         "Access-Control-Allow-Headers":	'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with'	,

@@ -1,5 +1,5 @@
 <template>
-    <section id="Ticket-Type" >
+    <section id="Ticket-Type">
         <div class="d-flex">
             <h2 class="col mb-0">
                 <a href="#TicketTypeDetail" data-toggle="collapse">
@@ -15,26 +15,32 @@
                     <th scope="col">{{ $t('booking.lb_seat_type') }}</th>
                     <th scope="col">{{ $t('booking.lb_seat_info') }}</th>
                     <th scope="col">{{ $t('booking.lb_seat_price') }}</th>
-                    <th scope="col" ></th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody v-for="(seat, seatIndex) in seats">
+
                 <tr v-for="(ticket, ticketIndex) in seat.tickets">
                     <th v-if="ticketIndex ==0 " scope="row" :rowspan="seat.tickets.length">{{ seat.maisu_status}}</th>
                     <td v-if="ticketIndex ==0" :rowspan="seat.tickets.length">
-                        <div class="square" v-bind:style="{background: seat.seat_type_color}"></div>{{ seat.seat_type_nm}}
+                        <div class="square" v-bind:style="{background: seat.seat_type_color}"></div>
+                        {{ seat.seat_type_nm}}
                     </td>
                     <td>{{ ticket.ticket_type_nm}}</td>
                     <td>{{ ticket.ticket_price}}</td>
                     <td>
                         <select class="form-control pull-right" style="width:80px;"
                                 @change="onChangeTicket($event.target.value,seat,ticket)"
-                                v-if="ticket.net_zan_maisu >= ticket.ticket_unit"
+                                v-if="isLogin
+                                    && ticket.net_zan_maisu >= ticket.ticket_unit
+                                    && ticket.number_specified_flg == 1"
                                 :key="number_ticket[seat.seat_type_nm+'_'+ticket.ticket_type_nm]">
                             <option v-bind:value="0">{{$t('booking.lb_please_select')}}</option>
                             <option v-for="ticketNumber  in (ticket.net_zan_maisu *1) "
                                     v-bind:value="ticketNumber"
-                                    v-if="ticketNumber % ticket.ticket_unit ===0"
+                                    v-if="ticketNumber % ticket.ticket_unit == 0
+                                            && ticketNumber <= ticket.limit_count
+                                            && ticketNumber <= ticket.net_zan_maisu"
                                     :selected="loadMyTicket(seat.seat_type_no ,ticket.ticket_type_no ,ticketNumber )">
                                 {{ticketNumber}}
                             </option>
@@ -53,6 +59,8 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import Config from "@/constant/config"
+
 export default {
   name: "ticket-content-seat",
   props: ['seats'],
@@ -62,12 +70,13 @@ export default {
       ticket_price: 0,
       ticket_type_no: 0,
       seat_type_no: 0,
-      seat_kind: 0
+      seat_type_kb: 0
     }
   },
   computed: {
     ...mapGetters({
-      myTickets: 'booking/myTickets'
+      myTickets: 'booking/myTickets',
+      isLogin: 'auth/isLogin'
     }),
 
   },
@@ -86,7 +95,8 @@ export default {
         seat_type_nm: seat.seat_type_nm,
         ticket_price: ticket.ticket_price,
         number_ticket: numTicket,
-        seat_kind: 1, // TODO : kind of seat
+        seat_type_kb: Config.SEAT_FREE,
+        client_id: this.$route.query.client_id,
         show_group_id: this.$route.query.show_group_id,
         show_no: this.$route.query.show_no
 

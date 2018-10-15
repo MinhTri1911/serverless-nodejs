@@ -19,7 +19,7 @@
         <label for="cb-protect-per-inf">{{ $t('terms.cb_protect_per_inf') }}</label><br>
       </div>
       <div class="accept-action">
-        <button class="rs-btn btn-large btn-green-dark block-left">{{ $t('terms.btn_no_accept') }}</button>
+        <nuxt-link :to="pathToPageHome" class="btn rs-btn btn-large btn-green-dark block-left">{{ $t('terms.btn_no_accept') }}</nuxt-link>
         <button @click.prevent="goToPageRegister()" class="rs-btn btn-large btn-green-dark block-right">{{ $t('common.btn_next') }}</button>
       </div>
     </main>

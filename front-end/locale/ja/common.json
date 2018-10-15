@@ -3,6 +3,7 @@
   "btn_back": "戻る",
   "btn_close": "閉じる",
   "btn_search": "検索",
+  "btn_login" : "ログイン",
 	"links": {
 		"help": "ご利用ガイド",
 		"search": "公演検索",

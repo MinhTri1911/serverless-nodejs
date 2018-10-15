@@ -20,8 +20,13 @@ export const updateStepOne = ({ commit }, data) => {
   commit(types.UPDATE_FLAG_STEP_ONE, data);
 }
 
+export const updateStepTwo = ({ commit }, data) => {
+  commit(types.UPDATE_FLAG_STEP_TWO, data);
+}
+
 export default {
   setModel,
   removeModel,
-  updateStepOne
+  updateStepOne,
+  updateStepTwo
 }

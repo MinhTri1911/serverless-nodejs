@@ -24,6 +24,8 @@ const CONST = {
   ERROR: 'error',
   ERROR_URL_EXPIRED: 'client_id-error-url-expired',
   ERROR_BLACK_CD: 'client_id-error-black-cd',
+  SHOW_SCHEDULE_LIST: 'client_id-show-show_group_id-schedule',
+  REGISTER_COMPLETE_TEMPORARY: 'client_id-register-complete-temporary'
 };
 
 export default CONST;

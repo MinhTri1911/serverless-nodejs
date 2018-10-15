@@ -29,10 +29,10 @@
   "required": "{field}は必須項目です",
   "size": "",
   "url": "{field}が正しくありません",
-  "required_with": "{field_1} and {field_2} are required at least one of the two",
-  "format": "{field} not valid format",
-  "fullsize": "{field} please enter fullsize character",
-  "passwordRegex": "{field} not valid format, please enter 8-16 character and there are at least 2 types in up case, lose case, number or symbol",
-  "textNumberHaftSize": "{field} please enter number or text haftsize",
-  "unique": "{field} is not allow duplicate"
+  "required_with": "{field_1}または{field_2}を入力してください。",
+  "format": "{field}は正しい形式で入力してください。",
+  "fullsize": "{field}は全角文字で入力してください。",
+  "passwordRegex": "{field}は正しい形式で、8文字以上、16文字以下とし、小文字、大文字、数字、記号のうち少なくとも２種類以上を含めてください。",
+  "textNumberHaftSize": "{field}は半角英数字で入力してください。",
+  "unique": "{field}は重複しないでください。"
 }

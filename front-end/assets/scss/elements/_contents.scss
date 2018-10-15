@@ -1,7 +1,7 @@
 /* Main Contents CSS */
 #MainC {
   display: block;
-  min-height: 500px;
+  min-height: 700px;
   max-width: 1200px;
   margin: 0 auto;
   background-color: #fff;
@@ -108,6 +108,12 @@ p.goto {
 @media screen and (max-width: 768px){
   #UpperContents, #LowerContents{
     margin: 15px;
+  }
+}
+
+@media screen and (max-height: 700px){
+  #MainC {
+    min-height: 400px;
   }
 }
 

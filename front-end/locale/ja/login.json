@@ -5,6 +5,7 @@
   "lb_login_guide_2": "「ログイン」ボタンをクリックして下さい",
   "lb_login_email": "メールアドレス",
   "lb_login_ID": "またはログインID",
+  "lb_ID": "メールアドレス, またはログインID",
   "lb_login_ID_admin": "ログインID",
   "lb_login_time": "日時",
   "lb_login_hour": "時",
@@ -27,7 +28,6 @@
   "lb_forgot_password_guide_2": "ご入力後、パスワード再設定ボタンを押してください。",
   "lb_phone": "電話番号または",
   "lb_home_phone": "携帯電話番号",
-  "lb_phone": "携帯電話番号",
   "lb_setting_password": "パスワード再設定",
   "lb_error_forgot_password": "入力内容に誤りがあります。内容を確認し、再度入力をしてください。",
 
@@ -47,6 +47,9 @@
   "lb_new_password": "新しいパスワード",
   "lb_confirm_new_password": "新しいパスワード確認",
   "lb_setting_password_error": "エラーメッセージ",
+  "lb_password_error_min": "パスワードは8文字以上でなければなりません",
+  "lb_password_error_max": "パスワードは16文字以内にしてください",
+  "lb_password_error_regex": "パスワードは小文字、大文字、数字、記号のうち少なくとも２種類以上を含めてください。",
   "btn_setting_password": "登録",
 
   "lb_password": "パスワード",

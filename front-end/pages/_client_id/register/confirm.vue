@@ -186,7 +186,7 @@
               data-toggle="modal" data-target="#confirm-stop-register" @click.prevent="backToPrevPage()">
               {{ $t('register.btn_edit') }}
             </button>
-            <button class="rs-btn btn-large btn-green-dark block-right">
+            <button @click.prevent="postRegister()" class="rs-btn btn-large btn-green-dark block-right">
               {{ $t('register.btn_register') }}
             </button>
           </div>

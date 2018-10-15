@@ -11,6 +11,7 @@ const CONST = {
   SEARCH_POST_CODE: 'search-post-code',
   // Login API link - DucVN
   LOGIN_API: 'login',
+  LOGOUT_API: 'logout',
   BOOKING_INFO: 'booking-show-info',
   TICKET_INFO: 'booking-ticket-type',
   USER_INFO: 'user/info',
@@ -23,7 +24,9 @@ const CONST = {
   CHECK_EXISTS_MEMBER_CODE: 'exists-member-code',
   GENRE_LIST: 'genres',
   SHOW_LIST: 'shows',
-  NOTIFY_LIST: 'notifies'
+  NOTIFY_LIST: 'notifies',
+  SHOW_LIST_SCHEDULE: 'shows/schedule',
+  REGISTER: 'register',
 };
 
 export default CONST;

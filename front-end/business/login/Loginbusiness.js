@@ -16,6 +16,7 @@ export default {
   	data() {
       return {
         error: false,
+        clickLogin: false,
 
         // Variable to replace button "List Perform" with button "Back"
         selectChair: this.$store.state.auth.redirectURL?true:false,
@@ -24,6 +25,9 @@ export default {
         client_id: '',
       }
     },
+    created() {
+    this.renderMsgErr();
+  },
     methods: {
       ...mapActions('auth', [
         'login',
@@ -50,34 +54,77 @@ export default {
        * @returns {void}
        */
       onSubmit() {
-        // Get user input
-        let user = {
-          mail: this.mail,
-          password: this.password,
-          client_id: this.$route.params.client_id
-        }
+        this.$nuxt.$loading.start()
+        this.$validator.validateAll().then((valid) => {
+        if (valid) {
+          // Get user input
+          let user = {
+            mail: this.mail,
+            password: this.password,
+            client_id: this.$route.params.client_id
+          };
+          this.error = false;
+          this.clickLogin = true;
 
-        // Set the target url when we Login successful
-        let url = constant.router.BASE_URL_NAME;
-        // Check stay in screen SELECT_TICKET we must change target URL
-        if (this.$store.state.auth.redirectURL == constant.router.SELECT_TICKET_NAME
-          || this.$store.state.auth.redirectURL == constant.router.SELECT_SEAT_NAME) {
-          url = this.$store.state.auth.redirectURL;
-        }
+          // Set the target url when we Login successful
+          let url = constant.router.BASE_URL_NAME;
+          // Check stay in screen SELECT_TICKET we must change target URL
+          if (this.$store.state.auth.redirectURL == constant.router.SELECT_TICKET_NAME
+            || this.$store.state.auth.redirectURL == constant.router.SELECT_SEAT_NAME) {
+            url = this.$store.state.auth.redirectURL;
+          }
 
-        // Call function login to Login
-        this.login(user)
-          .then((res) => {
-            // Redirect error page when Black_cd =1
-            if (this.$store.state.auth.redirectURL == constant.router.ERROR) {
-              url = constant.router.ERROR_BLACK_CD;
+          // Call function login to Login
+          this.login(user)
+            .then((res) => {
+              this.$nuxt.$loading.finish();
+              this.clickLogin = false;
+              // Redirect error page when Black_cd =1
+              if (this.$store.state.auth.redirectURL == constant.router.ERROR) {
+                url = constant.router.ERROR_BLACK_CD;
+              }
+              // Redirect to the target URL
+              this.$router.push({name: url});
+            })
+            .catch(err => {
+              this.$nuxt.$loading.finish();
+              this.error = true;
+              this.clickLogin = false;
+            });
             }
-            // Redirect to the target URL
-            this.$router.push({name: url});
-          })
-          .catch(err => {
-            this.error = true;
-          });
+      }).catch(() => {
+        this.$nuxt.$loading.finish();
+        return false;
+      });
+      this.$nuxt.$loading.finish()
+    },
+
+      /**
+     * Function overider message validator
+     *
+     * @returns {void}
+     */
+    renderMsgErr: function() {
+      const dict = {
+        custom: {
+          loginMail: {
+            required: this.$t('validation.required', { field: this.$t('login.lb_ID') }),
+            regex: this.$t('validation.regex', { field: this.$t('login.lb_ID') }),
+            email: this.$t('validation.email', { field: this.$t('login.lb_ID') }),
+            numeric: this.$t('validation.numeric', { field: this.$t('login.lb_ID') })
+          },
+          loginPwd: {
+            required: this.$t('validation.required', { field: this.$t('login.lb_login_password') }),
+          }
+        }
       }
+      this.$validator.localize('ja', dict);
+    },
+    validate() {
+      this.error = false;
+      this.$validator.validateAll().catch(() => {
+        return false;
+      });
     }
+  }
 }

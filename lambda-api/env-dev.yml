@@ -1,15 +1,17 @@
+profile : thiennb
 environment:
-  JWT_SECRET: secretkey
+  JWT_SECRET: Q2DwKE4Sv9
   DB_DATABASE: postgres
-  DB_USER_NAME: postgres
-  DB_PASSWORD: 123
+  DB_USER_NAME: ticket2
+  DB_PASSWORD: Yj)3Xl@ePC4&
   DB_PORT: 5432
-  DB_HOST: localhost
+  DB_HOST: ticket-dev1.c2l38m0lvhk7.ap-northeast-1.rds.amazonaws.com
   SECRET_KEY: U0cA2N$g(1
-  DB_SCHEMA: ticket1
-  URL_CLIENT: http://localhost:3000/
+  DB_SCHEMA: ticket2
+  URL_CLIENT: https://dev.ticket-dev1.pastorale.jp/
   URL_API: http://localhost:4000/
   MAIL_HOST: smtp.sendgrid.net
   MAIL_PORT: 465
   MAIL_USER: apikey
-  MAIL_PASS: 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
+  MAIL_PASS: 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
+

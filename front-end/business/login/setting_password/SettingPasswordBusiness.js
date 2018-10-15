@@ -9,6 +9,7 @@
 import constant from '@/constant';
 import Axios from 'axios';
 import { get, post } from '@/plugins/api';
+import { mapState, mapMutations, mapActions} from "vuex";
 
 export default {
   name: 'SettingPassword',
@@ -18,6 +19,7 @@ export default {
     return {
       error: false,
       valid: false,
+      clickLogin: false,
       key: this.$route.params.key,
       password: '',
       password_confirm: '',
@@ -28,6 +30,7 @@ export default {
     this.renderMsgErr();
   },
   methods: {
+    // ...mapActions('setError'),
     /**
      * Function submit to back previous page
      *
@@ -36,18 +39,23 @@ export default {
     back() {
       this.$router.go(-1);
     },
+
     /**
      * Function submit form for setting password
      *
      * @returns {void}
      */
     onSubmit() {
+      this.$nuxt.$loading.start()
       this.$validator.validateAll().then((valid) => {
         if (valid) {
+          this.clickLogin = true,
+          this.error = false;
           Axios.defaults.headers.common = {
             'Content-Type': 'application/json',
             Authorization: "",
           };
+
           // Post data to API by Axios
           return post(constant.api.SETTING_PASSWORD_API, {
             key: this.key,
@@ -55,21 +63,26 @@ export default {
             clientId: this.clientId,
           })
           .then(result => {
-            if (result.data.data.result) {
+            this.$nuxt.$loading.finish();
+            if (result.data.data.result||result.status) {
               this.$router.push({name: constant.router.COMPLETE_SETTING_PASSWORD});
             } else {this.error = true;}
           })
           .catch(err => {
+            this.$nuxt.$loading.finish();
+            this.clickLogin = false,
             this.error = true;
           });
         }
       }).catch(() => {
+        this.$nuxt.$loading.finish();
         return false;
       });
     },
 
     // Check key when load page
     onLoad() {
+
       // Post key to API by Axios
       return post(constant.api.CHECK_KEY, {
         key: this.$route.params.key, clientId: this.clientId
@@ -91,13 +104,21 @@ export default {
       const dict = {
         custom: {
           password: {
-            passwordRegex: this.$t('validation.passwordRegex', { field: this.$t('login.lb_new_password') }),
+            min: this.$t('login.lb_password_error_min'),
+            max: this.$t('login.lb_password_error_max'),
+            passwordRegex: this.$t('login.lb_password_error_regex'),
             required: this.$t('validation.required', { field: this.$t('login.lb_new_password') }),
           }
         }
       }
       this.$validator.localize('ja', dict);
     },
+    validate() {
+      this.error = false;
+      this.$validator.validateAll().catch(() => {
+        return false;
+      });
+    }
   },
   beforeMount() {
     this.onLoad();

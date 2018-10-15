@@ -9,6 +9,7 @@ $color_pizazz_approx: darkorange;
     min-height: $height-footer;
     .containerFooter {
       position: fixed;
+      z-index: 1000;
       width: 100%;
       left: 0;
       bottom: 0;
@@ -25,11 +26,14 @@ $color_pizazz_approx: darkorange;
       }
     }
     p {
+      margin: 0;
+      margin-top: 25px;
       color: $color_celeste_approx;
     }
   }
   #FooterMenu {
-    padding-bottom: 30px;
+    padding: 0;
+    margin: 0 auto;
     a {
       color: $color_celeste_approx;
       &:hover {
@@ -40,9 +44,27 @@ $color_pizazz_approx: darkorange;
   div#Footer {
     max-width: 1200px;
     margin: 0 auto;
-    height: $height-footer;
-    padding-top: 25px;
+    min-height: $height-footer;
+    padding: 25px 10px;
     background: $color_storm_dust_approx;
     text-align: center;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  #Footer {
+    #FooterMenu {
+      margin: 0;
+    }
+    p {
+      padding: 10px 0;
+      margin-top: 10px;
+      line-height: 1;
+    }
+  }
+  #mainFooter {
+    &.rs-fixed {
+      min-height: $height-footer + 35px;
+    }
   }
 }

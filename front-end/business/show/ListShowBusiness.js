@@ -73,9 +73,10 @@ export default {
         if (showItemEl.length >= Config.MAX_RECORD_FIXED_FOOTER) {
           const posElementFixed = $('#eventListWrap .show-item:nth-child(' + (Config.MAX_RECORD_FIXED_FOOTER - 1) + ')')
           if (posElementFixed) {
+            let ps = $("#eventListWrap .show-item:nth-child("+(Config.MAX_RECORD_FIXED_FOOTER - 1)+")")[0].offsetTop + $("#eventListWrap .show-item:nth-child("+(Config.MAX_RECORD_FIXED_FOOTER - 1)+")")[0].clientHeight;
             // When load max item show >= 15 item, then fixed footer
             if ($('#eventListWrap .show-item').length >= Config.MAX_RECORD_FIXED_FOOTER
-              && (lastShowItem.offsetTop + lastShowItem.clientHeight <= visible + scrollY)) {
+              && ( ps <= visible + scrollY)) {
               $('#mainFooter').addClass('rs-fixed')
             } else {
               $('#mainFooter').removeClass('rs-fixed')

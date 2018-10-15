@@ -61,6 +61,10 @@ export default {
       flagShowMagazineMail: 0,
       flagShowDirectMail: 0,
       listGenre: [],
+      inquiryNm: '',
+      inquiryTelNo: '',
+      inquiryUrl: '',
+      inquiryNote: '',
     },
     flagValidate: false,
     flagRequiredWith: true,
@@ -152,6 +156,10 @@ export default {
             this.model.flagShowMemberCode = hanlderResult[0].member_id_input_disp_kb == 1;
             this.statusInputName = hanlderResult[0].member_nm_kb;
             this.statusInputPhoneNumber = hanlderResult[0].tel_no_kb;
+            this.model.inquiryNm = hanlderResult[0].inquiry_nm;
+            this.model.inquiryTelNo = hanlderResult[0].inquiry_tel_no;
+            this.model.inquiryUrl = hanlderResult[0].inquiry_url;
+            this.model.inquiryNote = hanlderResult[0].inquiry_notes;
           }
 
           this.renderMsgErr();

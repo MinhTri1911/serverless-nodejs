@@ -3,7 +3,7 @@
  * Setting new password to user
  *
  * @author Rikkei.DucVN
- * @date 2018-10-05
+ * @date 2018-10-15
  */
 
 import { SettingPasswordBusiness } from "../../../business/login/setting-password/SettingPasswordBusiness";
@@ -11,6 +11,7 @@ import ServiceModel from "../../../models/ServiceModel";
 import Constant from "../../../config/Constant";
 import _ from 'lodash';
 import HttpCode from "../../../config/HttpCode";
+import { Helper } from '../../../common/Helper';
 
 /**
  * Function handler setting password
@@ -32,7 +33,15 @@ const settingPassword = async (event, context, callback) => {
         if (!data) {
           return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Incorrect Information!!!");
         } else {
-          return serviceModel.createSuccessCallback(HttpCode.SUCCESS,{ "result":"true" });
+          let helper = new Helper();
+          return helper.sendEmail('ducnhatvo@gmail.com', data.received, 'complete setting password', '', 'successfull')
+            .then(res => {
+              return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { status: HttpCode.SUCCESS });
+            })
+            .catch(err => {
+              console.log(err);
+              reject(new Error(`Something Went Wrong ${err}`));
+            });
         }
       })
       .catch(err => {
@@ -40,8 +49,8 @@ const settingPassword = async (event, context, callback) => {
         return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
       });
   } catch (err) {
-    console.error(err);
-    return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+      console.error(err);
+      return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
   }
 }
 

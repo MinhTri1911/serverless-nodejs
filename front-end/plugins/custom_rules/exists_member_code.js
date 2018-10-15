@@ -16,11 +16,11 @@ export default {
     return '';
   },
   validate(value, args) {
-    let [clinetId, memberNm, memberKn, mobileNo, telNo] = args;
+    let [clientId, memberNm, memberKn, mobileNo, telNo] = args;
     console.log(args);
     // Call api check exists member code
     return get(constant.api.CHECK_EXISTS_MEMBER_CODE, {
-      clientId: clinetId,
+      clientId: clientId,
       code: value,
       memberNm: memberNm,
       memberKn: memberKn,

@@ -35,14 +35,18 @@ export default {
     sumNumberTicket() {
       let numTicket = 0;
       this.myTickets.forEach(function (el) {
-        numTicket += el.number_ticket * 1;
+        if (el.ticket_price > 0) {
+          numTicket += el.number_ticket * 1;
+        }
       });
       return numTicket;
     },
     sumMoneyTicket() {
       let totalMoney = 0;
       this.myTickets.forEach(function (el) {
-          totalMoney += el.number_ticket * el.ticket_price;
+          if (el.ticket_price > 0) {
+            totalMoney += el.number_ticket * el.ticket_price;
+          }
         }
       )
       return totalMoney;

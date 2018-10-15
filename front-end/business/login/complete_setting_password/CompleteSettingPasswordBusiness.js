@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       error: false,
+      clickLogin: false,
       inquiry_nm: '',
       inquiry_tel_no: '',
       inquiry_url: '',
@@ -40,6 +41,8 @@ export default {
      * @returns {void}
      */
     onLoad() {
+      this.$nuxt.$loading.start()
+      this.clickLogin = true;
       Axios.defaults.headers.common = {
         'Content-Type': 'application/json',
         Authorization: "",
@@ -50,12 +53,16 @@ export default {
         client_id: this.$route.params.client_id,
       })
       .then(result => {
+        this.$nuxt.$loading.finish()
+        this.clickLogin = false;
         this.inquiry_nm = result.data.data.inquiry_nm;
         this.inquiry_url = result.data.data.inquiry_url;
         this.inquiry_notes = result.data.data.inquiry_notes;
         this.inquiry_tel_no = result.data.data.inquiry_tel_no;
       })
       .catch(e => {
+        this.$nuxt.$loading.finish()
+        this.clickLogin = false;
         this.error = true;
       });
     }

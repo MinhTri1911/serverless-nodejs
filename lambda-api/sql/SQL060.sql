@@ -34,5 +34,5 @@ from
   m_client
 where
   client_id = $client_id
-  and enable_kb = '1'
-  and to_char(now(), 'yyyymmdd') between apply_start_date and apply_end_date
+  /*and enable_kb = '1'*/
+  /*and to_char(now(), 'yyyymmdd') between apply_start_date and apply_end_date*/

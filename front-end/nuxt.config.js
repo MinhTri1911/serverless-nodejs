@@ -10,6 +10,7 @@ module.exports = {
     title: pkg.name,
     meta: [
       {charset: 'utf-8'},
+      {"http-equiv": 'X-UA-Compatible', content: 'IE=edge'},
       {name: 'viewport', content: 'width=device-width, initial-scale=1'},
       {hid: 'description', name: 'description', content: pkg.description}
     ],
@@ -40,8 +41,8 @@ module.exports = {
     // { src: '~/plugins/bootstrap.js', ssr: false },
     {src: '~/plugins/i18n.js', ssr: false},
     {src: '~/plugins/localStorage.js', ssr: false},
-    {src: '~/plugins/api.js', ssr: false},
-    { src: '~/plugins/vee-validate.js', ssr: false }
+    // {src: '~/plugins/api.js', ssr: false},
+    {src: '~/plugins/vee-validate.js', ssr: false}
   ],
 
   /*
@@ -73,13 +74,16 @@ module.exports = {
         'window.jQuery': 'jquery'
       })
     ],
+
     vendor: [
       'jquery',
+      'babel-es6-polyfill',
       'bootstrap',
       '@/static/js/build-diagram-seat.js',
       '@fortawesome/fontawesome',
       '@fortawesome/fontawesome-free-solid',
       '@fortawesome/fontawesome-free-brands'
     ]
+
   }
 }

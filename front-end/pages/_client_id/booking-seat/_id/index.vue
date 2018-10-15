@@ -10,7 +10,7 @@
                     <div class="w-md-50 w-100">
                         <div id="InfoContents">
                             <!--Notice-->
-                            <Warning></Warning>
+                            <Warning :seats="dataSeatType.seats" :dataTicket="dataTicket"></Warning>
                             <!--Notice End-->
 
                             <!--Info Ticket-->
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="ml-md-3 d-flex w-md-50 w-100 flex-column">
-                        <TicketBookingSeat></TicketBookingSeat>
+                        <TicketBookingSeat :seats="dataSeatType.seats" ></TicketBookingSeat>
                     </div>
                 </div>
 
@@ -36,12 +36,9 @@
 
                 </div>
                 <!--Notice-->
-                <section id="Notice2">
-                    <h2 class="mb-0">
-                        <a href="">
-                            Chu y 2
-                        </a>
-                    </h2>
+                <section id="Notice2" v-if="isLogin && haveMemberDiscount">
+                    <p class="text-center">{{$t("booking.lb_warning_common_3")}}</p>
+
                 </section>
                 <!--Notice End-->
                 <div id="Pagination">

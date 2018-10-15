@@ -46,5 +46,11 @@
   "btn_no": "いいえ",
   "lb_confirm_input": "入力項目確認の説明文",
   "btn_edit": "修正",
-  "btn_register": "登録"
+  "btn_register": "登録",
+  "lb_guide_complete_temporary": "仮登録完了の説明文",
+  "lb_msg_send_mail": "仮登録が完了致しました。ご登録いただいたメールアドレスに仮登録完了メールを送信致しました。",
+  "lb_msg_open_mail": "仮登録完了メールを開いていただき、メールの本文のURLから本登録へお進みください。",
+  "lb_msg_not_recive_mail": "仮登録完了メールが届かない場合、下記問い合わせ先までご連絡下さい。",
+  "lb_msg_question": "問合せ先を表示",
+  "btn_go_to_list_show": "公演一覧へ"
 }

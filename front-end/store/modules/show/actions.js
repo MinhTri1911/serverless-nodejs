@@ -47,11 +47,7 @@ export default {
       return post(_api.SHOW_LIST, { params: params })
         .then(result => {
            if (result.data.data.record_num > 0) {
-             let duplidateShow = []
              result.data.data.show_list.forEach(function (el, i) {
-               if (el.show_group_disp_kb != 1) {
-                 tmpShow.push(el)
-               } else {
                  var tex = Object.assign({}, el);
                  el.list_sales = [tex]
 
@@ -68,7 +64,6 @@ export default {
                  } else {
                    tmpShow.push(el)
                  }
-               }
              })
              commit(types.SET_TOTAL_RECORD, result.data.data.record_num)
 
@@ -77,7 +72,6 @@ export default {
                commit(types.SET_TOTAL_RECORD, result.data.data.record_num)
              }
            }
-           // console.log(tmpShow)
           commit(types.LIST_SHOWS, tmpShow)
           payload.$nuxt.$loading.finish()
         })

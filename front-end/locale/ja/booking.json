@@ -35,6 +35,9 @@
     "line_1": "○ 空席あり　△ 残りわずか　× 予定枚数終了　",
     "line_2": "※本画面表示時点の状況です。 "
   },
+  "lb_warning_common_3": "割引が適用される場合、割引後の価格は次のページで表示されます。",
+  "lb_empty_designate_seat" : "座席が選択されていません。",
+  "lb_require_login_modal" : "ログインすると座席を選択可能になります。",
   "btn_cancel_all": "選択してください",
   "btn_cancel": "取消",
   "btn_next": "次へ",

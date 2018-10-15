@@ -194,14 +194,20 @@ const createUser = async (event, context, callback) => {
   let registerBusiness = new RegisterBusiness(serviceModel.getDb());
 
   try {
-    return registerBusiness.createUser('test1', '01')
+    let parameter = JSON.parse(event.body);
+
+    return registerBusiness.createUser(parameter)
       .then(data => {
-        return serviceModel.createSuccessCallback(HttpCode, { result: data });
+        return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { code: HttpCode.SUCCESS });
       })
       .catch(err => {
+        console.error(err);
+
         return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
       });
   } catch (err) {
+    console.error(err);
+
     return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
   }
 }

@@ -1,6 +1,6 @@
 /**
- * File CompleteSendEmailBusiness.js
- * Send email contain URL setting password to user
+ * File ErrorBussiness.js
+ * Show error
  *
  * @author Rikkei.DucVN
  * @date 2018-10-02
@@ -11,7 +11,7 @@ import Axios from 'axios';
 import { post } from '@/plugins/api';
 
 export default {
-  name: 'CompleteSendEmailBusiness',
+  name: 'ErrorBusiness',
   layout: 'default',
   middleware: 'guest',
   data() {
@@ -25,6 +25,7 @@ export default {
     }
   },
   methods: {
+
     /**
      * Function go to Lits Perform
      *

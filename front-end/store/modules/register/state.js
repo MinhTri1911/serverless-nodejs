@@ -9,4 +9,5 @@
 export default {
   model: '',
   validStepOne: false,
+  validStepTwo: false,
 }

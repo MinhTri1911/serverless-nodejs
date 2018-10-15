@@ -62,6 +62,7 @@ $show-acept-border-color: #cecebf;
         }
       }
     }
+    /* Start style show item*/
     .show-item {
       display: block;
       margin: 10px 0;
@@ -72,6 +73,9 @@ $show-acept-border-color: #cecebf;
         padding: 5px;
         float: left;
         min-width: 100px;
+        &.fl-right{
+          float: right;
+        }
       }
       .row-show {
         clear: both;
@@ -131,6 +135,27 @@ $show-acept-border-color: #cecebf;
         text-decoration: none;
         padding: 2px 3px;
       }
+
+      &.schedule{
+        &.main-item{
+          .show-top{
+            .col-show{
+              width: 50%;
+            }
+          }
+        }
+        &.sub-item{
+          .show-top{
+            .col-show{
+              width: 33.33333333333%;
+            }
+          }
+        }
+      }
+    }
+    /* End style show item*/
+    .mid-page{
+      text-align: center;
     }
   }
 }

@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       error: false,
+      clickLogin: false,
       email: '',
       phone: '',
       clientId: '',
@@ -41,31 +42,42 @@ export default {
      * @returns {void}
      */
     onSubmit() {
+      this.$nuxt.$loading.start()
       this.$validator.validateAll().then((result) => {
         if (result) {
+          this.error = false;
+          this.clickLogin = true;
           Axios.defaults.headers.common = {
             'Content-Type': 'application/json',
             Authorization: "",
           };
 
           // Post data to API by Axios
+
           return post(constant.api.FORGOT_PASSWORD_API, {
             email: this.email,
             phone: this.phone,
             client_id: this.$route.params.client_id,
           })
           .then(result => {
-            if (result.data.data.result) {
+
+            this.clickLogin = false;
+            if (result.data.data.result||result.status) {
               this.$router.push({name: constant.router.COMPLETE_SEND_EMAIL_PASS});
             }
           })
           .catch(e => {
+            this.$nuxt.$loading.finish();
+            this.clickLogin = false;
             this.error = true;
           });
         }
+        this.$nuxt.$loading.finish();
       }).catch(() => {
+        this.$nuxt.$loading.finish();
         return false;
       });
+
     },
 
     /**
@@ -76,15 +88,15 @@ export default {
     renderMsgErr: function() {
       const dict = {
         custom: {
-          email: {
-            required: this.$t('validation.required', { field: this.$t('login.lb_login_email') }),
-          },
-          phone: {
-            required: this.$t('validation.required', { field: this.$t('login.lb_phone') }),
-          }
         }
       }
       this.$validator.localize('ja', dict);
+    },
+    validate() {
+      this.error = false;
+      this.$validator.validateAll().catch(() => {
+        return false;
+      });
     }
   }
 }

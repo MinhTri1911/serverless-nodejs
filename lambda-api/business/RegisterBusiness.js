@@ -8,6 +8,7 @@
  */
 
 import { Helper } from '../common/Helper';
+import crypto from 'crypto';
 
 class RegisterBusiness {
 
@@ -236,65 +237,226 @@ class RegisterBusiness {
    *
    * @param {String} clientId
    * @param {String} numberingCd
+   * @param {Object} transaction
    * @returns {Object}
    * @memberof RegisterBusiness
    */
-  getIdMemberAndUpdate(clientId, numberingCd) {
-    // return new Promise((resolve, reject) => {
-      let sqlSelect = this.helper.loadSql('SQL052.sql');
-      let sqlUpdate = this.helper.loadSql('SQL053.sql');
-      let member = null;
+  getIdMemberAndUpdate(clientId, numberingCd, transaction) {
+    let sqlSelect = this.helper.loadSql('SQL052.sql');
+    let sqlUpdate = this.helper.loadSql('SQL053.sql');
+    let member = null;
 
-      return this.db.query(sqlSelect, { bind: { client_id: clientId, numbering_cd: numberingCd }, type: this.db.QueryTypes.SELECT })
-        .then(data => {
-          member = data[0];
+    return this.db.query(sqlSelect, {
+      bind: {
+        client_id: clientId,
+        numbering_cd: numberingCd
+      },
+      type: this.db.QueryTypes.SELECT
+    }).then(data => {
+      member = data[0];
 
-          let dataUpdate = this.db.query(sqlUpdate, {
-            bind: {
-              id_now: parseInt(member.id_now)  + 1,
-              upd_pg_id: 'P0240CustomerRegist',
-              upd_client_id: clientId,
-              upd_employee_cd: 'test' + ' ' + (parseInt(member.id_now) + 1),
-              client_id: clientId,
-              numbering_cd: numberingCd
-            },
-          }).spread((results, metadata) => {
-            console.log(results, metadata);
+      if ((parseInt(member.id_now) + 1) > member.id_max) {
+        throw new Error('Member id is bigger than member_id max');
+      }
 
-            return results;
-          });
+      return this.db.query(sqlUpdate, {
+        bind: {
+          id_now: parseInt(member.id_now) + 1,
+          upd_pg_id: 'P0240CustomerRegist',
+          upd_client_id: clientId,
+          upd_employee_cd: 'test' + ' ' + (parseInt(member.id_now) + 1),
+          client_id: clientId,
+          numbering_cd: numberingCd
+        },
+        type: this.db.QueryTypes.UPDATE,
+        transaction: transaction
+      }).spread((results, metadata) => {
 
-          return {
-            member: member,
-            dataUpdate: dataUpdate
-          };
-        })
-        .catch(err => {
-          throw new Error(err);
-        });
+        return {
+          member: member,
+          dataUpdate: results
+        };
+      }).catch(err => {
+        throw new Error(err);
+      });
+    }).catch(err => {
+      throw new Error(err);
+    });
   }
 
-  createUser(clientId, numberingCd) {
+  /**
+   * Function insert member
+   *
+   * @param {Object} data
+   * @param {Object} transaction
+   * @returns {void}
+   * @memberof RegisterBusiness
+   */
+  insertMember(data, transaction) {
+    let {
+      clientId,
+      memberId,
+      memberPass,
+      memberNm,
+      memberKn,
+      postNo,
+      prefecture,
+      municipality,
+      address1,
+      address2,
+      telNo,
+      mobileNo,
+      mailAddress,
+      mailSendFlg,
+      postSendFlg,
+      sexType,
+      birthday,
+      ninsyouKey,
+      insPgId,
+      insClientId,
+      insEmployeeCd,
+      updPgId,
+      updClientId,
+      updEmployeeCd,
+      combineMemberId
+    } = data;
+
+    let sql = this.helper.loadSql('SQL016.sql');
+
+    return this.db.query(sql, {
+      bind: {
+        client_id: clientId,
+        member_id: memberId,
+        member_pass: memberPass,
+        member_nm: memberNm,
+        member_kn: memberKn,
+        post_no: postNo,
+        prefecture: prefecture,
+        municipality: municipality,
+        address1: address1,
+        address2: address2,
+        tel_no: telNo,
+        mobile_no: mobileNo,
+        mail_address: mailAddress,
+        mail_send_flg: mailSendFlg,
+        post_send_flg: postSendFlg,
+        sex_type: sexType,
+        birthday: birthday,
+        ninsyou_key: ninsyouKey,
+        ins_pg_id: insPgId,
+        ins_client_id: insClientId,
+        ins_employee_cd: insEmployeeCd,
+        upd_pg_id: updPgId,
+        upd_client_id: updClientId,
+        upd_employee_cd: updEmployeeCd,
+        combine_member_id: combineMemberId
+      },
+      type: this.db.QueryTypes.INSERT,
+      transaction: transaction
+    }).then(data => {
+      return true;
+    }).catch(err => {
+      transaction.rollback();
+      throw new Error(err);
+    });
+  }
+
+  /**
+   * Function create member
+   *
+   * @param {Object} parameter
+   * @returns {boolean}
+   * @memberof RegisterBusiness
+   */
+  createUser(parameter) {
     return new Promise((reslove, reject) => {
+      let memberId = null;
+
       // Create transaction
       this.db.transaction(t => {
-        let memberId = this.getIdMemberAndUpdate(clientId, numberingCd)
+        // First get id member and update
+        return this.getIdMemberAndUpdate(parameter.clientId, parameter.numberingCd, t)
           .then(data => {
-            return data;
+            // Second then create member
+            const secretKey = process.env.SECRET_KEY;
+            let password = crypto.createHash('sha256').update(secretKey + parameter.password).digest('hex');
+
+            let memberInf = {
+              clientId: parameter.clientId,
+              memberId: data.member.id_now,
+              memberPass: password,
+              memberNm: parameter.fullName,
+              memberKn: parameter.furigana,
+              postNo: parameter.postNo,
+              prefecture: parameter.prefecture,
+              municipality: parameter.municipality,
+              address1: parameter.address1,
+              address2: parameter.address2,
+              telNo: parameter.telNo,
+              mobileNo: parameter.mobileNo,
+              mailAddress: parameter.mail,
+              mailSendFlg: parameter.mailSendFlg,
+              postSendFlg: parameter.postSendFlg,
+              sexType: parameter.sexType,
+
+              // Replace - in string
+              birthday: parameter.birthday.replace(/-/g, ''),
+              ninsyouKey: 'Test@MinhTri1911',
+              insPgId: 'P0240CustomerRegist',
+              insClientId: parameter.clientId,
+              insEmployeeCd: 'test',
+              updPgId: 'P0240CustomerRegist',
+              updClientId: parameter.clientId,
+              updEmployeeCd: 'test',
+              combineMemberId: ''
+            }
+
+            memberId = data.member.id_now;
+
+            return this.insertMember(memberInf, t);
+          })
+          .then(data => {
+            // If have genre then insert to m_member_genre
+            let listGenre = parameter.listGenre;
+
+            if (!listGenre.length) {
+              return true;
+            }
+
+            let sql = this.helper.loadSql('SQL062.sql');
+
+            // Loop genre and insert
+            return listGenre.forEach(element => {
+              let value = {
+                client_id: parameter.clientId,
+                member_id: memberId,
+                genre_no: element,
+                ins_pg_id: 'test',
+                ins_client_id: parameter.clientId,
+                ins_employee_cd: 'test',
+                upd_pg_id: 'test',
+                upd_client_id: parameter.clientId,
+                upd_employee_cd: 'test'
+              }
+
+              return this.db.query(sql, { bind: value, transaction: t, type: this.db.QueryTypes.INSERT });
+            });
+          }).then(data => {
+            return this.helper.loadTemplate('temp-success-register', {
+              link: process.env.URL_CLIENT + '/test1/temp-success-register/' + 'Test@MinhTri1911',
+              content: '123123',
+              head: 'Hello ' + parameter.mail
+            });
+          }).then(html => {
+            t.rollback();
+            return this.helper.sendEmail('trihnm@rikkeisoft.com', [parameter.mail], 'Send mail success register', '', html);
           });
-
-        return memberId;
-      })
-      .then(data => {
+      }).then(data => {
+        t.rollback();
         // Commit transaction
-        console.log(data);
-
-        reslove(data);
-      })
-      .catch(err => {
+        reslove(true);
+      }).catch(err => {
         // Rollback transaction
-        console.log(err);
-
         reject(new Error(`Error function createUser: ${err}`));
       });
     });

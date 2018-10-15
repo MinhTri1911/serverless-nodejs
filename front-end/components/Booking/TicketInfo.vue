@@ -33,12 +33,13 @@
                         {{this.dataTicket.hall_nm}}
                     </div>
                     <div class=" d-none d-md-block d-lg-block ">
-                        <button type="button" class="btn btn-primary">
+                        <button type="button" class="btn btn-primary" v-if="this.dataTicket.show_group_disp_kb == 1">
                             {{ $t('booking.btn_show_detail') }}
                         </button>
                     </div>
                 </div>
-                <button type="button" class="d-md-none d-block btn btn-primary my-2 w-100">
+                <button type="button" class="d-md-none d-block btn btn-primary my-2 w-100"
+                        v-if="this.dataTicket.show_group_disp_kb == 1">
                     {{ $t('booking.btn_show_detail') }}
                 </button>
             </div>
@@ -111,8 +112,8 @@ export default {
       default: false,
       type: Boolean
     },
-    dataTicket:{
-      type : Object
+    dataTicket: {
+      type: Object
     }
   }
 }

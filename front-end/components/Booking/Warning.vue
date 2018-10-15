@@ -4,26 +4,27 @@
         <div class="info--paddingX">
 
             <!--TODO: check login in common , member exp-->
-            <div v-if="!isLogin"> {{$t("booking.lb_require_login")}}</div>
-            <div v-if="haveSeleteSeat && !haveFreeSeat"> {{$t("booking.lb_warning_select_only.line_1")}} <br>
+            <p v-if="!isLogin"> {{$t("booking.lb_require_login")}}</p>
+            <p v-if="haveSeleteSeat && !haveFreeSeat"> {{$t("booking.lb_warning_select_only.line_1")}} <br>
                 {{$t("booking.lb_warning_select_only.line_2")}}
-            </div>
-            <div v-if="!haveSeleteSeat && haveFreeSeat"> {{$t("booking.lb_warning_free_only")}}</div>
-            <div v-if="haveSeleteSeat && haveFreeSeat"> {{$t("booking.lb_warning_both_seat_type")}}</div>
-            <div v-if="isLogin"> {{$t("booking.lb_warning_common_1")}}</div>
-            <div v-if="!isLogin"> {{$t("booking.lb_warning_common_2.line_1")}} <br>
+            </p>
+            <p v-if="!haveSeleteSeat && haveFreeSeat"> {{$t("booking.lb_warning_free_only")}}</p>
+            <p v-if="haveSeleteSeat && haveFreeSeat"> {{$t("booking.lb_warning_both_seat_type")}}</p>
+            <p v-if="isLogin"> {{$t("booking.lb_warning_common_1")}}</p>
+            <p v-if="!isLogin && this.dataTicket.sales_term !='' "> {{$t("booking.lb_warning_common_2.line_1")}} <br>
                 {{$t("booking.lb_warning_common_2.line_2")}}
-            </div>
+            </p>
         </div>
     </section>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
+import Config from "@/constant/config"
 
 export default {
   name: "Warning",
-  props: ['seats'],
+  props: ['seats', 'dataTicket'],
   computed: {
     ...mapGetters({
       isLogin: 'auth/isLogin'
@@ -31,7 +32,7 @@ export default {
     haveFreeSeat: function () {
       let result = false;
       $.each(this.seats, function (seatName, seatInfo) {
-        if (seatInfo.seat_kind == 1) {
+        if (seatInfo.seat_type_kb == Config.SEAT_FREE) {
           result = true;
           return true;
         }
@@ -42,7 +43,7 @@ export default {
     haveSeleteSeat: function () {
       let result = false;
       $.each(this.seats, function (seatName, seatInfo) {
-        if (seatInfo.seat_kind == 2) {
+        if (seatInfo.seat_type_kb == Config.SEAT_DESIGNATED) {
           result = true;
           return true;
         }

@@ -19,5 +19,9 @@ export default {
 
   [types.UPDATE_FLAG_STEP_ONE](state, data) {
     state.validStepOne = data;
+  },
+
+  [types.UPDATE_FLAG_STEP_TWO](state, data) {
+    state.validStepTwo = data;
   }
 }

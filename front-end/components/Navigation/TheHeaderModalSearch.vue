@@ -76,6 +76,7 @@
   import _api from '@/constant/api';
   import { post } from '@/plugins/api';
   import datePicker from "vue-bootstrap-datetimepicker"
+  import route from "@/constant/router"
   export default {
     name: "TheHeaderModalSearch",
     components: {
@@ -114,6 +115,16 @@
     watch: {
       keySearchM : function () {
         this.keySearch = this.keySearchM;
+      },
+      '$route'(){
+        if (this.$route.name != route.LISTPERFORM) {
+          this.keySearch = null
+          this.fromShowDate = null
+          this.toShowDate = null
+          this.fromSalesDate = null
+          this.toSalesDate = null
+          this.chkGenreList = []
+        }
       }
     },
     mounted(){
@@ -123,11 +134,11 @@
       ...mapActions('show', ['startSearch']),
       searchModalShow() {
         let queryString = {
-          q: this.keySearchM,
-          from_show_date: this.fromShowDate,
-          to_show_date: this.toShowDate,
-          from_sales_date: this.fromSalesDate,
-          to_sales_date: this.toSalesDate,
+          q: this.keySearchM ? this.keySearchM.trim() : null,
+          from_show_date: this.fromShowDate ? this.fromShowDate.trim() : null,
+          to_show_date: this.toShowDate ? this.toShowDate.trim() : null,
+          from_sales_date: this.fromSalesDate ? this.fromSalesDate.trim() : null,
+          to_sales_date: this.toSalesDate ? this.toSalesDate.trim() : null,
           genre_no: this.chkGenreList
         }
         $('#topHeaderSearch').modal('hide')

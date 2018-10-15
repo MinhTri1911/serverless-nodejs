@@ -16,10 +16,10 @@ export default {
     return '';
   },
   validate(value, args) {
-    let [clinetId] = args;
+    let [clientId] = args;
 
     // Call api check exists mail
-    return get(constant.api.CHECK_EXISTS_MAIL_REGISTER, { clientId: clinetId, mail: value })
+    return get(constant.api.CHECK_EXISTS_MAIL_REGISTER, { clientId: clientId, mail: value })
       .then(res => {
         let data = res.data.data.existsMail;
 

@@ -9,7 +9,7 @@ export const check = ({ commit }) => {
   commit(types.CHECK);
 }
 
-//this is login function
+//This is login function
 export const login = ({ commit }, data) => {
 	commit('SET_LOADING', true, { root: true })
 
@@ -25,7 +25,6 @@ export const login = ({ commit }, data) => {
     .then(result => {
       // Redirect when Black_CD=1
       if(result.data.data.black_cd.black_cd =='1') {
-        localStorage.setItem('redirect_url', constant.router.ERROR);
         commit(types.SET_URL, constant.router.ERROR);
         commit(types.LOGOUT);
         resolve(HTTP_SUCCESS);
@@ -42,20 +41,20 @@ export const login = ({ commit }, data) => {
       }
     })
     .catch(e => {
+
       // Error then logout
       commit(types.LOGOUT);
       localStorage.removeItem('token');
-
       commit('SET_LOADING', false, { root: true });
-
       reject(e);
     });
   });
 }
 
 // This is logout function
-export const logout = ({ commit }) => {
+export const logout = ({ commit }, data) => {
 	return new Promise((resolve, reject) => {
+
 		// Call action logout
 		commit(types.LOGOUT);
 
@@ -63,7 +62,12 @@ export const logout = ({ commit }) => {
 		localStorage.removeItem('token');
 		localStorage.removeItem('redirectTo');
 
-		resolve(HTTP_SUCCESS);
+    resolve(HTTP_SUCCESS);
+
+    return post(constant.api.LOGOUT_API, {
+      client_id: data.client_id,
+      member_id: data.member_id
+    })
 	})
 }
 
@@ -84,15 +88,19 @@ export const initAuth = ({ commit }) => {
 	//send token to server and received data from server
 	return get('user/info',{"token": token})
 	  .then(res => {
+
       // Invalid token
       if (res.data.data.code == "Not Authentication") {
         commit(types.LOGOUT);
         localStorage.removeItem('token');
       } else {
+
         // Set it to info user
         user.email = res.data.data.infoUser.mail_address;
         user.client_id = res.data.data.infoUser.client_id;
         user.member_id = res.data.data.infoUser.member_id;
+        user.name = res.data.data.infoUser.member_nm;
+        user.member_kb_nm = res.data.data.infoUser.member_kb_nm;
 
         // Change state
         commit(types.SET_USER, user);
@@ -102,6 +110,10 @@ export const initAuth = ({ commit }) => {
 
 export const setUrl = ({ commit }, data) => {
   commit(types.SET_URL, data);
+}
+
+export const setError = ({ commit }, data) => {
+  commit(types.SET_ERROR, data);
 }
 
 export const removeUrl = ({ commit }) => {
@@ -115,5 +127,6 @@ export default {
 	setUser,
   initAuth,
   setUrl,
-  removeUrl
+  removeUrl,
+  setError,
 }

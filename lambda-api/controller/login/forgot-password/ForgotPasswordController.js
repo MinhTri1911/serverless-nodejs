@@ -11,6 +11,7 @@ import ServiceModel from "../../../models/ServiceModel";
 import  Constant  from "../../../config/Constant";
 import _ from 'lodash';
 import HttpCode from "../../../config/HttpCode";
+import { Helper } from '../../../common/Helper';
 
 /**
  * Function handler check input email and phone
@@ -31,7 +32,17 @@ const checkForgorPassword = async (event, context, callback) => {
         if (_.isEmpty(data)) {
           return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Incorrect Information!!!");
         } else {
-          return serviceModel.createSuccessCallback(HttpCode.SUCCESS,{ "result":"true" });
+          let helper = new Helper();
+          let html = 'Please click <a href=' + data.url +'>here</a> to reset you password'
+          return helper.sendEmail('ducnhatvo@gmail.com', data.received, 'Reset your password', '', html)
+            .then(res => {
+              return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { status: HttpCode.SUCCESS });
+            })
+            .catch(err => {
+              // Log error
+              console.log(err);
+              return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+            });
         }
       })
       .catch(err => {
@@ -41,7 +52,7 @@ const checkForgorPassword = async (event, context, callback) => {
   } catch (err) {
     console.error(err);
     return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
-  }
+}
 }
 
 export { checkForgorPassword }

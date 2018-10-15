@@ -42,6 +42,12 @@ export default {
     state.redirectURL = data;
   },
 
+  [types.SET_ERROR](state, data) {
+
+    // Reset state in local
+    state.error = data;
+  },
+
   [types.REMOVE_URL](state) {
 
     // Remove state in local

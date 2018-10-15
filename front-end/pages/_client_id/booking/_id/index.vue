@@ -7,7 +7,7 @@
             <div id="SingleContents">
                 <div id="InfoContents">
                     <!--Notice-->
-                    <Warning :seats="dataSeatType.seats"></Warning>
+                    <Warning :seats="dataSeatType.seats" :dataTicket="dataTicket"></Warning>
                     <!--Notice End-->
                     <!--Ticket Info -->
                     <TicketInfo :dataTicket="dataTicket"></TicketInfo>

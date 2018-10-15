@@ -7,7 +7,14 @@ export default {
     termsUse: false,
     validation: false,
     message: '',
+    pathToPageHome: {
+      name: constant.router.LISTPERFORM,
+      params: { client_id: '' }
+    }
   }),
+  created() {
+    this.pathToPageHome.params.client_id = this.$route.params.client_id;
+  },
   mounted() {
     // After render layout then check if both of checkbox is checked
     if (!!localStorage.getItem('is_checked_both')) {

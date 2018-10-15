@@ -16,3 +16,7 @@ package-lock.json
 serverlamda/
 
 dist/
+
+db\.json
+
+db\.json~

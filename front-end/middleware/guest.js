@@ -24,7 +24,7 @@ export default function ({ store, redirect, route }) {
     store.dispatch('auth/removeUrl');
   }
 
-  // Set URL is error page
+  // Remove redirect URL error page
   if (route.name === constant.router.ERROR_NAME) {
     store.dispatch('auth/removeUrl');
   }

@@ -30,12 +30,16 @@
                                 <div class="d-flex col-4 float-right">
                                     <select class="form-control pull-right" style="width:80px;"
                                             @change="onChangeTicket($event.target.value,seat,ticket)"
-                                            v-if="ticket.net_zan_maisu >= ticket.ticket_unit"
+                                            v-if="isLogin
+                                                  && ticket.net_zan_maisu >= ticket.ticket_unit
+                                                  && ticket.number_specified_flg == 1 "
                                             :key="number_ticket[seat.seat_type_nm+'_'+ticket.ticket_type_nm]">
                                         <option v-bind:value="0">{{$t('booking.lb_please_select')}}</option>
                                         <option v-for="ticketNumber  in (ticket.net_zan_maisu *1) "
                                                 v-bind:value="ticketNumber"
-                                                v-if="ticketNumber % ticket.ticket_unit ===0"
+                                                v-if="ticketNumber % ticket.ticket_unit ===0
+                                                        && ticketNumber <= ticket.limit_count
+                                                        && ticketNumber <= ticket.net_zan_maisu"
                                                 :selected="loadMyTicket(seat.seat_type_no ,ticket.ticket_type_no ,ticketNumber )">
                                             {{ticketNumber}}
                                         </option>
@@ -60,7 +64,7 @@
 </template>
 
 <script>
-
+import Config from "@/constant/config"
 import {mapGetters} from 'vuex'
 
 export default {
@@ -72,12 +76,13 @@ export default {
       ticket_price: 0,
       ticket_type_no: 0,
       seat_type_no: 0,
-      seat_kind: 0
+      seat_type_kb: 0
     }
   },
   computed: {
     ...mapGetters({
-      myTickets: 'booking/myTickets'
+      myTickets: 'booking/myTickets',
+      isLogin: 'auth/isLogin'
     }),
 
   },
@@ -97,9 +102,11 @@ export default {
         seat_type_nm: seat.seat_type_nm,
         ticket_price: ticket.ticket_price,
         number_ticket: numTicket,
-        seat_kind: 1, // TODO : kind of seat
+        seat_type_kb: Config.SEAT_FREE,
         show_group_id: this.$route.query.show_group_id,
-        show_no: this.$route.query.show_no
+        show_no: this.$route.query.show_no,
+        client_id: this.$route.params.client_id,
+        sales_no: this.$route.query.sales_no
 
       }
 

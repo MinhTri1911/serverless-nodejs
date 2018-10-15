@@ -223,7 +223,7 @@
         },
         number: {
             key: "1",
-            size: 5,
+            size: 7,
             x: 3,
             y: 8,
             color: {
@@ -243,7 +243,7 @@
      * @returns {string}
      */
     function templateRect(seat) {
-        console.log(seat);
+
         seat.color = {
           available: new Color(seat.color.available).toRGBA(),
           selected: new Color(seat.color.selected).toRGBA(),
@@ -263,7 +263,7 @@
             '</rect>' +
             '<text alignment-baseline="middle" text-anchor="middle"' +
             'x="' + (seat.x + seat.size / 2) + '" y="' + (seat.y + seat.size / 2) + '" ' +
-            'font-family="Verdana" ' + 'font-size="' + seat.number.size + '" ' +
+            'font-family="" ' + 'font-size="' + seat.number.size + '" ' +
             'fill="' + seat.number.color[seat.status] + '" ' +
             'style="cursor: default;" ' +
             '>' +
@@ -279,10 +279,10 @@
      * @returns {string}
      */
     function templateGraphic(image, matrix) {
-        return '<g fill="black" stroke="black" id="map-bg" transform="matrix(1, 0, 0, 1, 0, 0)"> ' +
+        return '<svg id="diagram" width="628" height="535" version="1.1"><g fill="black" stroke="black" id="map-bg" transform="matrix(1, 0, 0, 1, 0, 0)"> ' +
             image +
             matrix +
-            '</g>';
+            '</g></svg>';
     }
 
     function buildMapMatrix(seatList){
@@ -293,7 +293,8 @@
             seat_tmp.number.key = seat_info.seat_no;
             Object.keys(sample).map(function (sample_key) {
                 if (sample_key == 'status') {
-                    if (seat_info[sample[sample_key]] == 0) {
+                    // if seat have sale flag and seat designated
+                    if (seat_info[sample[sample_key]] == 0 && seat_info['seat_type_kb'] == 1) {
                         seat_tmp[sample_key] = 'available';
                     } else {
                         seat_tmp[sample_key] = 'unavailable';
@@ -320,7 +321,7 @@
         })
         return matrixDiagram;
     }
-    var seatList;
+
     /**
      * add event to seat
      */
@@ -338,9 +339,31 @@
                 seatList[id].status = 'available';
             }
             $('#select-seat').val(JSON.stringify(getAllSelectedSeat(seatList) )).trigger("change");
+          // localStorage.setItem('selectSeat', JSON.stringify(getAllSelectedSeat(seatList) ));
         });
         $(document).on('click', 'text', function () {
             $(this).parent().children('rect').click();
+        });
+
+        $(document).on('load-select-seat',function () {
+          let selectedSeat = JSON.parse($('#select-seat').val());
+          selectedSeat.forEach(function (itemSeat) {
+            changeStatusSeat(seatList,itemSeat.seat_no,'selected');
+          });
+
+        });
+        $(document).on('click', '.btn-cancel-all', function () {
+          removeAllSelectedSeat(seatList);
+          $('#select-seat').val(JSON.stringify(getAllSelectedSeat(seatList) )).trigger("change");
+
+        });
+
+        $(document).on('click', '.btn-cancel', function (event) {
+          let seatNo= $(this).data('seat_no');
+          changeStatusSeat(seatList,seatNo,'available');
+          $(this).attr('fill', seatList[seatNo].color.available);
+          $(this).attr('stroke', seatList[seatNo].border.color.available);
+          $('#select-seat').val(JSON.stringify(getAllSelectedSeat(seatList) )).trigger("change");
         });
         $('#panzoom-in').click(function () {
 
@@ -353,8 +376,11 @@
             panZoomInstance.reset();
         });
       $('#get-seat').click(function () {
+        changeStatusSeat(seatList,7,'selected');
         console.log(JSON.stringify(getAllSelectedSeat(seatList) ));
+
       });
+
     }
 
     /**
@@ -375,7 +401,11 @@
 
         let selectedSeats = matrix.map(function (seat) {
 
-            return {seat_no: seat.seat_no ,seat_nm : seat.seat_nm ,seat_type_nm :seat.seat_type_nm};
+            return {seat_no: seat.seat_no ,
+                    seat_nm : seat.seat_nm ,
+                    seat_type_no :seat.seat_type_no,
+                    seat_type_nm :seat.seat_type_nm
+            };
         }).filter(function (seat, index) {
             return seatList[index].status == 'selected';
         });
@@ -417,6 +447,8 @@
             if (checkSeatNo && seat.status != 'unavailable') {
                 seat.status = status;
                 $('g[data-id=' + index + ']').children('rect').attr('fill', seat.color[status]);
+                $('g[data-id=' + index + ']').children('rect').attr('stroke', seat.border.color[status]);
+
             }
         })
     }
@@ -435,6 +467,7 @@
         seat_nm: "seat_nm",
         seat_type_nm: "seat_type_nm",
         seat_type_no: "seat_type_no",
+        seat_type_kb: "seat_type_kb",
 
     }
 
@@ -448,13 +481,15 @@
         }
 
     };
+
     /**
      * build theatre
      * @param matrix (seats)
      * @param img (background)
      */
     function buildDiagram(matrix, img) {
-        let diagram = $('svg');
+        // let diagram = $('svg');
+        let diagram = $('#diagram_wrap');
         let seatList = [];
 
         let matrixDiagram = buildMapMatrix(seatList);
@@ -514,6 +549,7 @@
         }
         // console.log(seatList);
         event(seatList);
+
     }
 
     // buildDiagram(matrix, {
@@ -523,6 +559,7 @@ function initDiagram(srcImage ="",matrix = {}) {
   buildDiagram(matrix, {
         src: srcImage
     });
+
 }
 
 function getSeatList(){
