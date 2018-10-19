@@ -20,7 +20,7 @@
                     </button>
                 </div>
             </div>
-            <div id="DiagramDetail" class="parent border mt-0 collapse show">
+            <div id="DiagramDetail" class="parent border mt-0 collapse show" style="min-height: 500px">
                 <div class="panzoom w-100 h-100" style="overflow: hidden">
                     <div id="diagram_wrap"></div>
                     <!--<svg id="diagram" version="1.1"-->
@@ -56,20 +56,20 @@
                 </div>
             </div>
             <div id="BookTicketDetail" class="collapse show mt-3" v-if="selectSeats.length >0">
-                <div class="d-flex justify-content-between mx-2 mb-3  p-3">
-                    <div>
+                <div class="d-flex justify-content-between mx-2 mb-3  p-3 row">
+                    <div class="col-3">
                         {{ $t('booking.lb_seat_type') }}
                     </div>
-                    <div>
+                    <div class="col-3">
                         {{ $t('booking.lb_seat_info') }}
                     </div>
-                    <div>
+                    <div class="col-2">
                         {{ $t('booking.lb_seat_name') }}
                     </div>
-                    <div>
+                    <div class="col-2">
                         {{ $t('booking.lb_price') }}
                     </div>
-                    <div>
+                    <div class="col-2">
                         <button class="btn btn-primary py-0" style="visibility: hidden">
                             &nbsp
                         </button>
@@ -79,14 +79,15 @@
                      v-for="(seat,seatSelectIndex) in myTickets"
                      v-if="isDesignatedSeat(seat)"
                 >
-                    <div>
+                    <div class="col-3">
                         {{seat.seat_type_nm}}
                     </div>
-                    <div>
+                    <div class="col-3">
 
                         <select v-for="(seatInfo, seatInfoIndex) in seats"
                                 v-if="seat.seat_type_no == seatInfo.seat_type_no "
-                                @change="onChooseTicket(seat.seat_no ,$event.target )">
+                                @change="onChooseTicket(seat.seat_no ,$event.target )"
+                                class="w-100" >
                             <option v-bind:value="0" v-bind:data-ticket_price="0">{{$t('booking.lb_please_select')}}
                             </option>
                             <option v-for="(ticket, ticketIndex) in seatInfo.tickets"
@@ -103,13 +104,13 @@
                         </select>
 
                     </div>
-                    <div>
+                    <div class="col-2">
                         {{seat.seat_nm}}
                     </div>
-                    <div>
+                    <div class="col-2">
                         {{seat.ticket_price}}円
                     </div>
-                    <div>
+                    <div class="col-2">
                         <button id="btn-cancel" class="btn btn-primary py-0 btn-cancel"
                                 v-bind:data-seat_no="seat.seat_no">
                             {{ $t('booking.btn_cancel') }}
@@ -122,8 +123,9 @@
                     </button>
                 </div>
             </div>
-            <div id="BookTicketDetailEmpty" class="collapse show mt-3 align-items-center" v-if="selectSeats.length ==0">
-                <p class="align-items-center text-center">{{$t("booking.lb_empty_designate_seat")}}</p>
+            <div id="BookTicketValidate" class="collapse show mt-3 align-items-center" >
+                <p class="align-items-center text-center" v-if="selectSeats.length ==0">{{$t("message.msg029_empty_designate_seat")}}</p>
+                <p class="align-items-center text-center" v-if="!validTicketType ">{{$t("message.msg030_require_select_ticket_type")}}</p>
             </div>
 
             <input type="hidden" id="select-seat" v-bind:value="selectSeatString"
@@ -139,6 +141,8 @@ import Config from "@/constant/config"
 import LoginModal from "@/components/Navigation/TheLoginModal"
 import diagram from "@/static/js/build-diagram-seat.js"
 import {mapActions, mapGetters} from 'vuex'
+import constant from '@/constant';
+import {get} from '@/plugins/api';
 
 export default {
   name: "ticket-booking-seat",
@@ -153,13 +157,17 @@ export default {
   },
   data() {
     return {
-      selectSeats: ""
+      selectSeats: "",
+      validTicketType : "",
+      validMember : ""
     }
   },
   computed: {
     ...mapGetters({
-      myTickets: 'booking/myTickets',
-      isLogin: 'auth/isLogin'
+      myTickets : 'booking/myTickets',
+      isLogin : 'auth/isLogin',
+      memberId : 'auth/getMemberId',
+      checkMemberValid : 'auth/checkMemberValid'
     }),
     selectSeatString() {
       let selectSeatJson = [];
@@ -172,7 +180,7 @@ export default {
           && itemSeat.show_no == that.$route.query.show_no
           && itemSeat.seat_type_kb == Config.SEAT_DESIGNATED
         ) {
-          console.log(itemSeat.seat_type_kb);
+
           let seat = {
             seat_no: itemSeat.seat_no,
             seat_nm: itemSeat.seat_nm,
@@ -185,37 +193,98 @@ export default {
       });
       this.selectSeats = selectSeatJson;
       return JSON.stringify(selectSeatJson);
-    }
+    },
 
+
+  },
+  created() {
+
+    this.validateMemberTime();
   },
   mounted: function () {
 
-    let srcImage = "https://s3-ap-northeast-1.amazonaws.com/ticket-data-dev/test1/layout/1/1/hall_pic";
-    let isLogin =this.isLogin;
-    diagram.initDiagram(srcImage);
+    let clientId = this.$route.params.client_id;
+    let hallNo = 1;
+    let hallLayoutNo = 1;
+    let isLogin = this.isLogin;
+    let srcImage = process.env.baseS3Url + Config.PATH_IMG_SEAT_MAP
+                                                .replace(':client_id', clientId)
+                                                .replace(':hall_no', hallNo)
+                                                .replace(':hall_layout_no', hallLayoutNo);
+    get(constant.api.BOOKING_SEAT_DETAIL, {   clientId: this.$route.params.client_id,
+                                              showGroupId :this.$route.query.show_group_id,
+                                              showNo :this.$route.query.show_no,
+                                              salesNo :this.$route.query.sales_no
+                                            })
+      .then(result => {
+        const matrix = result.data.data;
 
-    $('#select-seat').on("change", this.onSelectedSeat);
+        diagram.initDiagram(srcImage,matrix);
+        // check seat svg exit for load selected seat
+        var checkExist = setInterval(function () {
+          if ($('#diagram').find('#map-bg')) {
+            $(document).trigger('load-select-seat');
+            if (!isLogin) {
 
-    // check seat svg exit for load selected seat
-    var checkExist = setInterval(function () {
-      if ($('#diagram').find('#map-bg')) {
-        $(document).trigger('load-select-seat');
-        if (!isLogin) {
-          console.log('notlogin');
-          $(document).off('click', 'rect');
-          $(document).off('click', 'text');
-          $(document).on('click', 'rect', function () {
-            $('#theLoginModal').modal('show');
-          });
-        }
+              $(document).off('click', 'rect');
+              $(document).off('click', 'text');
+              $(document).on('click', 'rect', function () {
+                $('#theLoginModal').modal('show');
+              });
+            }
 
-        clearInterval(checkExist);
-      }
-    }, 500);
+            clearInterval(checkExist);
+          }
+        }, 500);
+
+        $('#select-seat').on("change", this.onSelectedSeat);
+
+      })
+      .catch(err => {
+        // Will be redirect to page error 570 later
+        console.log(err);
+      });
+
+
+    // click next btn
+    this.$parent.$on('nextBtnClick', this.validate);
 
   },
 
   methods: {
+    validate(){
+      alert("next2");
+      this.$emit('validate', false);
+    },
+    validateTicketType(){
+      let result = true ;
+      var that = this;
+      this.myTickets.forEach(function (itemSeat) {
+        //{"seat_no":215,"seat_nm":"9列 25版","seat_type_nm":"S席"}
+        if (
+          itemSeat.client_id == that.$route.params.client_id
+          && itemSeat.show_group_id == that.$route.query.show_group_id
+          && itemSeat.show_no == that.$route.query.show_no
+          && (typeof(itemSeat.ticket_type_no) === "undefined"  || itemSeat.ticket_type_no == 0)
+        ) {
+
+          result = false;
+        }
+      });
+      return result;
+    },
+    validateMemberTime(){
+      get(constant.api.BOOKING_MEMBERSHIP, {clientId: this.$route.params.client_id,memberId : this.memberId})
+        .then(result => {
+
+          this.validMember = result.data.isValidMember;
+        })
+        .catch(err => {
+          // Will be redirect to page error 570 later
+          console.log(err);
+        });
+
+    },
     isDesignatedSeat(seat) {
       return (
         seat.client_id == this.$route.params.client_id
@@ -296,8 +365,9 @@ export default {
         seat_type_no: seatTypeNo,
         ticket_price: TicketPrice,
       };
-
+      // save choose ticket
       this.$store.dispatch("booking/chooseTicketType", ticketInfo);
+      this.validTicketType = this.validateTicketType();
     }
   },
   // watch:{

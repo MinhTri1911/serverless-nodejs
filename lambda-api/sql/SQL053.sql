@@ -9,6 +9,6 @@ set
   , upd_dtime = now()
 where
   client_id = $client_id
-  and numbering_cd = $numbering_cd
+  and numbering_cd = '01';
 
 /* commit; */

@@ -8,7 +8,7 @@
  */
 
 import { Helper } from '../../common/Helper';
- 
+
 class LogoutBusiness {
   /**
    * Constructor set instance sequelize
@@ -43,18 +43,19 @@ class LogoutBusiness {
           ip_address: ip
         },
         type: this.db.QueryTypes.INSERT
-      }).then(result =>{
+      })
+        .then(result =>{
           resolve(result);
         })
-      .catch(function(err) {
+        .catch(function(err) {
+          console.error(err);
+          reject(new Error(`Something Went Wrong ${err}`));
+        });
+    })
+      .catch(err => {
         console.error(err);
         reject(new Error(`Something Went Wrong ${err}`));
       });
-    })
-    .catch(err => {
-      console.error(err);
-      reject(new Error(`Something Went Wrong ${err}`));
-    });
 	}
 }
 

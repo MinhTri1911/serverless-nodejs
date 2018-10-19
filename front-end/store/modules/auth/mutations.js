@@ -39,7 +39,15 @@ export default {
   [types.SET_URL](state, data) {
 
     // Reset state in local
-    state.redirectURL = data;
+    state.redirectURL = data.redirectURL;
+    state.id = data.id;
+    state.query = data.query;
+  },
+
+  [types.SET_URL_BLACKCD](state, data) {
+
+    // Set state for blackcd
+    state.redirect_URL_BLACKCD = data;
   },
 
   [types.SET_ERROR](state, data) {
@@ -52,5 +60,8 @@ export default {
 
     // Remove state in local
     state.redirectURL = '';
+    state.id = '';
+    state.redirect_URL_BLACKCD = '';
+    state.query = '';
   }
 }

@@ -20,7 +20,11 @@
 		"introduction": "This is an introduction in English."
 	},
 	"footer" : {
-		"title" : "Copyright c PASTORALE CO., LTD."
+		"title" : "Copyright c PASTORALE CO., LTD.",
+		"privacy": "個人情報保護方針",
+		"law": "特定商取引法に基づく表示",
+		"kiyaku": "利用規約",
+		"spec": "動作環境を表示"
 	},
 	"about": {
 		"title": "About",

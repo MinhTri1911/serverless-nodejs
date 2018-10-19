@@ -14,6 +14,8 @@ const CONST = {
   LOGOUT_API: 'logout',
   BOOKING_INFO: 'booking-show-info',
   TICKET_INFO: 'booking-ticket-type',
+  BOOKING_MEMBERSHIP: 'booking-membership',
+  BOOKING_SEAT_DETAIL: 'booking-seat-detail',
   USER_INFO: 'user/info',
   // Forgor password API - DucVN
   FORGOT_PASSWORD_API: 'forgot-password',

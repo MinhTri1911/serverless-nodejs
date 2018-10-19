@@ -42,9 +42,9 @@ export default {
      * @returns {void}
      */
     onSubmit() {
-      this.$nuxt.$loading.start()
       this.$validator.validateAll().then((result) => {
         if (result) {
+          this.$nuxt.$loading.start()
           this.error = false;
           this.clickLogin = true;
           Axios.defaults.headers.common = {
@@ -53,14 +53,13 @@ export default {
           };
 
           // Post data to API by Axios
-
           return post(constant.api.FORGOT_PASSWORD_API, {
             email: this.email,
             phone: this.phone,
             client_id: this.$route.params.client_id,
           })
           .then(result => {
-
+            this.$nuxt.$loading.finish();
             this.clickLogin = false;
             if (result.data.data.result||result.status) {
               this.$router.push({name: constant.router.COMPLETE_SEND_EMAIL_PASS});
@@ -72,9 +71,7 @@ export default {
             this.error = true;
           });
         }
-        this.$nuxt.$loading.finish();
       }).catch(() => {
-        this.$nuxt.$loading.finish();
         return false;
       });
 

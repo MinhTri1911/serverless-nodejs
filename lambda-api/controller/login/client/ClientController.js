@@ -32,7 +32,6 @@ const getClientInfo = async (event, context, callback) => {
         if (_.isEmpty(data)) {
           return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Get infor client Fail!!!");
         }
-
         let infoUser = {
           "inquiry_nm": data[0].inquiry_nm,
           "inquiry_tel_no": data[0].inquiry_tel_no,

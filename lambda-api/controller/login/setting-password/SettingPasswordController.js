@@ -33,8 +33,8 @@ const settingPassword = async (event, context, callback) => {
         if (!data) {
           return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Incorrect Information!!!");
         } else {
-          let helper = new Helper();
-          return helper.sendEmail('ducnhatvo@gmail.com', data.received, 'complete setting password', '', 'successfull')
+          let helper = new Helper(serviceModel.getDb());
+          return helper.sendEmail('takuya.mori@pastorale.jp', data.received, 'complete setting password', '', 'successfull')
             .then(res => {
               return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { status: HttpCode.SUCCESS });
             })

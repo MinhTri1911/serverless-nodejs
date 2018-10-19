@@ -13,7 +13,7 @@ export default function ({ store, redirect, route }) {
   if (route.name === constant.router.SELECT_TICKET_NAME
     || route.name === constant.router.SELECT_SEAT_NAME
   ) {
-    store.dispatch('auth/setUrl', route.name);
+    store.dispatch('auth/setUrl', {"redirectURL": route.name, "id": route.params.id, "query": route.query});
   }
 
   // Check user to to another page we delete this redirect_url
@@ -27,5 +27,10 @@ export default function ({ store, redirect, route }) {
   // Remove redirect URL error page
   if (route.name === constant.router.ERROR_NAME) {
     store.dispatch('auth/removeUrl');
+  }
+
+  // Check token it user have
+  if (store.state.auth.authenticated) {
+    store.dispatch('auth/initAuth');
   }
 }

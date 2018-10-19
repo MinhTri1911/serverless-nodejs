@@ -21,6 +21,9 @@
   "btn_login": "ログイン",
   "btn_login_here": "ログインはこちら",
   "link_here": "こちら",
+  "lb_name": "様",
+  "lb_of": "の",
+  "lb_display_name": "{name}様の{member}",
 
   "lb_complete_send_password_head": "パスワード再設定URL送信完了説明文 ",
   "lb_forgot_password_head": "パスワード忘れ説明文",
@@ -62,6 +65,8 @@
   "lb_error_url_1": "有効期限が切れているか、",
   "lb_error_url_2": "URLが無効となっております。",
   "lb_error_url_3": "メールソフトによってはURLが改行によって無効となっている場合がございます。",
-  "lb_error_black_cd": "ログインに失敗致しました。お手数ですが、下記問合せ先までご連絡下さい。"
+  "lb_error_black_cd": "ログインに失敗致しました。お手数ですが、下記問合せ先までご連絡下さい。",
+
+  "lb_maintenance": "メンテナンス中文言"
 
 }

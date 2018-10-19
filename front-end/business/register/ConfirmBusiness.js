@@ -98,86 +98,70 @@ export default {
      * @returns {void}
      */
     postRegister: function() {
-      get(constant.api.CHECK_EXISTS_MAIL_REGISTER, { clientId: this.$route.params.client_id, mail: this.model.mail })
-        .then(res => {
-          let data = res.data.data;
+      post(constant.api.REGISTER, {
+        clientId: this.$route.params.client_id,
+        memberCode: this.model.memberCode,
+        password: this.model.password,
+        mail: this.model.mail,
+        fullName: this.model.fullName,
+        furigana: this.model.furigana,
+        postNo: this.model.postCode,
+        prefecture: this.model.slbCity,
+        municipality: this.model.district,
+        address1: this.model.address,
+        address2: this.model.buildingRoom,
+        telNo: this.model.phoneNumber,
+        mobileNo: this.model.cellPhone,
+        mailSendFlg: this.model.magazineMail,
+        postSendFlg: this.model.directMail,
+        sexType: this.model.gender === 'male' ? MALE : FEMALE,
+        birthday: this.model.birthday,
+        listGenre: this.model.genre
+      }).then(res => {
+        if (res.data.data.code !== HTTP_SUCCESS) {
+          throw new Error();
+        }
 
-          if (data.existsMail.kbn == IS_EXISTS) {
-            let path = this.$router.resolveresolve({
-              name: constant.router.REGISTER_INPUT,
-              params: { client_id: this.$route.params.client_id }
-            });
+        this.$store.dispatch('register/updateStepTwo', true);
 
-            this.$router.push(path.href);
-          }
-
-          return true;
-        }).then(status => {
-          if (!status) {
-            throw new Error();
-          }
-
-          if (!this.model.memberCode) {
-            return true;
-          }
-
-          return get(constant.api.CHECK_EXISTS_MEMBER_CODE, {
-            clientId: this.$route.params.client_id,
-            code: this.model.memberCode,
-            memberNm: this.model.fullName,
-            memberKn: this.model.furigana,
-            mobileNo: this.model.cellPhone,
-            telNo: this.model.phoneNumber
-          }).then(res => {
-            return true;
-          }).catch(err => {
-            throw new Error();
-          });
-        }).then(status => {
-          if (!status) {
-            throw new Error();
-          }
-
-          post(constant.api.REGISTER, {
-            numberingCd: "01",
-            clientId: this.$route.params.client_id,
-            memberCode: this.model.memberCode,
-            password: this.model.password,
-            mail: this.model.mail,
-            fullName: this.model.fullName,
-            furigana: this.model.furigana,
-            postNo: this.model.postCode,
-            prefecture: this.model.slbCity,
-            municipality: this.model.district,
-            address1: this.model.address,
-            address2: this.model.buildingRoom,
-            telNo: this.model.phoneNumber,
-            mobileNo: this.model.cellPhone,
-            mailSendFlg: this.model.magazineMail,
-            postSendFlg: this.model.directMail,
-            sexType: this.model.gender === 'male' ? MALE : FEMALE,
-            birthday: this.model.birthday,
-            listGenre: this.model.genre
-          }).then(res => {
-            if (res.data.data.code !== HTTP_SUCCESS) {
-              throw new Error();
-            }
-
-            this.$store.dispatch('register/updateStepTwo', true);
-
-            let path = this.$router.resolve({
-              name: constant.router.REGISTER_COMPLETE_TEMPORARY,
-              params: { client_id: this.$route.params.client_id }
-            });
-
-            this.$router.push(path.href);
-          }).catch(err => {
-            console.log(123123);
-            throw new Error();
-          })
-        }).catch(err => {
-          this.redirectToError();
+        let path = this.$router.resolve({
+          name: constant.router.REGISTER_COMPLETE_TEMPORARY,
+          params: { client_id: this.$route.params.client_id }
         });
+
+        this.$router.push(path.href);
+      }).catch(err => {
+        let errors = err.response.data.data.errors;
+
+        // If validator mail fail then redirect to page 120
+        if (Object.keys(errors).includes('mail') || Object.keys(errors).includes('memberCode')) {
+          let pathToInput = this.$router.resolve({
+            name: constant.router.REGISTER_INPUT,
+            params: { client_id: this.$route.params.client_id }
+          });
+
+          let msg = [];
+
+          if (Object.keys(errors).includes('mail')) {
+            msg.push(this.$t('validation.unique', { field: this.$t('register.lb_mail') }));
+          }
+
+          if (Object.keys(errors).includes('memberCode')) {
+            msg.push(this.$t('message.msg065_not_exists_member_code'));
+          }
+
+          this.$store.dispatch('auth/setError', msg);
+          this.$router.push(pathToInput.href);
+        } else {
+          this.$store.dispatch('auth/setError', [
+            this.$t('message.msg003_exception.line_1'),
+            this.$t('message.msg003_exception.line_2'),
+            this.$t('message.msg003_exception.line_3')
+          ]);
+
+          this.redirectToError();
+        }
+      });
     }
   }
 }

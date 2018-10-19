@@ -39,36 +39,39 @@ class ForgotPasswordBusiness {
     let { email, phone, client_id } = data;
     return new Promise((resolve, reject) => {
       let sql = this.helper.loadSql('SQL013.sql');
-        this.db.query(sql, { bind: { clientid: client_id, phone: phone, email: email }, type: this.db.QueryTypes.SELECT })
-          .then(result => {
-            if (result!='') {
-              let token = jwt.sign({
-                "member_id": result[0].member_id,
-                "email": email },
-                process.env.JWT_SECRET, {
-                  expiresIn: JWT_EXPIRATION_TIME
-                });
-              let url = URL + client_id + URL_RESET_PASSWORD + token;
-              let sqlUpdate = this.helper.loadSql('SQL014.sql');
-              this.db.query(sqlUpdate, { bind: {
+      this.db.query(sql, { bind: { clientid: client_id, phone: phone, email: email }, type: this.db.QueryTypes.SELECT })
+        .then(result => {
+          if (result!='') {
+            let token = jwt.sign({
+              "member_id": result[0].member_id,
+              "email": email },
+              process.env.JWT_SECRET, {
+              expiresIn: JWT_EXPIRATION_TIME
+              });
+            let url = URL + client_id + URL_RESET_PASSWORD + token;
+            let sqlUpdate = this.helper.loadSql('SQL014.sql');
+            this.db.query(sqlUpdate, {
+              bind: {
                 clientid: client_id,
                 ninsyoukey: token,
-                member_id: result[0].member_id },
-                type: this.db.QueryTypes.UPDATE })
+                member_id: result[0].member_id
+              },
+              type: this.db.QueryTypes.UPDATE
+            })
               .then(data=>{
                 resolve({"received": email, "url":url})
               })
               .catch(err => {
                 reject(new Error(`Something Went Wrong ${err}`));
               });
-            }
-            if (result=='') {
-              resolve(result);
-            }
-          })
-          .catch(err => {
-            reject(new Error(`Something Went Wrong ${err}`));
-		      });
+          }
+          if (result=='') {
+            resolve(result);
+          }
+        })
+        .catch(err => {
+          reject(new Error(`Something Went Wrong ${err}`));
+        });
 	  });
 	}
 }

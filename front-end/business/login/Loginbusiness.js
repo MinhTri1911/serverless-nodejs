@@ -54,9 +54,10 @@ export default {
        * @returns {void}
        */
       onSubmit() {
-        this.$nuxt.$loading.start()
         this.$validator.validateAll().then((valid) => {
         if (valid) {
+          this.$nuxt.$loading.start()
+
           // Get user input
           let user = {
             mail: this.mail,
@@ -68,6 +69,7 @@ export default {
 
           // Set the target url when we Login successful
           let url = constant.router.BASE_URL_NAME;
+
           // Check stay in screen SELECT_TICKET we must change target URL
           if (this.$store.state.auth.redirectURL == constant.router.SELECT_TICKET_NAME
             || this.$store.state.auth.redirectURL == constant.router.SELECT_SEAT_NAME) {
@@ -77,29 +79,29 @@ export default {
           // Call function login to Login
           this.login(user)
             .then((res) => {
-              this.$nuxt.$loading.finish();
+
               this.clickLogin = false;
+
               // Redirect error page when Black_cd =1
-              if (this.$store.state.auth.redirectURL == constant.router.ERROR) {
+              if (this.$store.state.auth.redirect_URL_BLACKCD == constant.router.ERROR) {
                 url = constant.router.ERROR_BLACK_CD;
               }
               // Redirect to the target URL
-              this.$router.push({name: url});
+              this.$router.push({name: url, params: { id: this.$store.state.auth.id}, query: this.$store.state.auth.query });
+              this.$nuxt.$loading.finish();
             })
             .catch(err => {
               this.$nuxt.$loading.finish();
               this.error = true;
               this.clickLogin = false;
             });
-            }
+        }
       }).catch(() => {
-        this.$nuxt.$loading.finish();
         return false;
       });
-      this.$nuxt.$loading.finish()
     },
 
-      /**
+     /**
      * Function overider message validator
      *
      * @returns {void}

@@ -17,7 +17,7 @@ export default {
   },
   validate(value, args) {
     let [clientId, memberNm, memberKn, mobileNo, telNo] = args;
-    console.log(args);
+
     // Call api check exists member code
     return get(constant.api.CHECK_EXISTS_MEMBER_CODE, {
       clientId: clientId,

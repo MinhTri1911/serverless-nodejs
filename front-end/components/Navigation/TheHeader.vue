@@ -28,25 +28,27 @@
       </div>
       <div class="head-top-row head-bottom">
         <div class="HeaderLeft">
-          <a href="javascript:void(0)">{{this.getName}}{{member}}</a>
+          <a href="javascript:void(0)" v-if="this.getName">
+            {{$t('login.lb_display_name', { name: this.getName, member: this.getMember })}}
+          </a>
         </div>
         <div class="HeaderRight">
           <nav id="Headmenupre">
             <ul id="TmenuGR">
-              <li class="tmenu"><a href="#">{{ $t('common.links.help') }}</a></li>
-              <li class="tmenu"><a href="#">{{ $t('common.links.list_show') }}</a></li>
+              <li class="tmenu"><nuxt-link :to="{name: 'client_id-guide' }">{{ $t('common.links.help') }}</nuxt-link></li>
+              <li class="tmenu"><nuxt-link :to="{name: 'client_id' }">{{ $t('common.links.list_show') }}</nuxt-link></li>
               <li v-if="false" class="tmenu"><a href="#">{{ $t('common.links.cart') }}</a></li>
-              <li v-if="false" class="tmenu"><a href="#">{{ $t('common.links.my_page') }}</a></li>
+              <li  class="tmenu"><nuxt-link v-if="this.$store.state.auth.authenticated" :to="{name: 'client_id-my-page' }"><i class="fas fa-user-alt"></i> {{ $t('common.links.my_page') }}</nuxt-link></li>
               <li  class="tmenu">
-                <nuxt-link :to="pathToTerms">{{ $t('common.links.register') }}</nuxt-link>
+                <nuxt-link v-if="!this.$store.state.auth.authenticated" :to="pathToTerms">{{ $t('common.links.register') }}</nuxt-link>
               </li>
-              <li class="tlogin" v-if="!this.$store.state.auth.authenticated">
-                <nuxt-link :to="{name: 'client_id-login' }">{{ $t('common.links.login') }}</nuxt-link>
+              <li class="tlogin" >
+                <nuxt-link v-if="!this.$store.state.auth.authenticated" :to="{name: 'client_id-login' }">{{ $t('common.links.login') }}</nuxt-link>
               </li>
-              <li class="tlogin" v-if="this.$store.state.auth.authenticated"  @click="logout()" >
-                <a href=""><i class="fas fa-power-off"></i>{{ $t('login.lb_logout') }}</a>
+              <li class="tlogin"   @click="logout()" >
+                <nuxt-link  v-if="this.$store.state.auth.authenticated" :to="{name: 'client_id' }"><i class="fas fa-power-off"></i>{{ $t('login.lb_logout') }}</nuxt-link>
               </li>
-              <li class="tmenu"><a href="#">{{$t('common.links.faq') }}</a></li>
+              <li class="tmenu"><nuxt-link :to="{name: 'client_id-help' }">{{$t('common.links.faq') }}</nuxt-link></li>
             </ul>
           </nav>
         </div>
@@ -75,7 +77,7 @@ export default {
     return {
       keySearch: this.$route.query.q,
       name:'' ,
-      member: this.$store.state.auth.user.member_kb_nm?'の' + this.$store.state.auth.user.member_kb_nm:'',
+      member: '',
       // Display login-logout - DucVN 2018-10-11
       isLogin: !!this.$store.state.auth.authenticated,
       pathToTerms: {
@@ -86,12 +88,11 @@ export default {
   },
   created() {
   },
-  computed: {...mapGetters({
-      getName: 'auth/getName'
+  computed: {
+    ...mapGetters({
+      getName: 'auth/getName',
+      getMember: 'auth/getMember',
     }),
-    checkName(){
-      return this.$store.state.auth.user.name ? this.$store.state.auth.user.name : null
-    }
   },
   mounted() {
 
@@ -111,29 +112,13 @@ export default {
 
     // Logout - DucVN - 2018-10-11
     logout() {
+      this.$router.push({name: 'client_id'});
       this.$store.dispatch('auth/logout', {
         client_id: this.$route.params.client_id,
-        member_id:  this.$store.state.auth.user.member_id
+        member_id: this.$store.state.auth.user.member_id
       });
     },
-    displayUsername() {
-      if (this.$store.state.auth.user.name) {
-        let checkName = this.$store.state.auth.user.name;
-        if(checkName.length<11) {
-          this.name = this.$store.state.auth.user.name + '様';
-        } else {
-          this.name = checkName.substring(1, 10) + '様';
-        }
-      }
-    }
   },
-  watch: {
-    '$route'(){
-      if (this.$route.name != route.LISTPERFORM) {
-        this.keySearch = ''
-      }
-    }
-  }
 };
 </script>
 

@@ -47,7 +47,7 @@ class GenreBusiness {
     let bindValueQuery = this.bindValueToQuery(condition)
     return new Promise((resolve, reject) => {
       if (!this.hasSearchClientId(params)) {
-        reject(new Error(`Vui lòng nhập client_id`))
+        reject(new Error(`Required client_id`))
       }
 
       this.db.query(`SELECT
@@ -57,7 +57,7 @@ class GenreBusiness {
                     , genre_rk
                     , disp_seq 
                   FROM
-                    ticket1.m_genre 
+                    m_genre 
                   ${queryCondition.clientId}
                   ORDER BY
                     disp_seq`,
@@ -68,7 +68,7 @@ class GenreBusiness {
         .then(data => {
           let response = {
             result: {
-              record_num: data.length,
+              record_num: data ? data.length : 0,
               genre_list: data
             }
           };

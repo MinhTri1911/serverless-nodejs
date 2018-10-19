@@ -11,7 +11,7 @@
         </div>
       </div>
 
-      <div class="container" v-if="flagValidate || !flagRequiredWith">
+      <div class="container" v-if="flagValidate || !flagRequiredWith || errorsMsg">
         <div class="error" :style="flagValidate || !flagRequiredWith ? 'display: block;' : ''">
           <div class="alert alert-danger" v-if="flagValidate || !flagRequiredWith">
             <label>{{ errors.first('mail') }}</label>
@@ -38,6 +38,12 @@
             <label>{{ errors.first('password') }}</label>
             <label>{{ errors.first('confirmed_password') }}</label>
             <label>{{ errors.first('member_code') }}</label>
+          </div>
+
+          <div v-if="errorsMsg.length" class="alert alert-danger">
+            <div class="error" :style="errorsMsg.length ? 'display: block;' : ''">
+              <label v-for="error in errorsMsg">{{ error }}</label>
+            </div>
           </div>
         </div>
       </div>
@@ -151,7 +157,7 @@
               <td class="td-content">
                 <select v-model="model.slbCity" v-validate="'required'" name="city" :data-vv-as="$t('register.lb_city')">
                   <option value="">{{ $t('register.lb_not_select') }}</option>
-                  <option v-for="item in dataInit.city" :value="item.code_no" >{{ item.code_nm }}</option>
+                  <option v-for="item in dataInit.city" :value="item.code_nm" >{{ item.code_nm }}</option>
                 </select>
               </td>
             </tr>

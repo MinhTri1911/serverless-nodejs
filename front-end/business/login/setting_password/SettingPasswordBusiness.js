@@ -8,8 +8,7 @@
 
 import constant from '@/constant';
 import Axios from 'axios';
-import { get, post } from '@/plugins/api';
-import { mapState, mapMutations, mapActions} from "vuex";
+import { post } from '@/plugins/api';
 
 export default {
   name: 'SettingPassword',
@@ -30,9 +29,8 @@ export default {
     this.renderMsgErr();
   },
   methods: {
-    // ...mapActions('setError'),
     /**
-     * Function submit to back previous page
+     * Function submit back previous page
      *
      * @returns {void}
      */
@@ -46,9 +44,9 @@ export default {
      * @returns {void}
      */
     onSubmit() {
-      this.$nuxt.$loading.start()
       this.$validator.validateAll().then((valid) => {
         if (valid) {
+          this.$nuxt.$loading.start()
           this.clickLogin = true,
           this.error = false;
           Axios.defaults.headers.common = {
@@ -75,22 +73,24 @@ export default {
           });
         }
       }).catch(() => {
-        this.$nuxt.$loading.finish();
         return false;
       });
     },
 
     // Check key when load page
     onLoad() {
+      this.$nuxt.$loading.start();
 
       // Post key to API by Axios
       return post(constant.api.CHECK_KEY, {
         key: this.$route.params.key, clientId: this.clientId
       })
       .then(result => {
+        this.$nuxt.$loading.finish();
         this.valid = true;
       })
       .catch(e => {
+        this.$nuxt.$loading.finish();
         this.$router.push({name: constant.router.ERROR_URL_EXPIRED});
       });
     },
@@ -121,6 +121,8 @@ export default {
     }
   },
   beforeMount() {
-    this.onLoad();
+    this.$nextTick(() => {
+      this.onLoad();
+    })
   }
 }

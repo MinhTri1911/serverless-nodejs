@@ -68,7 +68,19 @@ export default {
     },
     flagValidate: false,
     flagRequiredWith: true,
+    errorsMsg: []
   }),
+  beforeRouteEnter(to, from, next) {
+    // Reload or go from other page != page 130
+    if (from.name !== constant.router.REGISTER_CONFIRM) {
+      localStorage.removeItem('check_error');
+    } else {
+      // Check show message error when back from page 130 to page 120
+      localStorage.setItem('check_error', true);
+    }
+
+    next();
+  },
   created() {
     if (!!localStorage.getItem('is_checked_both') === false) {
       // Redirect to page 110 terms register
@@ -86,10 +98,16 @@ export default {
     if (!!this.register.model) {
       this.model = this.register.model;
     }
+
+    // If register fail in page 130 then show error in page 120
+    if (!!localStorage.getItem('check_error')) {
+      this.errorsMsg = this.auth.error;
+    }
   },
   computed: {
     ...mapState({
-      register: state => state.register
+      register: state => state.register,
+      auth: state => state.auth
     })
   },
   methods: {
@@ -156,17 +174,33 @@ export default {
             this.model.flagShowMemberCode = hanlderResult[0].member_id_input_disp_kb == 1;
             this.statusInputName = hanlderResult[0].member_nm_kb;
             this.statusInputPhoneNumber = hanlderResult[0].tel_no_kb;
-            this.model.inquiryNm = hanlderResult[0].inquiry_nm;
-            this.model.inquiryTelNo = hanlderResult[0].inquiry_tel_no;
-            this.model.inquiryUrl = hanlderResult[0].inquiry_url;
-            this.model.inquiryNote = hanlderResult[0].inquiry_notes;
+
+            let contactInf = {
+              inquiryNm: hanlderResult[0].inquiry_nm,
+              inquiryTelNo: hanlderResult[0].inquiry_tel_no,
+              inquiryUrl: hanlderResult[0].inquiry_url,
+              inquiryNote: hanlderResult[0].inquiry_notes,
+            }
+
+            window.localStorage.setItem('contact_inf', JSON.stringify(contactInf));
           }
 
           this.renderMsgErr();
         })
         .catch(err => {
+          this.$store.dispatch('auth/setError', [
+            this.$t('message.msg003_exception.line_1'),
+            this.$t('message.msg003_exception.line_2'),
+            this.$t('message.msg003_exception.line_3')
+          ]);
 
-          // Will be redirect to page error 570 later
+          // Redirect to page error 570 later
+          let path = this.$router.resolve({
+            name: constant.router.ERROR_NAME,
+            params: { client_id: this.$route.params.client_id }
+          });
+
+          this.$router.push(path.href);
         });
     },
 
@@ -186,7 +220,7 @@ export default {
           if (result.errors === undefined && result.listAddress.length) {
             let city = this.dataInit.city.find(element => element.code_nm === result.listAddress[0].todofuken_nm);
 
-            this.model.slbCity = city.code_no;
+            this.model.slbCity = city.code_nm;
             this.model.district = result.listAddress[0].shikuchoson_nm;
             this.model.address = result.listAddress[0].choiki_nm;
           } else {
@@ -210,6 +244,8 @@ export default {
       this.$validator.validate().then(result => {
         // validator check required with when validator all input
         this.validatorRequiredWith();
+        this.$store.dispatch('auth/setError', []);
+        this.errorsMsg = [];
 
         if (!result) {
           this.flagValidate = true;

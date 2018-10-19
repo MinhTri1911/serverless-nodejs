@@ -1,0 +1,145 @@
+/* HELP */
+
+.container {
+  clear: both;
+  max-width: 1200px !important;
+  height: 600px;
+  padding: 0px 0px 0px 0px;
+  background-color: white;
+
+  .login-head {
+    font-size: 1.5rem;
+    text-align: left;
+    background-color: #686859;
+    border-color: white;
+    box-shadow: none;
+    padding: 16px 0px 0px 30px;
+    margin-bottom: 15px;
+    color: white;
+    height: 60px;
+    font-weight: 500
+  }
+
+  h3 {
+    text-align: center;
+    font-style: normal;
+    font-weight:normal;
+    font-size: 1.5em;
+    padding: 0px 20% 0px 20%;
+    margin:  0px 0px 0px 0px;
+  }
+
+  .center-align {
+    margin-left: 20%;
+    margin-right: 20%;
+    width: 60%;
+
+    a {
+      color: blue;
+    }
+
+    a:hover {
+      color: red !important;
+    }
+
+    a:visited {
+      color: blue;
+    }
+
+    button {
+      color: #f1f1ed;
+      display: block;
+      width: 176px;
+      height: 46px;
+      margin: 10px auto;
+      font-size: 1.0em;
+      border: none;
+      background: #174A52;
+    }
+
+    button:hover {
+      display: block;
+      width: 176px;
+      height: 46px;
+      margin: 10px auto;
+      font-size: 1.0em;
+      border: none;
+      background: green;
+      cursor: pointer;
+    }
+
+    hr {
+      border-top: 3px double #8c8b8b;
+    }
+  }
+}
+
+
+@media only screen and (max-width: 800px) {
+
+  .container {
+
+    .login-head {
+      font-size: 1.5rem;
+      text-align: left;
+      background-color: #686859;
+      border-color: white;
+      box-shadow: none;
+      padding: 16px 0px 0px 30px;
+      margin-bottom: 15px;
+      color: white;
+      height: 60px;
+      font-weight: 500
+    }
+
+    h3 {
+      font-style: normal;
+      font-weight:normal;
+      font-size: 0.7em;
+      padding: 0px 5% 0px 5%;
+      margin:  0px 0px 0px 0px;
+    }
+
+    .center-align {
+      display: block;
+      margin-left: 5%;
+      margin-right: 5%;
+      width: 90%;
+
+      a {
+        color: blue;
+
+      }
+      a:hover {
+        color: red !important;
+      }
+
+      a:visited {
+        color: blue;
+      }
+
+      button {
+        color: #f1f1ed;
+        display: block;
+        width: 100px;
+        height: 50px;
+        margin: 10px auto;
+        font-size: 1em;
+        border: none;
+        background: #174A52;
+      }
+
+      button:hover {
+        display: block;
+        width: 100px;
+        height: 50px;
+        margin: 10px auto;
+        font-size: 1em;
+        border: none;
+        background: green;
+        cursor: pointer;
+      }
+    }
+  }
+}
+

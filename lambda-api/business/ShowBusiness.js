@@ -1,7 +1,9 @@
 import {Show} from "../models/Show"
 import Config from "../config/Constant";
 import _ from "lodash"
-
+import CommonClientId from "../common/ClientId"
+import {Helper} from "../common/Helper"
+const iconv = require('iconv-lite');
 class ShowBusiness {
   /**
    *
@@ -10,9 +12,8 @@ class ShowBusiness {
    */
   constructor(db) {
     this.db = db;
-    let show = new Show();
-    this.showModel = show.defineShowSchema(this.db)
     this.config = Config.ShowConfig;
+    this.helper = new Helper();
 
     return this;
   }
@@ -31,6 +32,10 @@ class ShowBusiness {
 
     if (this.hasSearchClientId(req)) {
       condition.clientId = req.client_id;
+    }
+
+    if (this.hasSearchShowGroupId(req)) {
+      condition.showGroupId = req.show_group_id;
     }
 
     if (this.hasSearchKey(req)) {
@@ -222,7 +227,7 @@ class ShowBusiness {
                     AND l.number >= $minNoShowGroup
                     AND l.number < $maxNoShowGroup
                     
-                    /*To get max num of number row to get total paginate*/
+                    /* To get max num of number row to get total paginate */
                     INNER JOIN
                       (SELECT row_number() OVER (
                                                  ORDER BY a.show_group_id DESC) AS number,
@@ -313,6 +318,8 @@ class ShowBusiness {
       let body = JSON.parse(req.body);
       if (body.params) {
         return body.params
+      } else if (body) {
+        return body
       }
     }
     return {}
@@ -330,7 +337,8 @@ class ShowBusiness {
       genreNo: this.addQueryGenreNo(req),
       showDate: this.addQueryShowDate(req),
       salesDate: this.addQuerySalesDate(req),
-      keySearch: this.addQueryKeySearch(req)
+      keySearch: this.addQueryKeySearch(req),
+      showGroupId: this.addQueryShowGroupId(req)
     }
   }
 
@@ -342,6 +350,18 @@ class ShowBusiness {
    */
   hasSearchClientId(req) {
     if (req && req.client_id && !_.isEmpty(req.client_id)) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check if user input show group id
+   * @param req
+   * @returns {boolean}
+   */
+  hasSearchShowGroupId(req) {
+    if (req && req.show_group_id && !_.isEmpty(req.show_group_id)) {
       return true;
     }
     return false;
@@ -404,7 +424,22 @@ class ShowBusiness {
   }
 
   /**
-   *
+   * Add sub query to show group id
+   * @param req
+   * @return {string}
+   */
+  addQueryShowGroupId(req) {
+    if (this.hasSearchShowGroupId(req)) {
+      if (!this.hasSearchClientId(req)) {
+        return ' a.show_group_id = $showGroupId';
+      }
+      return ' AND a.show_group_id = $showGroupId';
+    }
+    return '';
+  }
+
+  /**
+   * Add query to filter genre no when user input genre no
    * @param req
    * @returns {String}
    */
@@ -416,7 +451,7 @@ class ShowBusiness {
   }
 
   /**
-   *
+   * Add query to filer show date when user input show date
    * @param req
    * @returns {String}
    */
@@ -434,7 +469,7 @@ class ShowBusiness {
   }
 
   /**
-   *
+   * Add query to filter with sales date when user input sales date
    * @param req
    * @returns {String}
    */
@@ -495,6 +530,12 @@ class ShowBusiness {
       bindParam.clientId = conditionFromReq.clientId;
     }
 
+    // When user search with show group
+    if (!_.isNil(conditionFromReq.showGroupId) && !_.isNull(conditionFromReq.showGroupId)
+      && !_.isEmpty(conditionFromReq.showGroupId)) {
+      bindParam.showGroupId = conditionFromReq.showGroupId;
+    }
+
     // When user search with genre no
     if (!_.isNil(conditionFromReq.genreNo) && !_.isNull(conditionFromReq.genreNo)
       && !_.isEmpty(conditionFromReq.genreNo)) {
@@ -548,11 +589,85 @@ class ShowBusiness {
 
     if (!_.isNil(conditionFromReq.limit) && !_.isNull(conditionFromReq.limit)
       && _.isNumber(conditionFromReq.limit) && conditionFromReq.limit > 0) {
-      bindParam.maxNoShowGroup =  Number(conditionFromReq.offset) + Number(conditionFromReq.limit) + 1;
+      bindParam.maxNoShowGroup = Number(conditionFromReq.offset) + Number(conditionFromReq.limit) + 1;
     }
-console.log(bindParam)
+
     // When user search with key word
     return bindParam;
+  }
+
+  /**
+   *
+   */
+  getScheduleShow(request) {
+    let params = this.retrieveParams(request)
+    let condition = this.convertRequestToCondition(params)
+    let queryCondition = this.addSubQueryBaseOnRequest(params)
+    let bindValueQuery = this.bindValueToQuery(condition)
+    return new Promise((resolve, reject) => {
+      var queryDb = this.helper.loadSql('SQL027.sql')
+
+      if (!CommonClientId.checkExistsClientIdInRequest(request)) {
+        reject('Required client_id ')
+      }
+      // If user search client id, replace string client id from client id in file
+      if (queryCondition.clientId && !_.isNil(queryCondition.clientId)) {
+        queryDb = queryDb.replace('#replace_client_id', queryCondition.clientId)
+      }
+      // If user search with show group id, replace sub query from query string in file
+      if (queryCondition.showGroupId && !_.isNil(queryCondition.showGroupId)) {
+        queryDb = queryDb.replace('#replace_show_group_id', queryCondition.showGroupId)
+      }
+      // Replace all sub query in query string from file
+      queryDb = queryDb.replace('#replace_client_id', '').replace('#replace_show_group_id', '').replace('#replace_hide_show_flag')
+      // Execute query string
+      this.db.query(queryDb, {
+        type: this.db.QueryTypes.SELECT,
+        bind: bindValueQuery
+      })
+      .then(data => {
+        let res = {
+          record_num: data ? data.length : 0,
+          schedule_list: data
+        }
+        if (res && res.record_num > 0) {
+          res = Object.assign(res, data[0])
+          res.schedule_list = this.addSubSalesToSchedule(res)
+        }
+        resolve(res)
+      })
+      .catch(error => {
+        reject(error)
+      })
+    });
+  }
+
+  /**
+   *
+   * @param show
+   * @return {Array}
+   */
+  addSubSalesToSchedule(show){
+    var tmpShow = []
+    show.schedule_list.forEach(function (el, i) {
+      var tex = Object.assign({}, el);
+      el.sales_list = [tex]
+      let indexExistsShow = tmpShow.findIndex(function(te){
+        return te.show_no == el.show_no
+      })
+
+      if (indexExistsShow >= 0) {
+        if (!tmpShow[indexExistsShow].sales_list) {
+          tmpShow[indexExistsShow].sales_list = [tex]
+        } else {
+          tmpShow[indexExistsShow].sales_list.push(tex)
+        }
+      } else {
+        tmpShow.push(el)
+      }
+    })
+
+    return tmpShow;
   }
 }
 

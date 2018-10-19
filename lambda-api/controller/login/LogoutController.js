@@ -15,7 +15,7 @@ import HttpCode from "../../config/HttpCode";
 const requestIp = require('request-ip');
 
 /**
- * Function Insert in table h_login
+ * Function Insert into table h_login
  *
  * @param {*} event
  * @param {*} context
@@ -34,10 +34,9 @@ const logout = async (event, context, callback) => {
       .then(data => {
         console.log(data)
         if (_.isEmpty(data)) {
-          return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Login Fail!!!");
+          return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Internal Server Error!!!");
         }
-
-          return serviceModel.createSuccessCallback(HttpCode.SUCCESS,{ messenger: "logout ok" });
+        return serviceModel.createSuccessCallback(HttpCode.SUCCESS,{ messenger: "logout ok" });
       })
       .catch(err => {
         console.error(err);

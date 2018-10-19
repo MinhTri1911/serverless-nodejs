@@ -23,6 +23,7 @@ import { Helper } from '../../../common/Helper';
 const checkForgorPassword = async (event, context, callback) => {
   let serviceModel = new ServiceModel(Constant.DatabaseConfig);
   let account = new ForgotPasswordBusiness(serviceModel.getDb());
+
   // Get request parameter
   let req = JSON.parse(event.body);
 
@@ -30,16 +31,15 @@ const checkForgorPassword = async (event, context, callback) => {
     return account.checkEmailAndPhone(req)
       .then(data => {
         if (_.isEmpty(data)) {
-          return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Incorrect Information!!!");
+          return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Internal Server Error!!!");
         } else {
-          let helper = new Helper();
+          let helper = new Helper(serviceModel.getDb());
           let html = 'Please click <a href=' + data.url +'>here</a> to reset you password'
-          return helper.sendEmail('ducnhatvo@gmail.com', data.received, 'Reset your password', '', html)
+          return helper.sendEmail('takuya.mori@pastorale.jp', data.received, 'Reset your password', '', html)
             .then(res => {
               return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { status: HttpCode.SUCCESS });
             })
             .catch(err => {
-              // Log error
               console.log(err);
               return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
             });
@@ -52,7 +52,7 @@ const checkForgorPassword = async (event, context, callback) => {
   } catch (err) {
     console.error(err);
     return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
-}
+  }
 }
 
 export { checkForgorPassword }

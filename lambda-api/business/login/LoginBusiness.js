@@ -53,56 +53,56 @@ class LoginBusiness {
               },
               type: this.db.QueryTypes.INSERT
             })
-            .catch(function(err) {
-              console.error(err);
-              reject(new Error(`Something Went Wrong ${err}`));
-            });
+              .catch(function(err) {
+                console.error(err);
+                reject(new Error(`Something Went Wrong ${err}`));
+              });
           }
 
-        // Case for black_cd ==1
-        if (result!='' && result[0].black_cd=='1') {
-			    let sqlInsert = this.helper.loadSql('SQL023.sql');
-  				this.db.query(sqlInsert, {
-            bind: {
-              result_kb: '2',
-              loginkb: '1',
-              clientid: client_id,
-              memberid: result[0].member_id,
-              ip_address: ip
-            },
-						type: this.db.QueryTypes.INSERT
-					})
-					.catch(function(err) {
-            console.error(err);
-            reject(new Error(`Something Went Wrong ${err}`));
-          });
-        }
+          // Case for black_cd ==1
+          if (result!='' && result[0].black_cd=='1') {
+            let sqlInsert = this.helper.loadSql('SQL023.sql');
+            this.db.query(sqlInsert, {
+              bind: {
+                result_kb: '2',
+                loginkb: '1',
+                clientid: client_id,
+                memberid: result[0].member_id,
+                ip_address: ip
+              },
+              type: this.db.QueryTypes.INSERT
+            })
+              .catch(function(err) {
+                console.error(err);
+                reject(new Error(`Something Went Wrong ${err}`));
+              });
+          }
 
-        // Select fail we insert to h_login
-        if (result=='') {
-		      let sqlInsert = this.helper.loadSql('SQL023.sql');
-          this.db.query(sqlInsert, {
-            bind: {
-              result_kb: '2',
-              loginkb: '1',
-              clientid: client_id,
-              memberid: '',
-              ip_address: ip
-            },
-            type: this.db.QueryTypes.INSERT
-          })
-          .catch(function(err) {
-            console.error(err);
-            reject(new Error(`Something Went Wrong ${err}`));
-          });
-        }
+          // Select fail we insert to h_login
+          if (result=='') {
+            let sqlInsert = this.helper.loadSql('SQL023.sql');
+            this.db.query(sqlInsert, {
+              bind: {
+                result_kb: '2',
+                loginkb: '1',
+                clientid: client_id,
+                memberid: '',
+                ip_address: ip
+              },
+              type: this.db.QueryTypes.INSERT
+            })
+              .catch(function(err) {
+                console.error(err);
+                reject(new Error(`Something Went Wrong ${err}`));
+              });
+          }
 
-        resolve(result);
+          resolve(result);
       })
-      .catch(err => {
-        console.error(err);
-        reject(new Error(`Something Went Wrong ${err}`));
-      });
+        .catch(err => {
+          console.error(err);
+          reject(new Error(`Something Went Wrong ${err}`));
+        });
     });
 	}
 
@@ -113,24 +113,30 @@ class LoginBusiness {
 	 * @returns {result query} result
 	 */
   getUserByToken(data) {
-		let { client_id, member_id, member_pass, mail_address, iat, exp } = data;
+    let {
+      client_id,
+      member_pass,
+      mail_address,
+    } = data;
     return new Promise((resolve, reject) => {
       let sql = this.helper.loadSql('SQLCheckToken.sql');
       this.db.query(sql, {
         bind: {
-          idlogin: mail_address,
-          password: member_pass,
-          clientid: client_id ,
-          memberid: member_id
+          clientid: client_id, idlogin: mail_address, password: member_pass
         }, type: this.db.QueryTypes.SELECT
       })
-      .then(result => {
-        resolve(result);
-      })
-      .catch(err => {
-        console.error(err);
-        reject(new Error(`Something Went Wrong ${err}`));
-      });
+        .then(result => {
+          if (result) {
+            resolve(result);
+          } else {
+            result = null;
+            resolve(result);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          reject(new Error(`Something Went Wrong ${err}`));
+        });
     });
   }
 }

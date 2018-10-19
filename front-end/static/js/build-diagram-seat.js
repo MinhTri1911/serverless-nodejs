@@ -186,7 +186,7 @@
 
     }
     //end Color lib
-    const matrix = require("./sample.json");
+    var matrix = {};
 
     const configPanzoom = {
         fit: false,
@@ -254,12 +254,19 @@
           selected: new Color(seat.border.color.selected).toRGB(),
           unavailable: new Color(seat.border.color.unavailable).toRGB(),
         };
+        // console.log(seat);
+        let className = 'designate-seat';
+        if(seat.seat_type_kb == 2){
+          className = 'free-seat';
+        }
         return '<g data-id="' + seat.id + '">' +
             '<rect x="' + seat.x + '" y="' + seat.y + '" ' +
             'width="' + seat.size + '" height="' + seat.size + '" ' +
             'stroke="' + seat.border.color[seat.status] + '" ' + 'stroke-width="' + seat.border.width + '" ' +
             'fill="' + seat.color[seat.status] + '" ' +
-            'transform="rotate(' + -seat.angle + ", " + (seat.x) + ", " + (seat.y) + ')">' +
+            'transform="rotate(' + -seat.angle + ", " + (seat.x) + ", " + (seat.y) + ')" ' +
+            'data-seat_no="'+ seat.number.key + '" ' +
+            'class="'+ className + '">' +
             '</rect>' +
             '<text alignment-baseline="middle" text-anchor="middle"' +
             'x="' + (seat.x + seat.size / 2) + '" y="' + (seat.y + seat.size / 2) + '" ' +
@@ -344,6 +351,11 @@
         $(document).on('click', 'text', function () {
             $(this).parent().children('rect').click();
         });
+        // message in click on free seat
+        $(document).on('click', '.free-seat', function () {
+
+          alert('枚数選択をしてください。');
+        });
 
         $(document).on('load-select-seat',function () {
           let selectedSeat = JSON.parse($('#select-seat').val());
@@ -353,17 +365,26 @@
 
         });
         $(document).on('click', '.btn-cancel-all', function () {
-          removeAllSelectedSeat(seatList);
-          $('#select-seat').val(JSON.stringify(getAllSelectedSeat(seatList) )).trigger("change");
-
+          let confirmBox = confirm("ホントに？");
+          if(confirmBox==true ) {
+            removeAllSelectedSeat(seatList);
+            $('#select-seat').val(JSON.stringify(getAllSelectedSeat(seatList))).trigger("change");
+          }
         });
 
         $(document).on('click', '.btn-cancel', function (event) {
-          let seatNo= $(this).data('seat_no');
-          changeStatusSeat(seatList,seatNo,'available');
-          $(this).attr('fill', seatList[seatNo].color.available);
-          $(this).attr('stroke', seatList[seatNo].border.color.available);
-          $('#select-seat').val(JSON.stringify(getAllSelectedSeat(seatList) )).trigger("change");
+
+          var seatNo = 0 ;
+          seatNo = $(event.target).attr('data-seat_no');
+
+          let confirmBox = confirm("ホントに？");
+          if(confirmBox==true ) {
+
+            changeStatusSeat(seatList, seatNo, 'available');
+            $(this).attr('fill', seatList[seatNo].color.available);
+            $(this).attr('stroke', seatList[seatNo].border.color.available);
+            $('#select-seat').val(JSON.stringify(getAllSelectedSeat(seatList))).trigger("change");
+          }
         });
         $('#panzoom-in').click(function () {
 
@@ -555,7 +576,9 @@
     // buildDiagram(matrix, {
     //     src: '../img/hall_pic.png'
     // });
-function initDiagram(srcImage ="",matrix = {}) {
+function initDiagram(srcImage ="",matrixApi = {}) {
+  matrix = matrixApi;
+
   buildDiagram(matrix, {
         src: srcImage
     });

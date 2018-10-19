@@ -86,7 +86,9 @@ export default {
     }),
 
   },
+  mounted: function () {
 
+    },
   methods: {
     /**
      * Function init page get ticket info

@@ -30,10 +30,12 @@ export default {
       axios.get(url)
         .then(res => {
           const postsArray = [];
+
           // Push post item to array posts
           for (const key in res.data.items) {
             postsArray.push({...res.data.items[key] ,id :key});
           }
+
           // Set posts to data
           this.postList = postsArray;
           this.page.totalItems = res.data.total_items;

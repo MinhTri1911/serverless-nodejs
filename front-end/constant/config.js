@@ -17,7 +17,9 @@ const CONFIG = {
   PATH_IMG_SHOW_MAIN: '/:client_id/event/:show_group_id/internet_pic1_image',
   // Seat type
   SEAT_DESIGNATED: 1,
-  SEAT_FREE: 2
+  SEAT_FREE: 2,
+  // Path bg seat map from S3
+  PATH_IMG_SEAT_MAP: '/:client_id/layout/:hall_no/:hall_layout_no/hall_pic',
 };
 
 export default CONFIG;

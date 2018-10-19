@@ -1,0 +1,28 @@
+.register-step-3, .register-step-4 {
+  .container {
+    margin: 20px;
+
+    .block, .block-center {
+      padding: 10px;
+      margin-top: 5px;
+      background-color: #dfe7f0;
+    }
+
+    .block-center {
+      border-radius: 10px;
+      // height: 75px;
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+
+      .lb-question {
+        margin-top: 5px;
+      }
+    }
+
+    .btn-center {
+      display: table;
+      margin: auto;
+    }
+  }
+}

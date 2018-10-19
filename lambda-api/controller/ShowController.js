@@ -19,4 +19,20 @@ const getListShow = async (event, context, callback) => {
   }
 }
 
-export {getListShow}
+const getScheduleShow = async (event, context, callback) => {
+  let service = new ServiceModel(Config.DatabaseConfig);
+  let show = new ShowBusiness(service.getDb());
+  try {
+    return show.getScheduleShow(event)
+      .then(res => {
+        return service.createSuccessCallback(HttpCode.SUCCESS, res);
+      })
+      .catch(err => {
+        return service.createErrorCallback(HttpCode.ERROR, err + "Internal Server Error!!!");
+      });
+  } catch (err) {
+    return service.createErrorCallback(HttpCode.ERROR, err + "Internal Server Error!!!");
+  }
+}
+
+export {getListShow, getScheduleShow}

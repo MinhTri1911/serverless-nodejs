@@ -6,7 +6,7 @@ import TicketBookingSeat from "@/components/Booking/TicketBookingSeat"
 import TicketSummary from "@/components/Booking/TicketSummary"
 import {mapState, mapGetters} from 'vuex';
 import constant from '@/constant';
-import {get} from '@/plugins/api';
+import {get, post} from '@/plugins/api';
 
 export default {
   middleware: 'guest',
@@ -46,11 +46,14 @@ export default {
 
     }
   },
-  // beforeCreate : function() {
-  //   this.$store.state.auth.authenticated = true;
-  // },
+  beforeCreate: function () {
+    // this.$store.state.auth.authenticated = true;
+  },
   created() {
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start();
 
+    });
     this.initPage();
   },
   methods: {
@@ -60,25 +63,43 @@ export default {
      * @returns {Array}
      */
     initPage: function () {
-      get(constant.api.BOOKING_INFO, {clientId: this.$route.params.client_id})
+      get(constant.api.BOOKING_INFO, {
+          clientId: this.$route.params.client_id,
+          showGroupId: this.$route.query.show_group_id,
+          showNo: this.$route.query.show_no,
+          salesNo: this.$route.query.sales_no
+        })
         .then(result => {
 
-          this.dataTicket = result.data;
+          this.dataTicket = result.data.data;
+          //finish loading
+          this.$nuxt.$loading.finish();
         })
         .catch(err => {
           // Will be redirect to page error 570 later
           console.log(err);
         });
 
-      get(constant.api.TICKET_INFO, {clientId: this.$route.params.client_id})
+      get(constant.api.TICKET_INFO, {
+          clientId: this.$route.params.client_id,
+          showGroupId: this.$route.query.show_group_id,
+          showNo: this.$route.query.show_no,
+          salesNo: this.$route.query.sales_no
+        })
         .then(result => {
 
-          this.dataSeatType = result.data;
+          this.dataSeatType = result.data.data;
         })
         .catch(err => {
           // Will be redirect to page error 570 later
           console.log(err);
         });
+    },
+    onNextBtn: function () {
+      this.$emit('nextBtnClick', true);
+    },
+    validated(status) {
+      alert(status);
     }
   }
 

@@ -83,7 +83,7 @@ class ServicesModel {
     const paramCode = (code == null) ? 400 : code;
     const status = (paramCode >= 400) ? paramCode : 400;
     const response = {
-      statusCode: 500,
+      statusCode: status,
 
       // Required for CORS support to work
       headers: {

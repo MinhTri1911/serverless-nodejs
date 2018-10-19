@@ -29,8 +29,6 @@ const checkExistsClientIdInRequest = function (req) {
  * Add to export handle common function
  * @type {*}
  */
-const COMMON = {
+export default {
   checkExistsClientIdInRequest
 }
-
-export default COMMON

@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="ml-md-3 d-flex w-md-50 w-100 flex-column">
-                        <TicketBookingSeat :seats="dataSeatType.seats" ></TicketBookingSeat>
+                        <TicketBookingSeat :seats="dataSeatType.seats" @validate="validated"></TicketBookingSeat>
                     </div>
                 </div>
 
@@ -46,7 +46,7 @@
                         <button class="btn">
                             {{ $t("booking.btn_back")}}
                         </button>
-                        <button class="btn">
+                        <button class="btn" @click="onNextBtn">
                             {{ $t("booking.btn_next")}}
                         </button>
                     </div>

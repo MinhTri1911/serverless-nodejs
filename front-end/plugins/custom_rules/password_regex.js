@@ -37,7 +37,7 @@ export default {
         ||  value.search(regexLoseCaseNumberSymbol) != -1 || value.search(regexUpCaseNumberSymbol) != -1;
 
       if (!flag) {
-        let regexLoseCaseUpCaseNumberAndSymbol = /^(?=.*[a-z])(?=.*[A-Z])(?=,*\d)(?=.*[-!$%`@#^&*()_+|~=`{}\\[\]:";'<>?,.\/])[a-zA-Z\d-!$%`@#^&*()_+|~=`{}\\[\]:";'<>?,.\/]{8,16}$/g;
+        let regexLoseCaseUpCaseNumberAndSymbol = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-!$%`@#^&*()_+|~=`{}\\[\]:";'<>?,.\/])[a-zA-Z\d-!$%`@#^&*()_+|~=`{}\\[\]:";'<>?,.\/]{8,16}$/g;
 
         flag = value.search(regexLoseCaseUpCaseNumberAndSymbol);
       }

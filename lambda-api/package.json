@@ -16,6 +16,7 @@
     "axios": "^0.18.0",
     "babel-runtime": "^6.26.0",
     "ejs": "^2.6.1",
+    "iconv-lite": "^0.4.24",
     "jsonwebtoken": "^8.3.0",
     "lambda-env-vars": "^0.4.0",
     "lodash": "^4.17.4",

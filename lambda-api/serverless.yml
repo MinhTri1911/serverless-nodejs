@@ -216,6 +216,31 @@ functions:
         path: notifies
         method: post
         cors: true
+#  booking
+  getShowInfo:
+      handler: controller/BookingController.getShowInfo
+      name: getShowInfo
+      events:
+        - http:
+            path: booking-show-info
+            method: get
+            cros: true
+  getSeatDetail:
+        handler: controller/BookingController.getSeatDetail
+        name: getSeatDetail
+        events:
+          - http:
+              path: booking-seat-detail
+              method: get
+              cros: true
+  getTicketType:
+          handler: controller/BookingController.getTicketType
+          name: getTicketType
+          events:
+            - http:
+                path: booking-ticket-type
+                method: get
+                cros: true
 
   demoSendMail:
     handler: controller/RegisterController.demoSendMail
@@ -225,12 +250,27 @@ functions:
         path: demo
         method: post
         cors: true
-
+  getScheduleShow:
+    handler: controller/ShowController.getScheduleShow
+    name: getScheduleShow
+    events:
+    - http:
+        path: shows/schedule
+        method: post
+        cors: true
   createUser:
     handler: controller/RegisterController.createUser
     name: createUser
     events:
     - http:
         path: register
+        method: post
+        cors: true
+  activeAccount:
+    handler: controller/RegisterController.activeAccount
+    name: activeAccount
+    events:
+    - http:
+        path: active-account
         method: post
         cors: true

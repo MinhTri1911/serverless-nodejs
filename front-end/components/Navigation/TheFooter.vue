@@ -4,10 +4,10 @@
     <div class="containerFooter">
       <div id="Footer">
         <ul id="FooterMenu">
-          <li><a href="privacy/index.html">個人情報保護方針</a></li>
-          <li><a href="law/index.html">特定商取引法に基づく表示</a></li>
-          <li><a href="kiyaku/index.html">利用規約</a></li>
-          <li><a href="spec/index.html">動作環境</a></li>
+          <li><nuxt-link :to="{name: 'client_id-privacy' }">{{ $t('common.footer.privacy') }}</nuxt-link></li>
+          <li><nuxt-link :to="{name: 'client_id-kiyaku' }">{{ $t('common.footer.kiyaku') }}</nuxt-link></li>
+          <li><nuxt-link :to="{name: 'client_id-law' }">{{ $t('common.footer.law') }}</nuxt-link></li>   
+          <li><nuxt-link :to="{name: 'client_id-spec' }">{{ $t('common.footer.spec') }}</nuxt-link></li>
         </ul>
         <p> {{ $t('common.footer.title') }}</p>
       </div>

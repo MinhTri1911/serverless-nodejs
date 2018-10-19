@@ -7,9 +7,12 @@
  * @date 2018-10-10
  */
 
+import _ from 'lodash';
+
 const ejs = require('ejs');
 const path = require('path');
 const fs = require('mz/fs');
+const iconv = require('iconv-lite');
 const nodemailer = require('nodemailer/lib/nodemailer');
 
 class Helper {
@@ -19,7 +22,10 @@ class Helper {
    * @returns {void}
    * @memberof Helper
    */
-  constructor() {}
+  constructor(db) {
+    this.db = db;
+    return this
+  }
 
   /**
    * Function send mail via stmp protocol
@@ -34,48 +40,58 @@ class Helper {
    */
   sendEmail(fromEmail, toEmails, subject, textContent, htmlContent) {
     return new Promise((resolve, reject) => {
-      // Create a SMTP transporter object
-      let transporter = nodemailer.createTransport({
-        host: process.env.MAIL_HOST,
-        port: process.env.MAIL_PORT,
-        secure: true,
-        auth: { user: process.env.MAIL_USER, pass: process.env.MAIL_PASS },
-        logger: false,
-        debug: false
-      }, {
-        // Sender info
-        from: fromEmail,
-        headers: {
-          "X-Requested-With": '*',
-          "Access-Control-Allow-Headers": 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with',
-          "Access-Control-Allow-Origin": '*',
-          "Access-Control-Allow-Methods": 'POST,GET,OPTIONS'
-        }
-      });
+      let sql = this.loadSql('SQLGetKeySendGrid.sql')
+      let passwordEmail = '';
+      this.db.query(sql, { type: this.db.QueryTypes.SELECT})
+        .then(result => {
+          passwordEmail = result[0].sendgrid_apikey;
 
-      // Message content
-      let message = {
-        from: fromEmail,
-        to: toEmails,
-        subject: subject,
-        text: textContent,
-        html: htmlContent
-      };
+          // Create a SMTP transporter object
+          let transporter = nodemailer.createTransport({
+            host: process.env.MAIL_HOST,
+            port: process.env.MAIL_PORT,
+            secure: true,
+            auth: { user: process.env.MAIL_USER, pass: passwordEmail },
+            logger: false,
+            debug: false
+          }, {
+            // Sender info
+            from: fromEmail,
+            headers: {
+              "X-Requested-With": '*',
+              "Access-Control-Allow-Headers": 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with',
+              "Access-Control-Allow-Origin": '*',
+              "Access-Control-Allow-Methods": 'POST,GET,OPTIONS'
+            }
+          });
 
-      // Asynchronous function send mail
-      transporter.sendMail(message, (error, info) => {
-        if (error) {
-          // Close connection
-          transporter.close();
+          // Message content
+          let message = {
+            from: fromEmail,
+            to: toEmails,
+            subject: subject,
+            text: textContent,
+            html: htmlContent
+          };
 
-          reject(new Error(`Error send mail function: ${error}`));
-        } else {
-          // Close connection
-          transporter.close();
+          // Asynchronous function send mail
+          transporter.sendMail(message, (error, info) => {
+            if (error) {
+              // Close connection
+              transporter.close();
 
-          resolve({ status: true });
-        }
-      });
+              reject(new Error(`Error send mail function: ${error}`));
+            } else {
+              // Close connection
+              transporter.close();
+
+              resolve({ status: true });
+            }
+          });
+        })
+        .catch(err => {
+          console.error(err);
+        });
     });
   }
 
@@ -109,7 +125,10 @@ class Helper {
    * @memberof Helper
    */
   loadSql(sqlFile, pathFolder = 'sql') {
-    return fs.readFileSync(pathFolder + '/' + sqlFile).toString();
+    const file  = fs.readFileSync(pathFolder + '/' + sqlFile).toString();
+    // const content = iconv.decode(Buffer.from(file), "Shift_JIS");
+
+    return file;
   }
 }
 

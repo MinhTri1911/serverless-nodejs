@@ -57,7 +57,7 @@ class NotifyBusiness {
         })
         .then(result => {
           let res = {
-            record_num: result ? result[0].total : 0,
+            record_num: result && result.length > 0 ? result[0].total : 0,
             notify_list: result
           }
           resolve(res);

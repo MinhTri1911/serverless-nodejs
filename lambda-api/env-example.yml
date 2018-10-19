@@ -12,4 +12,9 @@ environment:
   MAIL_HOST: smtp.sendgrid.net
   MAIL_PORT: 465
   MAIL_USER: apikey
-  MAIL_PASS: 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
+  MAIL_PASS: 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
+  MAIL_NAME: trihnm@rikkeisoft.com
+  INS_PG_ID: test1
+  INS_EMPLOYEE_CD: NET
+  UPD_PG_ID: test1
+  UPD_EMPLOYEE_CD: NET

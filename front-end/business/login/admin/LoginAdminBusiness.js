@@ -73,6 +73,7 @@ export default {
 
         // Set the target url when we Login successful
         let url = constant.router.BASE_URL_NAME;
+
         // Check stay in screen SELECT_TICKET we must change target URL
         if (this.$store.state.auth.redirectURL == constant.router.SELECT_TICKET_NAME
           || this.$store.state.auth.redirectURL == constant.router.SELECT_SEAT_NAME) {
@@ -86,6 +87,7 @@ export default {
             if (this.$store.state.auth.redirectURL == constant.router.ERROR) {
               url = constant.router.ERROR_BLACK_CD;
             }
+
             // Redirect to the target URL
             this.$router.push({name: url});
           })

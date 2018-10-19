@@ -41,6 +41,7 @@ export default {
      * @returns {void}
      */
     onLoad() {
+      this.$nuxt.$loading.start()
       Axios.defaults.headers.common = {
         'Content-Type': 'application/json',
         Authorization: "",
@@ -51,17 +52,21 @@ export default {
         client_id: this.$route.params.client_id,
       })
       .then(result => {
+        this.$nuxt.$loading.finish();
         this.inquiry_nm = result.data.data.inquiry_nm;
         this.inquiry_url = result.data.data.inquiry_url;
         this.inquiry_notes = result.data.data.inquiry_notes;
         this.inquiry_tel_no = result.data.data.inquiry_tel_no;
       })
       .catch(e => {
+        this.$nuxt.$loading.finish();
         this.error = true;
       });
     }
   },
   beforeMount(){
+    this.$nextTick(() => {
     this.onLoad();
+    })
   }
 }

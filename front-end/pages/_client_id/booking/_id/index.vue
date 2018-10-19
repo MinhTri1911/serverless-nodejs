@@ -34,8 +34,7 @@
                         <button class="btn">
                             {{ $t('booking.btn_back') }}
                         </button>
-                        <button class="btn">
-
+                        <button class="btn" @click="">
                             {{ $t('booking.btn_next') }}
                         </button>
                     </div>

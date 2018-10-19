@@ -1,16 +1,17 @@
 <template>
-  <table>
-    <div class="container">
-      <div class="login-head"></div>
-        <div>
-          <h3 v-for="(error, index) in messenge_error" :key="index">{{ error }}</h3>
-        </div>
-        <div class="center-align">
-          <hr>
-          <button type="button" @click="list()">{{ $t('login.btn_listbutton') }}</button>
-      </div>
+  <div class="container">
+    <div class="login-head">
     </div>
-  </table>
+    <div>
+      <h3 v-for="(error, index) in messenge_error" :key="index">{{ error }}</h3>
+    </div>
+    <div class="center-align">
+      <hr>
+      <button type="button" @click="list()">
+        {{ $t('login.btn_listbutton') }}
+      </button>
+    </div>
+  </div>
 </template>
 
 <script src="@@/business/error/ErrorCommonBusiness.js"></script>

@@ -24,7 +24,7 @@ class ClientBusiness {
 	}
 
   /**
-   * Function will get info of client
+   * Function will get info client
    *
    * @param {*} data
    * @param {*}

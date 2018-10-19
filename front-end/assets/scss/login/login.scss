@@ -1,28 +1,33 @@
 /* LOGIN 専用 */
 
 .container {
-  max-width: 1230px !important;
+  clear: both;
+  max-width: 1200px !important;
+  height: 600px;
+  padding: 0px 0px 0px 0px;
 
   .login {
     display: block;
     max-height: 800px;
     height: 600px;
     width: 100%;
-    margin: 15px auto;
+    margin: 0px auto;
     padding: 0px 0px 50px 0px;
     background-color: #fff;
     border-left: solid #ddd 1px;
     border-right: solid #ddd 1px;
 
     .login-head {
-      font-size: 1.5em;
+      font-size: 1.5rem;
       text-align: center;
-      color: #fff;
       background-color: #686859;
       border-color: white;
       box-shadow: none;
-      padding: 3px 0px 0px 20px;
+      padding: 16px 0px 0px 30px;
       margin-bottom: 15px;
+      color: white;
+      height: 60px;
+      font-weight: 500
     }
 
     .login-form {
@@ -80,7 +85,7 @@
             padding-left: 4px;
             font-size: 22px;
             width: 107%;
-            height: 36px;
+            height: 40px;
             border: 1px solid #888;
           }
 
@@ -136,7 +141,7 @@
         background-color: #686859;
         border-color: white;
         box-shadow: none;
-        padding: 3px 0px 0px 20px;
+        padding: 17px 0px 0px 20px;
         margin-bottom: 15px;
       }
 
@@ -148,8 +153,8 @@
         h3 {
           font-style: normal;
           font-weight:normal;
-          font-size: 1em;
-          padding: 1px 0px 0px 2px;
+          font-size: 0.9em;
+          padding: 1px 4px 4px 4px;
           margin:  1px 0px 0px 2px;
         }
 
@@ -167,7 +172,7 @@
 
         .block {
           border: 1px solid;
-          margin: 10px 0px 1px 0px;
+          margin: 0px 0px 5px 0px;
 
           .error-messenger {
             color: red;
@@ -179,6 +184,7 @@
           .block-inner {
             display: block;
             padding-top: 5px;
+            padding-bottom: 10px;
 
             .col-xl-4 {
               width: 100%;
@@ -189,19 +195,19 @@
               margin: 0px 0 0px 0;
               width: 100%;
 
-            input {
-              padding-left: 2px;
-              font-size: 22px;
-              width: 100%;
-              height: 30px;
-              border: 1px solid #888;
+              input {
+                padding-left: 2px;
+                font-size: 22px;
+                width: 100%;
+                height: 40px;
+                border: 1px solid #888;
 
-            }
+              }
 
-            .input-center {
-              margin: auto;
+              .input-center {
+                margin: auto;
+              }
             }
-          }
 
             button {
               color: #f1f1ed;

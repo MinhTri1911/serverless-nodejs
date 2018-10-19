@@ -53,7 +53,7 @@ export default {
         client_id: this.$route.params.client_id,
       })
       .then(result => {
-        this.$nuxt.$loading.finish()
+        this.$nuxt.$loading.finish();
         this.clickLogin = false;
         this.inquiry_nm = result.data.data.inquiry_nm;
         this.inquiry_url = result.data.data.inquiry_url;
@@ -61,13 +61,14 @@ export default {
         this.inquiry_tel_no = result.data.data.inquiry_tel_no;
       })
       .catch(e => {
-        this.$nuxt.$loading.finish()
         this.clickLogin = false;
         this.error = true;
       });
     }
   },
   beforeMount(){
-    this.onLoad();
+    this.$nextTick(() => {
+      this.onLoad();
+    })
   }
 }

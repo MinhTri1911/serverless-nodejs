@@ -1,4 +1,9 @@
 {
+  "msg003_exception": {
+    "line_1": "エラーが発生しました。",
+    "line_2": "ご迷惑おかけして申し訳ありません。",
+    "line_3": "お手数ですが、下記お問合せにご連絡ください。"
+  },
   "msg009_explain_input_inf": {
     "msg_1_head": {
       "dot": "・"
@@ -26,5 +31,13 @@
   },
   "msg020_password_security": "パスワード保護のため非表示としております。",
   "msg065_not_exists_member_code": "入力された会員番号と一致する情報はありませんでした。",
-  "msg_confirm_stop_register": "利用登録を中止しますがよろしいですか？はい/いいえ"
+  "msg_confirm_stop_register": "利用登録を中止しますがよろしいですか？はい/いいえ",
+  "msg029_empty_designate_seat" : "座席が選択されていません。",
+  "msg030_require_select_ticket_type" : "券種が選択されていません。",
+  "msg031_validate_number_ticket" : "枚までご購入いただけます。",
+  "msg032_validate_save_fail" : "{row}列{col}番のお席は確保できませんでした。",
+  "msg033_validate_member_end" : "お申込みできない座席が含まれています。",
+  "msg054_validate_require_ticket" : "お申込みできない座席が含まれています。",
+  "msg004_validate_sale_term" : "受付期間外の為、予約を行う場合は再度公演一覧から操作をお願い致します。"
+  
 }
