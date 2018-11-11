@@ -7,6 +7,8 @@
   "lb_phone_number": "電話番号",
   "lb_cell_phone": "携帯電話番号",
   "lb_zipcode": "郵便番号",
+  "lb_zipcode_3": "郵便番号（3桁）",
+  "lb_zipcode_4": "郵便番号（4桁）",
   "btn_search_zipcode": "住所検索ボタン",
   "lb_city": "都道府県",
   "lb_district": "市区町村",
@@ -52,5 +54,12 @@
   "lb_msg_open_mail": "仮登録完了メールを開いていただき、メールの本文のURLから本登録へお進みください。",
   "lb_msg_not_recive_mail": "仮登録完了メールが届かない場合、下記問い合わせ先までご連絡下さい。",
   "lb_msg_question": "問合せ先を表示",
-  "btn_go_to_list_show": "公演一覧へ"
+  "btn_go_to_list_show": "公演一覧へ",
+  "btn_go_to_login_page": "ログインはこちら",
+  "lb_title_register": "新規登録",
+  "lb_title_confirm_inf": "登録情報確認",
+  "lb_title_complete_temporary": "仮登録完了",
+  "lb_title_complete": "本登録完了",
+  "lb_exlain_complete_register": "下記ボタンから本登録処理を行ってください。",
+  "btn_register_complete": "本登録"
 }

@@ -21,7 +21,7 @@
                             {{ $t('booking.lb_show_date') }}
                         </div>
                         <div>
-                            {{this.dataTicket.show_date}}
+                            {{this.dataTicket.show_date_disp_char}}
                         </div>
                     </div>
                 </div>
@@ -33,12 +33,13 @@
                         {{this.dataTicket.hall_nm}}
                     </div>
                     <div class=" d-none d-md-block d-lg-block ">
-                        <button type="button" class="btn btn-primary" v-if="this.dataTicket.show_group_disp_kb == 1">
+                        <button type="button" class="btn btn-primary" @click="showGroup" v-if="this.dataTicket.show_group_disp_kb == 1">
                             {{ $t('booking.btn_show_detail') }}
                         </button>
                     </div>
                 </div>
                 <button type="button" class="d-md-none d-block btn btn-primary my-2 w-100"
+                        @click="showGroup"
                         v-if="this.dataTicket.show_group_disp_kb == 1">
                     {{ $t('booking.btn_show_detail') }}
                 </button>
@@ -105,6 +106,7 @@
 </template>
 
 <script>
+import constant from '@/constant';
 export default {
   name: "ticket-info",
   props: {
@@ -114,6 +116,16 @@ export default {
     },
     dataTicket: {
       type: Object
+    }
+  },
+  methods: {
+    showGroup(){
+
+      let routeData = this.$router.resolve(
+        {name: constant.router.BOOKING_DETAIL,
+          params: { client_id:  this.$route.params.client_id },
+          query: {'show_group_id':this.$route.query.show_group_id } });
+      window.open(routeData.href, '_blank');
     }
   }
 }

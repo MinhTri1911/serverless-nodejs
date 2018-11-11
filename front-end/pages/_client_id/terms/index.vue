@@ -1,6 +1,7 @@
 <template lang="html">
   <div id="MainC" class="terms">
     <main id="ContentsPane">
+      <h1 class="rs-title-pg"><span id="Pagetitle">{{ $t('terms.lb_title_terms') }}</span></h1>
       <div class="error" :style="validation ? 'display: block;' : ''">
         <div class="alert alert-danger" v-if="validation">
           {{ message }}
@@ -8,9 +9,9 @@
       </div>
 
       <div class="accept-inf-link">
-        <nuxt-link to="/about">{{ $t('terms.href_terms_of_use') }}</nuxt-link>
+        <nuxt-link :to="{ name: routerNameKiyaku }">{{ $t('terms.href_terms_of_use') }}</nuxt-link>
         <br/>
-        <nuxt-link to="/about">{{ $t('terms.href_protect_per_inf') }}</nuxt-link>
+        <nuxt-link :to="{ name: routerNamePrivate }">{{ $t('terms.href_protect_per_inf') }}</nuxt-link>
       </div>
       <div class="accept-input">
         <input type="checkbox" id="cb-terms-use" v-model="termsUse">
@@ -20,7 +21,7 @@
       </div>
       <div class="accept-action">
         <nuxt-link :to="pathToPageHome" class="btn rs-btn btn-large btn-green-dark block-left">{{ $t('terms.btn_no_accept') }}</nuxt-link>
-        <button @click.prevent="goToPageRegister()" class="rs-btn btn-large btn-green-dark block-right">{{ $t('common.btn_next') }}</button>
+        <button @click.prevent="goToPageRegister()" class="btn rs-btn btn-large btn-green-dark block-right">{{ $t('common.btn_next') }}</button>
       </div>
     </main>
   </div>

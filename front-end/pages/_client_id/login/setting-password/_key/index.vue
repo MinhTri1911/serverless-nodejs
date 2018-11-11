@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div id="MainC">
      <div class="login" v-if="!valid">
      </div>
     <div class="login" v-if="valid">
@@ -7,14 +7,14 @@
         {{ $t('login.lb_setting_password_head') }}
       </div>
       <div>
-        <h3>{{ $t('login.lb_setting_password_1') }}</h3>
-        <h3>{{ $t('login.lb_setting_password_2') }}</h3>
-        <h3>{{ $t('login.lb_setting_password_3') }}</h3>
+        <p>{{ $t('login.lb_setting_password_1') }}</p>
+        <p>{{ $t('login.lb_setting_password_2') }}</p>
+        <p>{{ $t('login.lb_setting_password_3') }}</p>
       </div>
       <div class="login-form">
         <div class="col-xl-12 block">
           <div class="col-xl-12 block-inner">
-            <div class="col-xl-4">
+            <div class="col-xl-4 max-width">
               {{ $t('login.lb_new_password') }}
             </div>
               <div class="col-xl-8 input-center">
@@ -29,7 +29,7 @@
               </div>
           </div>
           <div class="col-xl-12 block-inner">
-            <div class="col-xl-4">
+            <div class="col-xl-4 max-width">
               {{ $t('login.lb_confirm_new_password') }}
             </div>
             <div class="col-xl-8 input-center">
@@ -41,7 +41,7 @@
               @keyup="validate()"
               @keyup.enter="onSubmit()"
               @paste.prevent>
-              </div>
+            </div>
           </div>
             <div class= "error-messenger" colspan="2">{{ errors.first('password') }}</div>
             <div class= "error-messenger" colspan="2">{{ errors.first('password_confirm') }}</div>

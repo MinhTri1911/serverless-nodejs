@@ -9,6 +9,7 @@
 import constant from '@/constant';
 import Axios from 'axios';
 import { post } from '@/plugins/api';
+import ClientInfo from '@/components/UI/ClientInfo';
 
 export default {
   name: 'CompleteSettingPasswordBusiness',
@@ -17,12 +18,14 @@ export default {
   data() {
     return {
       error: false,
-      clickLogin: false,
-      inquiry_nm: '',
-      inquiry_tel_no: '',
-      inquiry_url: '',
-      inquiry_notes: '',
-      clientId: '',
+      click_login: false,
+      model: {
+        inquiry_nm: '',
+        inquiry_tel_no: '',
+        inquiry_url: '',
+        inquiry_notes: '',
+        client_id: '',
+      }
     }
   },
   methods: {
@@ -42,7 +45,7 @@ export default {
      */
     onLoad() {
       this.$nuxt.$loading.start()
-      this.clickLogin = true;
+      this.click_login = true;
       Axios.defaults.headers.common = {
         'Content-Type': 'application/json',
         Authorization: "",
@@ -54,14 +57,14 @@ export default {
       })
       .then(result => {
         this.$nuxt.$loading.finish();
-        this.clickLogin = false;
-        this.inquiry_nm = result.data.data.inquiry_nm;
-        this.inquiry_url = result.data.data.inquiry_url;
-        this.inquiry_notes = result.data.data.inquiry_notes;
-        this.inquiry_tel_no = result.data.data.inquiry_tel_no;
+        this.click_login = false;
+        this.model.inquiry_nm = result.data.data.inquiry_nm;
+        this.model.inquiry_url = result.data.data.inquiry_url;
+        this.model.inquiry_notes = result.data.data.inquiry_notes;
+        this.model.inquiry_tel_no = result.data.data.inquiry_tel_no;
       })
       .catch(e => {
-        this.clickLogin = false;
+        this.click_login = false;
         this.error = true;
       });
     }
@@ -70,5 +73,8 @@ export default {
     this.$nextTick(() => {
       this.onLoad();
     })
+  },
+  components: {
+    ClientInfo
   }
 }

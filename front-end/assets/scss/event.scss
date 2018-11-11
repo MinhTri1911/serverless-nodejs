@@ -1,59 +1,62 @@
-/* 公演詳細用 */
+//colors
+$black: #000;
+$color_storm_dust_approx: #666;
 
-h2#eventTitle {/* 公演詳細のh2は背景色が付きません。その代りに長いタイトルに対応（改行可） */
-	background: none;
-	padding-left: 0;
+section {
+  &#eventDate {
+    display: block;
+    padding-bottom: 6px;
+    color: $black;
+    font-weight: bold;
+    border-bottom: $color_storm_dust_approx 1px dotted;
+  }
+  &#eventGenre {
+    font-size: smaller;
+    img {
+      vertical-align: bottom;
+    }
+  }
+  &#eventcolumn_upper {
+    display: block;
+    width: 100%;
+    ul li {
+      &#eventPhotoL {
+        width: 400ps;
+        float: left;
+        list-style: none;
+      }
+      &#eventSchedule {
+        display: block;
+        float: left;
+        list-style: none;
+        padding: 0 0 30px 15px;
+      }
+    }
+  }
+  &#eventcolumn_lower {
+    float: left;
+    display: block;
+    width: 100%;
+    li {
+      list-style: none;
+      padding: 0 0 20px 0;
+    }
+  }
 }
-
-section#eventDate {/* 公演タイトル下の公演全体スケジュール */
-	display: block;
-	padding-bottom: 6px;
-	color: #000;
-	font-weight: bold;
-	border-bottom: #666 1px dotted;
+#eventSchedule {
+  dl {
+    font-size: 0.9em;
+  }
+  dt {
+    padding: 0;
+    margin: 0;
+  }
+  dd {
+    padding: 0 0 10px 0;
+    margin: 0;
+  }
 }
-
-section#eventGenre {/* スケジュール下の公演のジャンル */
-	font-size: smaller;
-}
-section#eventGenre img {
-	vertical-align: bottom;
-}
-
-section#eventcolumn_upper {
-	display: block;
-	width: 100%;
-}
-section#eventcolumn_upper ul li#eventPhotoL {/* イベント写真は幅400pxを最大値とします。縦は自由です */
-	width: 400ps;
-	float: left;
-	list-style: none;
-}
-section#eventcolumn_upper ul li#eventSchedule {
-	display: block;
-	float: left;
-	list-style: none;
-	padding: 0 0 30px 15px;
-}
-
-#eventSchedule dl {
-	font-size: 0.9em;
-}
-#eventSchedule dt {
-	padding: 0;
-	margin: 0;
-}
-#eventSchedule dd {
-	padding: 0 0 10px 0;
-	margin: 0;
-}
-section#eventcolumn_lower {
-	float: left;
-	display: block;
-	width: 100%;
-}
-
-section#eventcolumn_lower li {
-	list-style: none;
-	padding: 0 0 20px 0;
+h2#eventTitle {
+  background: none;
+  padding-left: 0;
 }

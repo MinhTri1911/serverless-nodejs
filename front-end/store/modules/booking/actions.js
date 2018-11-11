@@ -44,12 +44,18 @@ export const deleteTicketDesignated = ({commit}, delTicket) => {
   commit(types.DELETE_TICKET_DESIGNATED, delTicket)
 }
 
+export const setCart = ({commit}, cartId) => {
+  commit(types.SET_CART, cartId)
+}
+
+
 
 export default {
   setPosts,
   addTicket,
   deleteTicket,
   deleteTicketDesignated,
-  chooseTicketType
+  chooseTicketType,
+  setCart
 
 }

@@ -3,11 +3,7 @@
     <div class="login-head">
       {{ $t('common.footer.kiyaku') }}
     </div>
-    <div>
-      <h3></h3>
-    </div>
-    <div class="center-align">
-      <hr>
+    <div class="content" v-html="content">
     </div>
   </div>
 </template>

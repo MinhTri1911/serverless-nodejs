@@ -1,6 +1,7 @@
 <template lang="html">
   <div id="MainC" class="register-step-1">
     <main id="ContentsPane">
+      <h1 class="rs-title-pg"><span id="Pagetitle">{{ $t('register.lb_title_register') }}</span></h1>
       <div class="container">
         <div class="block">
           {{ $t('message.msg009_explain_input_inf.msg_1_head.dot') }}
@@ -11,6 +12,7 @@
         </div>
       </div>
 
+      <!-- Show message errors -->
       <div class="container" v-if="flagValidate || !flagRequiredWith || errorsMsg">
         <div class="error" :style="flagValidate || !flagRequiredWith ? 'display: block;' : ''">
           <div class="alert alert-danger" v-if="flagValidate || !flagRequiredWith">
@@ -30,6 +32,8 @@
               }}
             </label>
             <label>{{ errors.first('post_code') }}</label>
+            <label>{{ errors.first('post_code_1') }}</label>
+            <label>{{ errors.first('post_code_2') }}</label>
             <label>{{ errors.first('city') }}</label>
             <label>{{ errors.first('district') }}</label>
             <label>{{ errors.first('address') }}</label>
@@ -47,7 +51,9 @@
           </div>
         </div>
       </div>
+      <!-- End show message errors -->
 
+      <!-- Table input infomation -->
       <div class="container" id="RegForm">
         <table>
           <tbody>
@@ -62,6 +68,7 @@
                   :data-vv-as="$t('register.lb_mail')"/>
               </td>
             </tr>
+
             <tr>
               <td class="td-head" scope="row">
                 <label>{{ $t('register.lb_confirm_mail') }}<span class="require">{{ $t('common.require') }}</span></label>
@@ -90,6 +97,7 @@
               </td>
 
             </tr>
+
             <tr>
               <td class="td-head">
                 <label>{{ $t('register.lb_furigana') }}<span class="require">{{ $t('common.require') }}</span></label>
@@ -205,7 +213,7 @@
               <td class="td-content flex-block">
                 <input type="hidden"
                   v-model="model.birthday"
-                  v-validate="'required|date_format:YYYY-MM-DD|after:1900-01-01'"
+                  v-validate="'required|date_format:YYYY-MM-DD|after:1900-01-01|before:' + now"
                   name="birthday"
                   :data-vv-as="$t('register.lb_birthday')"/>
                 <label class="between">{{ $t('register.lb_calendar') }}</label>
@@ -278,6 +286,9 @@
           </tbody>
         </table>
       </div>
+      <!-- End table input infomation -->
+
+      <!-- Show input infomation -->
       <div class="container">
         <label v-if="model.flagShowMemberCode">{{ $t('register.lb_explant_code_member') }}</label>
         <div class="block" v-if="model.flagShowMemberCode">
@@ -343,18 +354,20 @@
             </div>
           </div>
           <div class="block-action">
-            <button class="rs-btn btn-large btn-green-dark block-left"
+            <button class="btn rs-btn btn-large btn-green-dark block-left"
               data-toggle="modal" data-target="#confirm-stop-register">
               {{ $t('register.btn_stop_register') }}
             </button>
-            <button class="rs-btn btn-large btn-green-dark block-right" @click.prevent="goToNextPage()">
+            <button class="btn rs-btn btn-large btn-green-dark block-right" @click.prevent="goToNextPage()">
               {{ $t('common.btn_next') }}
             </button>
           </div>
         </div>
       </div>
+      <!-- End show input infomation -->
     </main>
 
+    <!-- Show modal -->
     <div class="modal fade" id="confirm-stop-register"
       tabindex="-1" role="dialog"
       aria-labelledby="title-stop"
@@ -381,6 +394,7 @@
         </div>
       </div>
     </div>
+    <!-- End show modal -->
   </div>
 </template>
 

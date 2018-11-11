@@ -1,3 +1,4 @@
+export const SET_CART = 'SET_CART'
 export const SET_TICKET = 'SET_TICKET'
 export const ADD_TICKET = 'ADD_TICKET'
 export const DELETE_TICKET = 'DELETE_TICKET'
@@ -9,7 +10,8 @@ export default {
   ADD_TICKET,
   DELETE_TICKET,
   DELETE_TICKET_DESIGNATED,
-  CHOOSE_TICKET_TYPE
+  CHOOSE_TICKET_TYPE,
+  SET_CART
 
 }
 

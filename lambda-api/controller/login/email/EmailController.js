@@ -39,16 +39,16 @@ const sendEmail = async (event, context, callback) => {
       logger: false,
       debug: false
     },
-    {
-      // Sender info
-      from: 'ducvn@rikkeisoft.com',
-      headers: {
-        "X-Requested-With":	'*'	,
-        "Access-Control-Allow-Headers":	'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with'	,
-        "Access-Control-Allow-Origin":	'*'	,
-        "Access-Control-Allow-Methods":	'POST,GET,OPTIONS'
-      }
-    });
+      {
+        // Sender info
+        from: 'ducvn@rikkeisoft.com',
+        headers: {
+          "X-Requested-With": '*',
+          "Access-Control-Allow-Headers": 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with',
+          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Allow-Methods": 'POST,GET,OPTIONS'
+        }
+      });
 
     // Message content
     let message = {
@@ -68,7 +68,7 @@ const sendEmail = async (event, context, callback) => {
         // Subject of the message
         subject: req.subject,
         // Body
-        html: 'Please click <a href=' + req.content +'>here</a> to reset you password'
+        html: 'Please click <a href=' + req.content + '>here</a> to reset you password'
       };
     }
 
@@ -83,10 +83,10 @@ const sendEmail = async (event, context, callback) => {
       statusCode: 200,
       body: JSON.stringify('Send email successful'),
       headers: {
-        "X-Requested-With":	'*'	,
-        "Access-Control-Allow-Headers":	'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with'	,
-        "Access-Control-Allow-Origin":	'*'	,
-        "Access-Control-Allow-Methods":	'POST,GET,OPTIONS'
+        "X-Requested-With": '*',
+        "Access-Control-Allow-Headers": 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with',
+        "Access-Control-Allow-Origin": '*',
+        "Access-Control-Allow-Methods": 'POST,GET,OPTIONS'
       },
     };
     callback(null, response);

@@ -1,11 +1,71 @@
 /* MYPAGE */
 
+.my-page, #MainC {
+  min-height: 100%;
+  height: 100;
+  min-height: 700px;
+
+  #ContentsPane {
+    height: 100;
+
+    h1 {
+      margin-bottom: 0;
+    }
+
+    .container {
+      .alert {
+        margin-top: 20px;
+      }
+
+      .block-border {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #cecebf;
+
+        label {
+          margin-top: 10px;
+          margin-right: 20px;
+        }
+
+        table {
+          margin-top: 20px;
+
+          tbody {
+            tr {
+              td {
+                word-break: break-all;
+              }
+            }
+          }
+        }
+      }
+
+      .block-inline-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+      }
+    }
+  }
+
+  .modal {
+    .modal-dialog {
+      .modal-footer {
+        .block-action {
+          display: flex;
+        }
+      }
+    }
+  }
+}
+
 .container {
-  clear: both;
-  max-width: 1200px !important;
-  height: 600px;
-  padding: 0px 0px 0px 0px;
-  background-color: white;
+  // clear: both;
+  // max-width: 1200px !important;
+  // // height: 600px;
+  // padding: 0px 0px 0px 0px;
+  // background-color: white;
 
   .login-head {
     font-size: 1.5rem;
@@ -73,73 +133,3 @@
     }
   }
 }
-
-
-@media only screen and (max-width: 800px) {
-
-  .container {
-
-    .login-head {
-      font-size: 1.5rem;
-      text-align: left;
-      background-color: #686859;
-      border-color: white;
-      box-shadow: none;
-      padding: 16px 0px 0px 30px;
-      margin-bottom: 15px;
-      color: white;
-      height: 60px;
-      font-weight: 500
-    }
-
-    h3 {
-      font-style: normal;
-      font-weight:normal;
-      font-size: 0.7em;
-      padding: 0px 5% 0px 5%;
-      margin:  0px 0px 0px 0px;
-    }
-
-    .center-align {
-      display: block;
-      margin-left: 5%;
-      margin-right: 5%;
-      width: 90%;
-
-      a {
-        color: blue;
-
-      }
-      a:hover {
-        color: red !important;
-      }
-
-      a:visited {
-        color: blue;
-      }
-
-      button {
-        color: #f1f1ed;
-        display: block;
-        width: 100px;
-        height: 50px;
-        margin: 10px auto;
-        font-size: 1em;
-        border: none;
-        background: #174A52;
-      }
-
-      button:hover {
-        display: block;
-        width: 100px;
-        height: 50px;
-        margin: 10px auto;
-        font-size: 1em;
-        border: none;
-        background: green;
-        cursor: pointer;
-      }
-    }
-  }
-}
-

@@ -9,13 +9,16 @@ environment:
   SECRET_KEY: U0cA2N$g(1
   DB_SCHEMA: ticket2
   URL_CLIENT: https://dev.ticket-dev1.pastorale.jp/
-  URL_API: http://localhost:4000/
+  URL_API:  https://w40big0px3.execute-api.us-east-1.amazonaws.com/dev
   MAIL_HOST: smtp.sendgrid.net
   MAIL_PORT: 465
   MAIL_USER: apikey
-  MAIL_PASS: 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
+  MAIL_PASS: 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
   MAIL_NAME: trihnm@rikkeisoft.com
   INS_PG_ID: test1
   INS_EMPLOYEE_CD: NET
   UPD_PG_ID: test1
   UPD_EMPLOYEE_CD: NET
+  URI_SENDGRID_GETBOUNCE: https://api.sendgrid.com/v3/suppression/bounces/
+  URI_SENDGRID_SENDMAIL: https://api.sendgrid.com/v3/mail/send
+  PROXY_URL: http://192.168.1.2:3128

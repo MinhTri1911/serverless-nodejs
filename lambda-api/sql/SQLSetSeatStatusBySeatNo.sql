@@ -1,0 +1,1 @@
+SELECT set_seat_status_by_seat_no( $client_id, $show_group_id, $show_no, $seat_no)

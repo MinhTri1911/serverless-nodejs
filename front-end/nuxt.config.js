@@ -2,7 +2,9 @@ const pkg = require('./package')
 const webpack = require('webpack')
 module.exports = {
   mode: 'spa',
-
+  router: {
+    middleware: ['valid_client_id']
+  },
   /*
   ** Headers of the page
   */
@@ -23,7 +25,7 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: {color: '#3B8070'},
+  loading: {color: '#3B8070',height :'5px'},
 
   /*
   ** Global CSS
@@ -50,7 +52,7 @@ module.exports = {
   */
   modules: [],
   env: {
-    baseUrl: 'http://localhost:4000',
+    baseUrl: 'https://7golgodswe.execute-api.ap-northeast-1.amazonaws.com/dev',
     clientUrl: 'http://localhost:3000',
     baseS3Url: "https://s3-ap-northeast-1.amazonaws.com/ticket-data-dev"
   }
@@ -79,7 +81,6 @@ module.exports = {
       'jquery',
       'babel-es6-polyfill',
       'bootstrap',
-      '@/static/js/build-diagram-seat.js',
       '@fortawesome/fontawesome',
       '@fortawesome/fontawesome-free-solid',
       '@fortawesome/fontawesome-free-brands'

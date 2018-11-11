@@ -1,0 +1,22 @@
+{
+  "lb_inf_member": "会員情報",
+  "lb_member": "会員",
+  "lb_determinative": "有効期限",
+  "lb_explain_inf_member": "会員情報説明欄",
+  "lb_member_of": "の会員です。",
+  "lb_determinative_from_to": "有効期限は{year}年{month}月{day}日までです。",
+  "lb_inf_order": "支払情報欄",
+  "lb_payment_type": "支払方法",
+  "lb_payment_code_conbini": "コンビニ支払番号",
+  "lb_payment_deadline": "支払期限",
+  "btn_history_order": "予約・購入履歴",
+  "btn_change_user_inf": "登録情報変更",
+  "btn_register_member": "会員入会申込",
+  "lb_expired": "期限切れ",
+  "lb_member_enable": "有効会員",
+  "lb_had_register": "申込済み",
+  "lb_had_updated": "更新済み",
+  "lb_history": "履歴",
+  "lb_register_join_group": "入会申込",
+  "lb_register_update": "更新申込"
+}

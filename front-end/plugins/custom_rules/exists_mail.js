@@ -19,9 +19,9 @@ export default {
     let [clientId] = args;
 
     // Call api check exists mail
-    return get(constant.api.CHECK_EXISTS_MAIL_REGISTER, { clientId: clientId, mail: value })
+    return get(constant.api.CHECK_EXISTS_MAIL_REGISTER, { client_id: clientId, mail: value })
       .then(res => {
-        let data = res.data.data.existsMail;
+        let data = res.data.data.exists_mail;
 
         return data.kbn == NOT_EXISTS;
       })

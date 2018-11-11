@@ -43,6 +43,7 @@ select
     and d.reserve_no = ''
     and d.cart_id = ''
     and d.handle_kb in ('0', '2')
+    and k.member_kb_no = /* member_kb_no */$member_kb_no
       then '1'
     else '0'
     end as sales_seat_flg
@@ -99,6 +100,12 @@ from
       code_type_cd = '0043'
   ) j
     on i.hall_pic_kb = j.code_no
+  left outer join t_show_member_seat k
+    on d.client_id = k.client_id
+    and d.show_group_id = k.show_group_id
+    and d.show_no = k.show_no
+    and d.seat_no = k.seat_no
+    and k.member_kb_no = /* member_kb_no */$member_kb_no
 where
   a.client_id = /* client_id */$client_id
   and a.show_group_id = /* show_group_id */$show_group_id

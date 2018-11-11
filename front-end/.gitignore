@@ -20,3 +20,5 @@ dist/
 db\.json
 
 db\.json~
+/nbproject/private/
+\.history/

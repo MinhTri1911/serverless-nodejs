@@ -39,3 +39,87 @@
 #paySel dt {
 	font-weight: bold;
 }
+
+//colors
+$color_reno_sand_approx: hsla(34, 85%, 35%, 1);
+$white:  white;
+$black: black;
+$color_mexican_red_approx: brown;
+$hot_cinnamon: chocolate;
+
+//fonts
+$font_0: Sans-Serif;
+
+.breadcrumb {
+	list-style: none;
+	overflow: hidden;
+	font: 18px $font_0;
+	//Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+	border-radius: 0;
+	padding: 0;
+	li {
+		width: 25%;
+		a::after {
+			content: " ";
+			display: block;
+			width: 0;
+			height: 0;
+			border-top: 25px solid transparent;
+			border-bottom: 25px solid transparent;
+			border-left: 30px solid $color_reno_sand_approx;
+			position: absolute;
+			top: 50%;
+			margin-top: -25px;
+			left: 100%;
+			z-index: 2;
+		}
+		a::before {
+			content: " ";
+			display: block;
+			width: 0;
+			height: 0;
+			border-top: 25px solid transparent;
+			border-bottom: 25px solid transparent;
+			border-left: 30px solid $white;
+			position: absolute;
+			top: 50%;
+			margin-top: -25px;
+			margin-left: 1px;
+			left: 100%;
+			z-index: 1;
+		}
+		&:last-child {
+			a {
+				color: $black;
+				pointer-events: none;
+				cursor: default;
+			}
+			a::after {
+				border: 0;
+			}
+		}
+		a {
+			width: 100%;
+			text-align: center;
+			pointer-events: none;
+			color: $white !important;
+			height: 50px;
+			text-decoration: none !important;
+			padding: 10px 0 10px 20px;
+			background: $color_mexican_red_approx;
+			background: $color_reno_sand_approx;
+			position: relative;
+			display: block;
+			float: left;
+		}
+		&:first-child a {
+			padding-left: 30px;
+		}
+		&.active a {
+			background-color: $hot_cinnamon;
+			&:after {
+				border-left-color: $hot_cinnamon;
+			}
+		}
+	}
+}

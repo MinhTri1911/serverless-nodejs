@@ -3,5 +3,5 @@ update m_member
     password_ninsyou_key = $ninsyoukey
     ,password_reset_dtime = now()
   where
-    client_id = $clientid
+    client_id = $client_id
     and member_id = $member_id

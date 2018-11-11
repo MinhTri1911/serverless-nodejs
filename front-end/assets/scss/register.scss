@@ -1,5 +1,5 @@
 @import "~assets/scss/variables";
-.register-step-1 {
+.register-step-1, .update-infomation {
   .alert {
     text-align: center;
 
@@ -90,7 +90,7 @@
         height: 35px;
         border: 1px solid #888;
         font-size: 1.2em;
-        margin-left: 10px;
+        margin-left: 25px;
       }
     }
   }
@@ -107,7 +107,7 @@
       }
 
       .label-checkbox {
-        width: 115px;
+        width: 95px;
       }
 
       .content {
@@ -312,7 +312,7 @@
     .block-input {
       .inline {
         .label-checkbox {
-          width: 38px;
+          width: 32px;
         }
 
         .content-flex {

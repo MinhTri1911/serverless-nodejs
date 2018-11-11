@@ -1,5 +1,6 @@
 select
-  member_pass
+  member_id
+  , member_pass
   , member_nm
   , member_kn
   , post_no
@@ -16,6 +17,9 @@ select
   , birthday
   , temp_regist_dtime
   , combine_member_id
+  , upd_pg_id
+  , upd_client_id
+  , upd_employee_cd
 from
   m_member
 where

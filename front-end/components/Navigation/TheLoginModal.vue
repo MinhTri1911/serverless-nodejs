@@ -15,7 +15,6 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{$t('common.btn_close')}}</button>
-
             <nuxt-link :to="{name: 'client_id-login' }" class="btn btn-primary" data-dismiss="modal" style="color: white; text-decoration: none;">{{$t('common.btn_login')}}</nuxt-link>
         </div>
       </div>

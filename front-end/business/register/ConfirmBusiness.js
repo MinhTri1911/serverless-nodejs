@@ -12,12 +12,14 @@ import { post, get } from '@/plugins/api';
 
 const DEFAULT_GENRE_INLINE = 4;
 const IS_EXISTS = 1;
-const MALE = 0;
-const FEMALE = 1;
-const HTTP_SUCCESS = 200;
 
 export default {
-  middleware: 'guest',
+  middleware: 'redirect_if_authenticated',
+  head() {
+    return {
+      title: this.$t('register.lb_title_confirm_inf')
+    }
+  },
   data: () => ({
     model: '',
     dataInit: {
@@ -98,30 +100,33 @@ export default {
      * @returns {void}
      */
     postRegister: function() {
+      this.$nuxt.$loading.start();
+
       post(constant.api.REGISTER, {
-        clientId: this.$route.params.client_id,
-        memberCode: this.model.memberCode,
+        client_id: this.$route.params.client_id,
+        member_code: this.model.memberCode,
         password: this.model.password,
         mail: this.model.mail,
-        fullName: this.model.fullName,
+        full_name: this.model.fullName,
         furigana: this.model.furigana,
-        postNo: this.model.postCode,
+        post_no: this.model.postCode,
         prefecture: this.model.slbCity,
         municipality: this.model.district,
         address1: this.model.address,
         address2: this.model.buildingRoom,
-        telNo: this.model.phoneNumber,
-        mobileNo: this.model.cellPhone,
-        mailSendFlg: this.model.magazineMail,
-        postSendFlg: this.model.directMail,
-        sexType: this.model.gender === 'male' ? MALE : FEMALE,
+        tel_no: this.model.phoneNumber,
+        mobile_no: this.model.cellPhone,
+        mail_send_flg: this.model.magazineMail,
+        post_send_flg: this.model.directMail,
+        sex_type: this.model.gender === 'male' ? constant.config.MALE : constant.config.FEMALE,
         birthday: this.model.birthday,
-        listGenre: this.model.genre
+        list_genre: this.model.genre
       }).then(res => {
-        if (res.data.data.code !== HTTP_SUCCESS) {
+        if (res.data.data.code !== constant.http.SUCCESS) {
           throw new Error();
         }
 
+        this.$nuxt.$loading.finish();
         this.$store.dispatch('register/updateStepTwo', true);
 
         let path = this.$router.resolve({
@@ -131,6 +136,20 @@ export default {
 
         this.$router.push(path.href);
       }).catch(err => {
+        this.$nuxt.$loading.finish();
+
+        if (err.response.status == constant.http.ERROR) {
+          this.$store.dispatch('auth/setError', [
+            this.$t('message.msg003_exception.line_1'),
+            this.$t('message.msg003_exception.line_2'),
+            this.$t('message.msg003_exception.line_3')
+          ]);
+
+          this.redirectToError();
+
+          return;
+        }
+
         let errors = err.response.data.data.errors;
 
         // If validator mail fail then redirect to page 120
@@ -152,14 +171,6 @@ export default {
 
           this.$store.dispatch('auth/setError', msg);
           this.$router.push(pathToInput.href);
-        } else {
-          this.$store.dispatch('auth/setError', [
-            this.$t('message.msg003_exception.line_1'),
-            this.$t('message.msg003_exception.line_2'),
-            this.$t('message.msg003_exception.line_3')
-          ]);
-
-          this.redirectToError();
         }
       });
     }

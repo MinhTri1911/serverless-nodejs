@@ -18,3 +18,6 @@ environment:
   INS_EMPLOYEE_CD: NET
   UPD_PG_ID: test1
   UPD_EMPLOYEE_CD: NET
+  URI_SENDGRID_GETBOUNCE: https://api.sendgrid.com/v3/suppression/bounces/
+  URI_SENDGRID_SENDMAIL: https://api.sendgrid.com/v3/mail/send
+  PROXY_URL: http://192.168.1.2:3128

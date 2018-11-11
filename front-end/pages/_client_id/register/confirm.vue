@@ -1,6 +1,9 @@
 <template lang="html">
   <div id="MainC" class="register-step-2">
     <main id="ContentsPane">
+      <h1 class="rs-title-pg"><span id="Pagetitle">{{ $t('register.lb_title_confirm_inf') }}</span></h1>
+
+      <!-- Show text explain -->
       <div class="container">
         {{ $t('register.lb_confirm_input') }}
         <div class="block">
@@ -13,6 +16,9 @@
           </div>
         </div>
       </div>
+      <!-- End show text explain -->
+
+      <!-- Show infomation -->
       <div class="container">
         <div class="row">
           <div class="col-md-3 lbl-inf">
@@ -143,7 +149,7 @@
           </div>
           <div class="col-md-6 lbl-content">
             <label v-if="dataInit.memberInf">{{ dataInit.memberInf.member_id }}</label>
-            <label v-if="dataInit.memberInf">{{ dataInit.memberInf.member_kb_type_nm }}</label>
+            <label class="ml-4" v-if="dataInit.memberInf">{{ dataInit.memberInf.member_kb_type_nm }}</label>
           </div>
         </div>
 
@@ -192,6 +198,7 @@
           </div>
         </div>
       </div>
+      <!-- End show infomation -->
     </main>
   </div>
 </template>

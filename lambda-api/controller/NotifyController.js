@@ -12,7 +12,7 @@ const getListNotify = async (event, context, callback) => {
         return service.createSuccessCallback(HttpCode.SUCCESS, res);
       })
       .catch(err => {
-        return service.createErrorCallback(HttpCode.ERROR, err + "Internal Server Error!!!");
+        return service.createErrorCallback(HttpCode.ERROR, err);
       });
   } catch (err) {
     return service.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");

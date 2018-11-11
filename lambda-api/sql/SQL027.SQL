@@ -25,7 +25,7 @@ select
       then to_char( 
       to_date(f.show_date, 'YYYYMMDD')
       , 'yyyy/FMMM/FMdd'
-    ) || '(' || (ARRAY ['“ú','Œ','‰Î','…','–Ø','‹à','“y']) [extract('dow' FROM to_timestamp(f.show_date,'YYYYMMDD')) + 1]
+    ) || '(' || (ARRAY ['æ—¥','æœˆ','ç«','æ°´','æœ¨','é‡‘','åœŸ']) [extract('dow' FROM to_timestamp(f.show_date,'YYYYMMDD')) + 1]
      || ') ' || to_char( 
       to_timestamp(f.show_start_time, 'HH24MI')
       , 'HH24:MI'
@@ -40,111 +40,114 @@ select
     else to_char( 
       to_date(i.reserve_start, 'YYYYMMDDHH24MI')
       , 'yyyy/FMMM/FMdd'
-    ) || '(' || (ARRAY ['“ú','Œ','‰Î','…','–Ø','‹à','“y']) [extract('dow' FROM to_timestamp(i.reserve_start,'YYYYMMDDHH24MI')) + 1]
+    ) || '(' || (ARRAY ['æ—¥','æœˆ','ç«','æ°´','æœ¨','é‡‘','åœŸ']) [extract('dow' FROM to_timestamp(i.reserve_start,'YYYYMMDDHH24MI')) + 1]
      || ')' || to_char( 
       to_timestamp(i.reserve_start, 'YYYYMMDDHH24MI')
       , 'HH24:MI'
-    ) || '@`@' || to_char( 
+    ) || 'ã€€ã€œã€€' || to_char(
       to_date(i.reserve_limit, 'YYYYMMDDHH24MI')
       , 'yyyy/FMMM/FMdd'
-    ) || '(' || (ARRAY ['“ú','Œ','‰Î','…','–Ø','‹à','“y']) [extract('dow' FROM to_timestamp(i.reserve_limit,'YYYYMMDDHH24MI')) + 1]
-     || ')' || to_char( 
+    ) || '(' || (ARRAY ['æ—¥','æœˆ','ç«','æ°´','æœ¨','é‡‘','åœŸ']) [extract('dow' FROM to_timestamp(i.reserve_limit,'YYYYMMDDHH24MI')) + 1]
+     || ')' || to_char(
       to_timestamp(i.reserve_limit, 'YYYYMMDDHH24MI')
       , 'HH24:MI'
-    ) 
+    )
     end as sales_term
   , c.min_show as disp_sort
   , f.show_explanation
-  , case 
-    when a.show_group_disp_kb = '1' 
-    and e.group_sales_kbn in ('0', '1') 
-      then '1' 
-    when a.show_group_disp_kb = '2' 
-    and g.yusen_kbn in ('0', '1') 
-      then '1' 
-    else '0' 
+  , case
+    when a.show_group_disp_kb = '1'
+    and e.group_sales_kbn in ('0', '1')
+      then '1'
+    when a.show_group_disp_kb = '2'
+    and g.yusen_kbn in ('0', '1')
+      then '1'
+    else '0'
     end as select_button_disp_flg
-  , case 
-    when g.yusen_kbn = '4' 
-      then '1' 
-    else '0' 
+  , case
+    when g.yusen_kbn = '4'
+      then '1'
+    else '0'
     end as hide_show_flg
   , f.show_start_time
-  , case 
-    when f.hall_view_flg = '0' 
-    and l.min_seat_type_kb = '1' 
-    and h.internet_seat_kb = '1' 
-      then '1' 
-    else '0' 
+  , case
+    when f.hall_view_flg = '0'
+    and l.min_seat_type_kb = '1'
+    and h.internet_seat_kb = '1'
+      then '1'
+    else '0'
     end as seat_selection_flg
-  , case 
-    when f.hall_view_flg = '0' --'0'‚Å•\¦
-    and l.min_seat_type_kb = '1' --w’èÈ
-    and h.internet_seat_kb in ('1', '2') --ÀÈw’è‚Ü‚½‚Í–‡”w’èiÀÈ}•\¦j
-      then '1' 
-    else '0' 
-    end as hall_seat_view_flg 
+  , case
+    when f.hall_view_flg = '0' --'0'ã§è¡¨ç¤º
+    and l.min_seat_type_kb = '1' --æŒ‡å®šå¸­
+    and h.internet_seat_kb in ('1', '2') --åº§å¸­æŒ‡å®šã¾ãŸã¯æšæ•°æŒ‡å®šï¼ˆåº§å¸­å›³è¡¨ç¤ºï¼‰
+      then '1'
+    else '0'
+    end as hall_seat_view_flg
+  , a.show_group_disp_kb
 from
-  t_show_group a 
-  inner join t_sales_show b 
-    on a.client_id = b.client_id 
-    and a.show_group_id = b.show_group_id 
-  inner join v_show_group_koen_kikan c 
-    on a.client_id = c.client_id 
-    and a.show_group_id = c.show_group_id 
-  inner join m_genre d 
-    on a.client_id = d.client_id 
-    and a.genre_no = d.genre_no 
-  inner join v_show_group_sales_status e 
-    on a.client_id = e.client_id 
-    and a.show_group_id = e.show_group_id 
-  inner join t_show f 
-    on a.client_id = f.client_id 
-    and a.show_group_id = f.show_group_id 
-    and b.show_no = f.show_no 
-  inner join v_show_sales_status g 
-    on a.client_id = g.client_id 
-    and a.show_group_id = g.show_group_id 
-    and b.sales_no = g.sales_no 
-    and b.show_no = g.show_no 
-  inner join t_sales h 
-    on a.client_id = h.client_id 
-    and a.show_group_id = h.show_group_id 
-    and b.sales_no = h.sales_no 
-  inner join v_sales_handle_time i 
-    on b.client_id = i.client_id 
-    and b.show_group_id = i.show_group_id 
-    and b.sales_no = i.sales_no 
-    and b.show_no = i.show_no 
-    and i.client_handle_kb = '2' 
-  inner join m_sub_genre j 
-    on a.client_id = j.client_id 
-    and a.genre_no = j.genre_no 
-    and a.sub_genre_no = j.sub_genre_no 
-  left outer join ( 
+  t_show_group a
+  inner join t_sales_show b
+    on a.client_id = b.client_id
+    and a.show_group_id = b.show_group_id
+  inner join v_show_group_koen_kikan c
+    on a.client_id = c.client_id
+    and a.show_group_id = c.show_group_id
+  inner join m_genre d
+    on a.client_id = d.client_id
+    and a.genre_no = d.genre_no
+  inner join v_show_group_sales_status e
+    on a.client_id = e.client_id
+    and a.show_group_id = e.show_group_id
+  inner join t_show f
+    on a.client_id = f.client_id
+    and a.show_group_id = f.show_group_id
+    and b.show_no = f.show_no
+  inner join v_show_sales_status g
+    on a.client_id = g.client_id
+    and a.show_group_id = g.show_group_id
+    and b.sales_no = g.sales_no
+    and b.show_no = g.show_no
+  inner join t_sales h
+    on a.client_id = h.client_id
+    and a.show_group_id = h.show_group_id
+    and b.sales_no = h.sales_no
+  inner join v_sales_handle_time i
+    on b.client_id = i.client_id
+    and b.show_group_id = i.show_group_id
+    and b.sales_no = i.sales_no
+    and b.show_no = i.show_no
+    and i.client_handle_kb = '2'
+  inner join m_sub_genre j
+    on a.client_id = j.client_id
+    and a.genre_no = j.genre_no
+    and a.sub_genre_no = j.sub_genre_no
+  left outer join (
     select
       code_no
-      , code_nm 
+      , code_nm
     from
-      m_code 
+      m_code
     where
       code_type_cd = '0043'
-  ) k 
-    on a.list_image_kb = k.code_no 
-  inner join ( 
+  ) k
+    on a.list_image_kb = k.code_no
+  inner join (
     select
       client_id
       , show_group_id
-      , min(seat_type_kb) as min_seat_type_kb 
+      , min(seat_type_kb) as min_seat_type_kb
     from
-      t_seat_type 
+      t_seat_type
     group by
       client_id
       , show_group_id
-  ) l 
-    on a.client_id = l.client_id 
-    and a.show_group_id = l.show_group_id 
-where #replace_client_id #replace_show_group_id
+  ) l
+    on a.client_id = l.client_id
+    and a.show_group_id = l.show_group_id
+where   a.client_id = /* client_id */$client_id
+  and a.show_group_id = /* show_group_id */$show_group_id
+  and to_char(/* admin_time */#replace_admin_time, 'yyyymmddhh24mi') between h.salesinfo_start_dtime and h.salesinfo_end_dtime
 order by
   a.client_id
   , disp_sort

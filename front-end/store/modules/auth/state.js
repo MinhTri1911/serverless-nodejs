@@ -1,9 +1,12 @@
 export default {
   authenticated: false,
   user: '',
-  error: '',
+  admin: '',
+  admin_time: '',
+  admin_flag: '',
+  error: [],
   query: '',
   id: '',
   redirectURL: '',
   redirect_URL_BLACKCD: '',
- }
+}

@@ -1,5 +1,6 @@
 {
   "lb_login_head": "ログイン",
+  "lb_login_admin_head": "管理者用ログイン",
   "lb_logout": " ログアウト",
   "lb_login_guide_1": "メールアドレス (またはログインID), パスワードを入力し",
   "lb_login_guide_2": "「ログイン」ボタンをクリックして下さい",
@@ -23,7 +24,7 @@
   "link_here": "こちら",
   "lb_name": "様",
   "lb_of": "の",
-  "lb_display_name": "{name}様の{member}",
+  "lb_display_name": "{name}様{member}",
 
   "lb_complete_send_password_head": "パスワード再設定URL送信完了説明文 ",
   "lb_forgot_password_head": "パスワード忘れ説明文",

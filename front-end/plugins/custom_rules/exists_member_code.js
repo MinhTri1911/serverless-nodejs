@@ -20,14 +20,14 @@ export default {
 
     // Call api check exists member code
     return get(constant.api.CHECK_EXISTS_MEMBER_CODE, {
-      clientId: clientId,
+      client_id: clientId,
       code: value,
-      memberNm: memberNm,
-      memberKn: memberKn,
-      mobileNo: mobileNo,
-      telNo: telNo
+      member_nm: memberNm,
+      member_kn: memberKn,
+      mobile_no: mobileNo,
+      tel_no: telNo
     }).then(res => {
-        let data = res.data.data.existsCode;
+        let data = res.data.data.exists_code;
         let isValid = data.macth_flg == EXISTS || Object.keys(data).length !== 0;
 
         if (isValid) {

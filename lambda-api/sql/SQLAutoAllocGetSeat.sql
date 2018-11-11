@@ -1,0 +1,3 @@
+select  auto_alloc_get_seat($in_client_id::varchar, $in_show_group_id::varchar, $in_sales_no::bigint, $in_show_no::bigint, $in_area_no::smallint,
+         $in_block_no::bigint, $in_seat_type_no::bigint, $in_memberkb_no::bigint, $in_membertype_no::bigint, $in_member_id::varchar,$in_seat_count::integer, $in_reservetype::varchar,
+         $in_cart_id::varchar, $in_pgid::varchar, $in_accountid::varchar)

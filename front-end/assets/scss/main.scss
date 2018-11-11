@@ -1,91 +1,95 @@
+//colors
+$black: black;
+$color_quill_gray_approx: rgb(211, 211, 211);
+$color_celeste_approx: #ccc;
+$color_chicago_approx: rgb(88, 88, 88);
+$red: red;
+$color_salmon_approx: salmon;
+
+//urls
+$url_0: url(~assets/images/main-page-background.jpg);
+
 .intro {
   height: 300px;
   position: relative;
   padding: 30px;
+  //Instead of the line below you could use @include box-sizing($bs)
   box-sizing: border-box;
-  background-image: url("~assets/images/main-page-background.jpg");
+  background-image: $url_0;
   background-position: center;
   background-size: cover;
+  h1 {
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    width: 90%;
+    font-size: 1.5rem;
+    color: $black;
+    background-color: $color_quill_gray_approx;
+    padding: 10px;
+    //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+    border-radius: 10px;
+    //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    box-shadow: 3px 3px 3px $black;
+    //Instead of the line below you could use @include box-sizing($bs)
+    box-sizing: border-box;
+    border: 1px solid $black;
+  }
 }
-
-.intro h1 {
-  position: absolute;
-  top: 10%;
-  left: 5%;
-  width: 90%;
-  font-size: 1.5rem;
-  color: black;
-  background-color: rgb(211, 211, 211);
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 3px 3px 3px black;
-  box-sizing: border-box;
-  border: 1px solid black;
-}
-
-@media (min-width: 768px) {
+@media(min-width: 768px) {
+  .post {
+    width: 600px;
+    margin: auto;
+  }
+  .post-details {
+    flex-direction: row;
+  }
   .intro h1 {
     font-size: 2rem;
   }
 }
-
 .featured-posts {
   display: flex;
   padding: 20px;
+  //Instead of the line below you could use @include box-sizing($bs)
   box-sizing: border-box;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
 }
-
 .single-post-page {
   padding: 30px;
   text-align: center;
+  //Instead of the line below you could use @include box-sizing($bs)
   box-sizing: border-box;
 }
-
 .post {
   width: 100%;
 }
-
-@media (min-width: 768px) {
-  .post {
-    width: 600px;
-    margin: auto;
-  }
-}
-
 .post-title {
   margin: 0;
 }
-
 .post-details {
   padding: 10px;
+  //Instead of the line below you could use @include box-sizing($bs)
   box-sizing: border-box;
-  border-bottom: 3px solid #ccc;
+  border-bottom: 3px solid $color_celeste_approx;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
-
-@media (min-width: 768px) {
-  .post-details {
-    flex-direction: row;
-  }
-}
-
 .post-detail {
-  color: rgb(88, 88, 88);
+  color: $color_chicago_approx;
   margin: 0 10px;
 }
-
 .post-feedback a {
-  color: red;
+  color: $red;
   text-decoration: none;
-}
-
-.post-feedback a:hover,
-.post-feedback a:active {
-  color: salmon;
+  &:hover {
+    color: $color_salmon_approx;
+  }
+  &:active {
+    color: $color_salmon_approx;
+  }
 }

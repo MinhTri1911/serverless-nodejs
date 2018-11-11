@@ -1,4 +1,9 @@
 {
+  "msg001_timeout": {
+    "line_1": "有効期限が切れているか、",
+    "line_2": "URLが無効となっております。",
+    "line_3": "メールソフトによってはURLが改行によって無効となっている場合がございます。"
+  },
   "msg003_exception": {
     "line_1": "エラーが発生しました。",
     "line_2": "ご迷惑おかけして申し訳ありません。",
@@ -10,6 +15,12 @@
     },
     "msg_1": "と記載されている項目は、どちらか1つ入力してあれば可となります。",
     "msg_2": "・半角カナ、環境依存文字は利用しないで下さい。"
+  },
+  "msg004_error_sales_term" : "受付期間外の為、予約を行う場合は再度公演一覧から操作をお願い致します。",
+  "msg043_save_free_seat_fail" : "選択された枚数を確保できませんでした。",
+  "msg044_save_designate_seat_fail": {
+    "line_1": "並び席でのご用意ができませんでした。",
+    "line_2": "お申込み内容は次のカート画面で変更いただけます。"
   },
   "msg028_explain_register": "利用規約、個人情報保護方針をお読みの上、同意する場合は、各項目にチェックをつけ【次へ】ボタンを押して下さい。",
   "msg010_enter_space_full_size": "全角で入力してください。苗字と名前の間にスペースを入れてください。",
@@ -32,12 +43,32 @@
   "msg020_password_security": "パスワード保護のため非表示としております。",
   "msg065_not_exists_member_code": "入力された会員番号と一致する情報はありませんでした。",
   "msg_confirm_stop_register": "利用登録を中止しますがよろしいですか？はい/いいえ",
-  "msg029_empty_designate_seat" : "座席が選択されていません。",
-  "msg030_require_select_ticket_type" : "券種が選択されていません。",
-  "msg031_validate_number_ticket" : "枚までご購入いただけます。",
-  "msg032_validate_save_fail" : "{row}列{col}番のお席は確保できませんでした。",
-  "msg033_validate_member_end" : "お申込みできない座席が含まれています。",
+  "msg_not_found_data": "Whoop! No data display here",
+  "msg029_empty_designate_seat": "座席が選択されていません。",
+  "msg030_require_select_ticket_type": "券種が選択されていません。",
+  "msg031_validate_number_ticket": "枚までご購入いただけます。",
+  "msg032_validate_save_fail": "{row}列{col}番のお席は確保できませんでした。",
+  "msg033_validate_member_end": "お申込みできない座席が含まれています。",
+  "msg034_validate_require_number_ticket" : "枚数が選択されていません。",
+  "msg035_order_exists": {
+    "line_1": "カートが存在しているため、手続きを行うことができません。",
+    "line_2": "一度予約を完了していただくか、カートを空にしていただく必要がございます。"
+  },
+  "msg036_not_have_history_order": "予約・購入履歴がありません。",
+  "msg037_explain_login_id": {
+    "line_1": "ログインIDを登録していただくと、メールアドレスの代わりにログインIDでもログインすることが可能になります。",
+    "line_2": "※パスワードは同じものを使用します。"
+  },
+  "msg038_note_input_login_id": "半角英数字のみ入力可能です。",
   "msg054_validate_require_ticket" : "お申込みできない座席が含まれています。",
-  "msg004_validate_sale_term" : "受付期間外の為、予約を行う場合は再度公演一覧から操作をお願い致します。"
-  
+  "msg057_cancel_seat" : "「{seattype} {tickettype}　{seatname}」を取り消しますがよろしいですか？",
+  "msg059_cancel_pair_ticket" : "枚数指定のあるチケットは座席選択画面での変更になります。",
+  "msg004_validate_sale_term": "受付期間外の為、予約を行う場合は再度公演一覧から操作をお願い致します。",
+  "msg070_booking_complete": {
+    "msg_alert": "予約番号[予約番号]で予約が完了いたしました。詳細についてはメールをご確認ください。",
+    "msg_suggest": " メールが届かない場合には下記問合わせ先までご連絡ください。"
+  },
+  "msg082_can_not_join_group": "現在{group}に入会できません。",
+  "msg083_can_not_update": "現在{group}の更新を行うことができません。",
+  "msg008_client_id_expired": "サービスは終了致しました。"
 }

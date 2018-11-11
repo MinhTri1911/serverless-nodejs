@@ -18,7 +18,7 @@ const checkExistsClientIdInRequest = function (req) {
       param = JSON.parse(req.body)
     }
     // Check client id in request
-    if (param && param.client_id) {
+    if (param && (param.client_id || param.params.client_id)) {
       return true
     }
   }

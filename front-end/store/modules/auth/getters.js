@@ -5,10 +5,10 @@ export default {
   },
 
   getName: (state) => {
-    let checkName = state.user.name;
-      if (state.user.name) {
+    let checkName = state.user.member_nm;
+      if (state.user.member_nm) {
       if (checkName.length<11) {
-        return state.user.name;
+        return state.user.member_nm;
       } else {
         checkName = checkName.substring(1,10) + '...';
         return checkName;
@@ -18,7 +18,7 @@ export default {
 
   getMember: (state) => {
     if (state.user.member_kb_nm && state.user.member_kb_no != '0') {
-      return state.user.member_kb_nm;
+      return 'の' + state.user.member_kb_nm;
     } else {
       return '';
     }
@@ -27,6 +27,27 @@ export default {
   getMemberId: (state) => {
     if(state.user ) {
       return state.user.member_id;
+    }
+    return '';
+  },
+
+  getMemberKbNo: (state) => {
+    if(state.user ) {
+      return state.user.member_kb_no;
+    }
+    return 0;
+  },
+
+  getMemberTypeNo: (state) => {
+    if(state.user ) {
+      return state.user.member_type_no;
+    }
+    return 0;
+  },
+
+  getAdminTime: (state) => {
+    if(state.admin_time ) {
+      return state.admin_time.date + ' ' +state.admin_time.hour + ':'+ state.admin_time.minute ;
     }
     return '';
   },

@@ -301,7 +301,7 @@
             Object.keys(sample).map(function (sample_key) {
                 if (sample_key == 'status') {
                     // if seat have sale flag and seat designated
-                    if (seat_info[sample[sample_key]] == 0 && seat_info['seat_type_kb'] == 1) {
+                    if (seat_info[sample[sample_key]] == 1 && seat_info['seat_type_kb'] == 1) {
                         seat_tmp[sample_key] = 'available';
                     } else {
                         seat_tmp[sample_key] = 'unavailable';
@@ -334,23 +334,23 @@
      */
     function event(seatList) {
 
-        $(document).on('click', 'rect', function () {
+        $(document).on('click', 'rect,text', function () {
             let id = $(this).parent().attr('data-id');
             if (seatList[id].status == 'available') {
-                $(this).attr('fill', seatList[id].color.selected);
-                $(this).attr('stroke', seatList[id].color.available);
+                $(this).parent().children('rect').attr('fill', seatList[id].color.selected);
+                // $(this).parent().children('rect').attr('stroke', seatList[id].color.available);
                 seatList[id].status = 'selected';
             } else if (seatList[id].status == 'selected') {
-                $(this).attr('fill', seatList[id].color.available);
-                $(this).attr('stroke', seatList[id].border.color.available);
+                $(this).parent().children('rect').attr('fill', seatList[id].color.available);
+                // $(this).parent().children('rect').attr('stroke', seatList[id].border.color.available);
                 seatList[id].status = 'available';
             }
             $('#select-seat').val(JSON.stringify(getAllSelectedSeat(seatList) )).trigger("change");
           // localStorage.setItem('selectSeat', JSON.stringify(getAllSelectedSeat(seatList) ));
         });
-        $(document).on('click', 'text', function () {
-            $(this).parent().children('rect').click();
-        });
+        // $(document).on('click', 'text', function () {
+        //     $(this).parent().children('rect').click();
+        // });
         // message in click on free seat
         $(document).on('click', '.free-seat', function () {
 

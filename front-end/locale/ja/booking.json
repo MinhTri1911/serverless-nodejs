@@ -41,5 +41,6 @@
   "btn_cancel_all": "選択してください",
   "btn_cancel": "取消",
   "btn_next": "次へ",
-  "btn_back": "戻る"
+  "btn_back": "戻る",
+  "title_booking_complete": "予約完了"
 }

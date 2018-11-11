@@ -8,10 +8,9 @@
 
 import { ForgotPasswordBusiness } from "../../../business/login/forgot-password/ForgotPasswordBusiness";
 import ServiceModel from "../../../models/ServiceModel";
-import  Constant  from "../../../config/Constant";
+import Constant from "../../../config/Constant";
 import _ from 'lodash';
 import HttpCode from "../../../config/HttpCode";
-import { Helper } from '../../../common/Helper';
 
 /**
  * Function handler check input email and phone
@@ -28,22 +27,17 @@ const checkForgorPassword = async (event, context, callback) => {
   let req = JSON.parse(event.body);
 
   try {
+    // Reset env
+    process.env.INS_PG_ID = context.functionName;
+    process.env.UPD_PG_ID = context.functionName;
+
     return account.checkEmailAndPhone(req)
       .then(data => {
         if (_.isEmpty(data)) {
           return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Internal Server Error!!!");
-        } else {
-          let helper = new Helper(serviceModel.getDb());
-          let html = 'Please click <a href=' + data.url +'>here</a> to reset you password'
-          return helper.sendEmail('takuya.mori@pastorale.jp', data.received, 'Reset your password', '', html)
-            .then(res => {
-              return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { status: HttpCode.SUCCESS });
-            })
-            .catch(err => {
-              console.log(err);
-              return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
-            });
         }
+
+        return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { status: HttpCode.SUCCESS });
       })
       .catch(err => {
         console.error(err);

@@ -7,9 +7,11 @@ const concatUrl = function (url) {
 }
 
 export function get(url, payload = '') {
+  let token = !!localStorage.getItem('token') ? localStorage.getItem('token') : '';
+
   axios.defaults.headers.common = {
     'Content-Type': 'application/json',
-    Authorization: "",
+    Authorization: token,
   };
 
   return axios({
@@ -20,9 +22,11 @@ export function get(url, payload = '') {
 }
 
 export function post(url, payload = '') {
+  let token = !!localStorage.getItem('token') ? localStorage.getItem('token') : '';
+
   axios.defaults.headers.common = {
     'Content-Type': 'application/json',
-    Authorization: "",
+    Authorization: token,
   };
 
   return axios({
@@ -33,9 +37,11 @@ export function post(url, payload = '') {
 }
 
 export function patch(url, payload = '') {
+  let token = !!localStorage.getItem('token') ? localStorage.getItem('token') : '';
+
   axios.defaults.headers.common = {
     'Content-Type': 'application/json',
-    Authorization: "",
+    Authorization: token,
   };
 
   return axios({
@@ -46,9 +52,11 @@ export function patch(url, payload = '') {
 }
 
 export function put(url, payload = '') {
+  let token = !!localStorage.getItem('token') ? localStorage.getItem('token') : '';
+
   axios.defaults.headers.common = {
     'Content-Type': 'application/json',
-    Authorization: "",
+    Authorization: token,
   };
 
   return axios({
@@ -59,9 +67,11 @@ export function put(url, payload = '') {
 }
 
 export function del(url, payload = '') {
+  let token = !!localStorage.getItem('token') ? localStorage.getItem('token') : '';
+
   axios.defaults.headers.common = {
     'Content-Type': 'application/json',
-    Authorization: "",
+    Authorization: token,
   };
 
   return axios({

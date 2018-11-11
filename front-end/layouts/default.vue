@@ -1,11 +1,11 @@
 <template>
   <div>
-    <TheHeader @sidenavToggle="displaySidenav = !displaySidenav" />
+    <TheHeader @sidenavToggle="displaySidenav = !displaySidenav" v-if="!hasError"/>
     <nuxt/>
-    <TheFooter />
+    <TheFooter v-if="!hasError" />
     <TheSidenav
             :show="displaySidenav"
-            @close="displaySidenav = false" />
+            @close="displaySidenav = false" v-if="!hasError"/>
     <div class="page_top"><a href="#HeadWrap"><i class="fas fa-chevron-circle-up scrollup"></i></a></div>
   </div>
 
@@ -15,23 +15,46 @@
 import TheHeader from '@/components/Navigation/TheHeader'
 import TheFooter from '@/components/Navigation/TheFooter'
 import TheSidenav from '@/components/Navigation/TheSidenav'
+import {mapGetters, mapActions} from 'vuex'
 
 export default {
-
   components: {
     TheHeader,
-      TheFooter,
+    TheFooter,
     TheSidenav
   },
   data() {
     return {
       displaySidenav: false
     }
+  },
+  created(){
+    // Reset error when loading DOM
+    this.$store.dispatch('error/resetError');
+  },
+  computed: {
+    // When happened error, change status error to true
+    // Hide header and footer of page
+    ...mapGetters({
+      hasError: 'error/getStatusError'
+    })
+  },
+  watch: {
+    '$route'(){
+      // this.$store.dispatch('error/resetError');
+    }
   }
 }
 $(function() {
-    $('.menu-trigger').click(function(){
+    $('.menu-trigger, header #TmenuGR a').click(function(e){
         $('header').toggleClass('action');
+        e.preventDefault();
+    });
+
+    $(document).on('click', function(evnt){
+      if (!$(evnt.target).is(".menu-trigger") && !$(evnt.target).is(".menu-trigger *")){
+        $('header').removeClass('action');
+      }
     });
 });
 

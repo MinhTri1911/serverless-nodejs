@@ -8,7 +8,7 @@
 
 import { LogoutBusiness } from "../../business/login/LogoutBusiness";
 import ServiceModel from "../../models/ServiceModel";
-import  Constant  from "../../config/Constant";
+import Constant from "../../config/Constant";
 import _ from 'lodash';
 import HttpCode from "../../config/HttpCode";
 
@@ -36,7 +36,7 @@ const logout = async (event, context, callback) => {
         if (_.isEmpty(data)) {
           return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Internal Server Error!!!");
         }
-        return serviceModel.createSuccessCallback(HttpCode.SUCCESS,{ messenger: "logout ok" });
+        return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { messenger: "logout ok" });
       })
       .catch(err => {
         console.error(err);

@@ -7,9 +7,18 @@
  */
 import { mapState } from 'vuex';
 import constant from '@/constant';
+import ClientInfo from "@/components/UI/ClientInfo";
 
 export default {
-  middleware: 'guest',
+  middleware: 'redirect_if_authenticated',
+  head() {
+    return {
+      title: this.$t('register.lb_title_complete_temporary')
+    }
+  },
+  components: {
+    ClientInfo
+  },
   data: () => ({
     model: {
       inquiryNm: '',
@@ -17,6 +26,7 @@ export default {
       inquiryUrl: '',
       inquiryNote: ''
     },
+    pathToHomePage: '',
   }),
   created() {
     if (!this.register.validStepTwo) {
@@ -38,6 +48,13 @@ export default {
 
     this.$store.dispatch('register/removeModel');
     this.$store.dispatch('register/updateStepOne', false);
+
+    let pathToHome = this.$router.resolve({
+      name: constant.router.LISTPERFORM,
+      params: { client_id: this.$route.params.client_id }
+    });
+
+    this.pathToHomePage = pathToHome.href;
   },
   computed: {
     ...mapState({

@@ -7,9 +7,9 @@ insert into h_login(
   , ip_address
   , login_rireki_no
 ) values (
-  $clientid
-  , $memberid
-  , $loginkb
+  $client_id
+  , $member_id
+  , $login_kb
   , now()
   , $result_kb
   , $ip_address

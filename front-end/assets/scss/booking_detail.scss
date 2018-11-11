@@ -1,0 +1,342 @@
+//colors
+$color_mercury_approx: #dee2e6;
+$color_celeste_approx: #ccc;
+$color_sisal_approx: #cecebf;
+$color_blue_dianne_approx: #174a52;
+$color_mine_shaft_approx: #333;
+$white: #fff;
+$color_alto_approx: #ddd;
+$color_siam_approx: #686859;
+$black_40: rgba(0,0,0,0.4);
+$color_gallery_approx: #eee;
+$black: #000;
+$color_fuscous_gray_approx: #555;
+$red: #ff0000;
+
+//@extend-elements
+//original selectors
+//.pagination ul li span, .pagination ul li a
+%extend_1 {
+    display: block;
+    font-size: 12px;
+    padding: 0.6em 1em;
+    border-radius: 3px;
+}
+
+
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    margin: auto;
+}
+
+#MainC {
+    min-height: 300px !important;
+    padding-top: 5px;
+    border-bottom: solid #ddd 1px;
+}
+.tmenu__a--height {
+    height: 50px !important;
+}
+#SingleContents {
+    width: auto;
+    margin: 30px 30px 0;
+    padding-bottom: 30px;
+    section {
+        border: 1px solid $color_celeste_approx;
+        margin-bottom: 15px;
+        h2 {
+            margin-top: 0 !important;
+        }
+    }
+}
+
+.width-content-50 {
+    width: 50%;
+}
+
+.width-content-22 {
+    width: 25%;
+}
+
+.width-content-30 {
+    width: 30%;
+}
+
+.width-content-33 {
+    width: 33.3%;
+}
+
+.width-content-70 {
+    width: 70%;
+}
+
+.width-content-20 {
+    width: 20%;
+}
+
+.width-content-80 {
+    width: 80%;
+}
+
+.btn-close {
+    text-align: center;
+}
+
+.info {
+    padding: 5px 0;
+    &:first-child {
+        padding-top: 0;
+    }
+    &:last-child {
+        border-bottom: none;
+    }
+}
+.info__title--medium {
+    width: 10.5em;
+}
+.info__title--long {
+    width: 15.5em;
+}
+.info--paddingX {
+    padding: 0 10px;
+}
+.info__button {
+    background: $color_sisal_approx;
+    height: 40px;
+    margin: 0 0 15px 0;
+    padding: 0 10px;
+    button {
+        padding: 0 5px;
+    }
+}
+.btn {
+    //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+    border-radius: 0;
+}
+.ticket--paddingX {
+    padding-right: 10px;
+}
+.ticket--marginY {
+    margin: 5px 0;
+}
+.ticket--marginT {
+    margin-top: 8px;
+    &:first-child {
+        margin-top: 0;
+    }
+}
+.btn-primary {
+    background-color: $color_blue_dianne_approx;
+    border-color: $color_blue_dianne_approx;
+}
+#MainC {
+    display: block;
+    min-height: 500px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: $white;
+    border-left: solid $color_alto_approx 1px;
+    border-right: solid $color_alto_approx 1px;
+    a {
+        text-decoration: underline;
+        &:hover {
+            text-decoration: none;
+            opacity: 0.7;
+            filter: alpha(opacity=70);
+        }
+        span.linkBtn {
+            color: $white;
+            text-align: center;
+            width: auto;
+            padding: 10px;
+            margin: 10px;
+            text-decoration: none;
+        }
+    }
+    h2 {
+        display: block;
+        height: 40px;
+        background: $color_sisal_approx;
+        color: $color_mine_shaft_approx;
+        font-size: 1.3rem;
+        margin: 15px 0;
+        padding: 6px 10px 0;
+    }
+}
+h1 {
+    background: $color_siam_approx;
+    display: block;
+    width: 100%;
+    height: 60px;
+    color: $white;
+    font-weight: 500;
+    margin: 0;
+    padding: 10px 0 0;
+    //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+    box-shadow: 0 2px 2px $black_40 inset;
+    span#Pagetitle {
+        margin-left: 30px;
+        font-size: 1.5rem;
+    }
+}
+#UpperContents {
+    width: auto;
+    margin: 30px 30px 50px;
+}
+#LowerContents {
+    width: auto;
+    margin: 30px 30px 0;
+}
+.pagination {
+    overflow: hidden;
+    ul {
+        list-style: none;
+        position: relative;
+        left: 50%;
+        float: left;
+        li {
+            margin: 0 1px;
+            position: relative;
+            left: -50%;
+            float: left;
+            span {
+                @extend %extend_1;
+            }
+            a {
+                @extend %extend_1;
+                background: $color_gallery_approx;
+                color: $black;
+                text-decoration: none;
+                &:hover {
+                }
+            }
+            &.current {
+                font-weight: bold;
+                color: $black;
+            }
+        }
+    }
+}
+@media screen and(max-width: 1000px) {
+    #eventListWrap {
+        overflow: auto;
+    }
+}
+.eventThum {
+    float: left;
+    margin: 0 10px 10px 0;
+}
+a {
+    text-decoration: none;
+    &:hover img {
+        text-decoration: none;
+        opacity: 0.7;
+        filter: alpha(opacity=70);
+    }
+}
+.red {
+    color: $red;
+}
+.page_top {
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    right: 50px;
+    bottom: 30px;
+    opacity: 0.6;
+    a {
+        width: 60px;
+        height: 60px;
+        font-size: 60px;
+        text-decoration: none;
+        &:before {
+            font-size: 60px;
+        }
+    }
+}
+.centerfix {
+    text-align: center;
+}
+.rightfix {
+    text-align: right;
+}
+.marginBottomfix {
+    margin-bottom: 25px;
+}
+@media only screen and(max-width : 768px) {
+    .info__mobile {
+        padding: 5px 0;
+        &:first-child {
+            padding-top: 0;
+            border-bottom: 1px solid $color_mercury_approx;
+        }
+        &:last-child {
+            padding-bottom: 0;
+        }
+    }
+}
+ul#TmenuGR {
+    margin-top: 16px;
+}
+h2 > a {
+    color: $color_mine_shaft_approx !important;
+    text-decoration: none !important;
+}
+dl#Info {
+    margin-left: 10px;
+    dt {
+        font-weight: bold;
+    }
+    dd {
+        padding: 0;
+        margin: 0 0 10px 0;
+    }
+}
+p.goto {
+    text-align: right;
+}
+.square {
+    float: left;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(0, 0, 0, .2);
+}
+table.eventList {
+    margin-left: 10px;
+    border: none;
+    th {
+        border: none;
+        background-color: $color_sisal_approx;
+        padding: 5px;
+    }
+    td {
+        border: none;
+        border-bottom: 1px dotted $color_fuscous_gray_approx;
+        &.eventTitle {
+            width: auto;
+        }
+        &.genre {
+            width: 100px;
+            padding: 5px;
+        }
+        &.term {
+            width: 20%;
+            padding: 5px;
+            font-weight: bold;
+        }
+        &.controll {
+            width: 92px;
+            padding: 5px;
+        }
+    }
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}

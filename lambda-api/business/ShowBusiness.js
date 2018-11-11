@@ -1,9 +1,8 @@
-import {Show} from "../models/Show"
 import Config from "../config/Constant";
 import _ from "lodash"
 import CommonClientId from "../common/ClientId"
 import {Helper} from "../common/Helper"
-const iconv = require('iconv-lite');
+
 class ShowBusiness {
   /**
    *
@@ -25,10 +24,15 @@ class ShowBusiness {
    * @return {Object}
    */
   convertRequestToCondition(req) {
-    let condition = {
-      limit: req && req.limit ? Number(req.limit) : this.config.RECORD_SHOW_PER_PAGE,
-      offset: req && req.offset ? Number(req.offset) : 0
-    };
+    let condition = [];
+
+    if (req && req.start_position) {
+      condition.startPosition = Number(req.start_position);
+    }
+
+    if (req && req.end_position) {
+      condition.endPosition = Number(req.end_position);
+    }
 
     if (this.hasSearchClientId(req)) {
       condition.clientId = req.client_id;
@@ -39,7 +43,7 @@ class ShowBusiness {
     }
 
     if (this.hasSearchKey(req)) {
-      condition.key = req.q ? req.q.trim().replace(/\s+/g, ' ') : '';
+      condition.key = req.key_search ? req.key_search.trim().replace(/\s+/g, ' ') : '';
     }
 
     if (this.hasSearchShowDate(req) && req.from_show_date) {
@@ -62,6 +66,10 @@ class ShowBusiness {
       condition.genreNo = req.genre_no;
     }
 
+    if (this.hasSearchAdminTime(req) && req.admin_time) {
+      condition.adminTime = req.admin_time;
+    }
+
     return condition;
   }
 
@@ -72,13 +80,14 @@ class ShowBusiness {
    * @return {Promise}
    */
   getShows(req) {
-    // console.log(req);
-    let params = this.retrieveParams(req)
-    let condition = this.convertRequestToCondition(params)
-    let queryCondition = this.addSubQueryBaseOnRequest(params)
-    let bindValueQuery = this.bindValueToQuery(condition)
+    let params = this.retrieveParams(req);
+    let condition = this.convertRequestToCondition(params);
+    let queryCondition = this.addSubQueryBaseOnRequest(params);
+    let bindValueQuery = this.bindValueToQuery(condition);
+
     return new Promise((resolve, reject) => {
-      let where = `${queryCondition.clientId}
+      let whereCondition = `${queryCondition.clientId}
+               ${queryCondition.adminTime}
                /*%if form.genre_no != "" */
                ${queryCondition.genreNo}
                /*%end*/ 
@@ -91,213 +100,37 @@ class ShowBusiness {
                /*%if form.free_word != "" */
                ${queryCondition.keySearch}`;
 
-      this.db.query(`
-                    SELECT a.client_id,
-                           l.number,
-                           max(ll.number) over() AS total,
-                           a.show_group_id,
-                           b.sales_no,
-                           b.show_no,
-                           a.show_group_main_title,
-                           c.koen_kikan AS show_term,
-                           d.genre_nm,
-                           e.message AS show_group_sales_status,
-                           j.code_nm,
-                           a.list_explanation,
-                           CASE
-                               WHEN a.show_group_disp_kb = '1' THEN f.hall_nm
-                               ELSE ''
-                           END AS hall_nm,
-                           g.info AS show_sales_status,
-                           h.sales_nm,
-                           h.sales_explanation,
-                           CASE
-                               WHEN i.reserve_start = ''
-                                    OR i.reserve_limit = '' THEN ''
-                               ELSE to_char(to_date(i.reserve_start, 'YYYYMMDDHH24MI'), 'yyyy/FMMM/FMdd') || '(' || (ARRAY ['日','月','火','水','木','金','土']) [extract('dow' FROM to_timestamp(i.reserve_start,'YYYYMMDDHH24MI')) + 1] || ')' || to_char(to_timestamp(i.reserve_start, 'YYYYMMDDHH24MI'), 'HH24:MI') || '　～　' || to_char(to_date(i.reserve_limit, 'YYYYMMDDHH24MI'), 'yyyy/FMMM/FMdd') || '(' || (ARRAY ['日','月','火','水','木','金','土']) [extract('dow' FROM to_timestamp(i.reserve_limit,'YYYYMMDDHH24MI')) + 1] || ')' || to_char(to_timestamp(i.reserve_limit, 'YYYYMMDDHH24MI'), 'HH24:MI')
-                           END AS sales_term,
-                           c.min_show AS disp_sort,
-                           CASE
-                               WHEN a.show_group_disp_kb = '1'
-                                    AND e.group_sales_kbn IN ('0',
-                                                              '1') THEN '1'
-                               WHEN a.show_group_disp_kb = '2'
-                                    AND g.yusen_kbn IN ('0',
-                                                        '1') THEN '1'
-                               ELSE '0'
-                           END AS select_button_disp_flg,
-                           count(a.client_id) OVER () AS show_cnt,
-                                                   a.show_group_disp_kb,
-                                                   CASE
-                                                       WHEN f.hall_view_flg = '0'
-                                                            AND k.min_seat_type_kb = '1'
-                                                            AND h.internet_seat_kb = '1' THEN '1'
-                                                       ELSE '0'
-                                                   END AS seat_selection_flg
-                    FROM t_show_group a
-                    INNER JOIN t_sales_show b ON a.client_id = b.client_id
-                    AND a.show_group_id = b.show_group_id
-                    INNER JOIN v_show_group_koen_kikan c ON a.client_id = c.client_id
-                    AND a.show_group_id = c.show_group_id
-                    INNER JOIN m_genre d ON a.client_id = d.client_id
-                    AND a.genre_no = d.genre_no
-                    INNER JOIN v_show_group_sales_status e ON a.client_id = e.client_id
-                    AND a.show_group_id = e.show_group_id
-                    INNER JOIN t_show f ON a.client_id = f.client_id
-                    AND a.show_group_id = f.show_group_id
-                    AND b.show_no = f.show_no
-                    INNER JOIN v_show_sales_status g ON a.client_id = g.client_id
-                    AND a.show_group_id = g.show_group_id
-                    AND b.sales_no = g.sales_no
-                    AND b.show_no = g.show_no
-                    INNER JOIN t_sales h ON a.client_id = h.client_id
-                    AND a.show_group_id = h.show_group_id
-                    AND b.sales_no = h.sales_no
-                    INNER JOIN v_sales_handle_time i ON b.client_id = i.client_id
-                    AND b.show_group_id = i.show_group_id
-                    AND b.sales_no = i.sales_no
-                    AND b.show_no = i.show_no
-                    AND i.client_handle_kb = '2'
-                    LEFT OUTER JOIN
-                      (SELECT code_no,
-                              code_nm
-                       FROM m_code
-                       WHERE code_type_cd = '0043' ) j ON a.list_image_kb = j.code_no
-                    INNER JOIN
-                      (SELECT client_id,
-                              show_group_id,
-                              min(seat_type_kb) AS min_seat_type_kb
-                       FROM t_seat_type
-                       GROUP BY client_id,
-                                show_group_id) k ON a.client_id = k.client_id
-                    AND a.show_group_id = k.show_group_id
-                    
-                    /* To get show group */
-                    INNER JOIN
-                      (SELECT row_number() OVER () AS number,
-                                                a.client_id,
-                                                a.show_group_id,
-                                                c.min_show AS disp_sort
-                       FROM t_show_group a
-                       INNER JOIN t_sales_show b ON a.client_id = b.client_id
-                       AND a.show_group_id = b.show_group_id
-                       INNER JOIN v_show_group_koen_kikan c ON a.client_id = c.client_id
-                       AND a.show_group_id = c.show_group_id
-                       INNER JOIN m_genre d ON a.client_id = d.client_id
-                       AND a.genre_no = d.genre_no
-                       INNER JOIN v_show_group_sales_status e ON a.client_id = e.client_id
-                       AND a.show_group_id = e.show_group_id
-                       INNER JOIN t_show f ON a.client_id = f.client_id
-                       AND a.show_group_id = f.show_group_id
-                       AND b.show_no = f.show_no
-                       INNER JOIN v_show_sales_status g ON a.client_id = g.client_id
-                       AND a.show_group_id = g.show_group_id
-                       AND b.sales_no = g.sales_no
-                       AND b.show_no = g.show_no
-                       INNER JOIN t_sales h ON a.client_id = h.client_id
-                       AND a.show_group_id = h.show_group_id
-                       AND b.sales_no = h.sales_no
-                       INNER JOIN v_sales_handle_time i ON b.client_id = i.client_id
-                       AND b.show_group_id = i.show_group_id
-                       AND b.sales_no = i.sales_no
-                       AND b.show_no = i.show_no
-                       AND i.client_handle_kb = '2'
-                       LEFT OUTER JOIN
-                         (SELECT code_no,
-                                 code_nm
-                          FROM m_code
-                          WHERE code_type_cd = '0043' ) j ON a.list_image_kb = j.code_no
-                       INNER JOIN
-                         (SELECT client_id,
-                                 show_group_id,
-                                 min(seat_type_kb) AS min_seat_type_kb
-                          FROM t_seat_type
-                          GROUP BY client_id,
-                                   show_group_id) k ON a.client_id = k.client_id
-                       AND a.show_group_id = k.show_group_id
-                       WHERE
-                       ${where}
-                       GROUP BY a.client_id,
-                                a.show_group_id,
-                                c.min_show
-                       ORDER BY a.client_id,
-                                c.min_show,
-                                a.show_group_id) l ON a.client_id = l.client_id
-                    AND a.show_group_id = l.show_group_id
-                    AND l.number >= $minNoShowGroup
-                    AND l.number < $maxNoShowGroup
-                    
-                    /* To get max num of number row to get total paginate */
-                    INNER JOIN
-                      (SELECT row_number() OVER (
-                                                 ORDER BY a.show_group_id DESC) AS number,
-                                                a.client_id ,
-                                                a.show_group_id,
-                                                c.min_show AS disp_sort
-                       FROM t_show_group a
-                       INNER JOIN t_sales_show b ON a.client_id = b.client_id
-                       AND a.show_group_id = b.show_group_id
-                       INNER JOIN v_show_group_koen_kikan c ON a.client_id = c.client_id
-                       AND a.show_group_id = c.show_group_id
-                       INNER JOIN m_genre d ON a.client_id = d.client_id
-                       AND a.genre_no = d.genre_no
-                       INNER JOIN v_show_group_sales_status e ON a.client_id = e.client_id
-                       AND a.show_group_id = e.show_group_id
-                       INNER JOIN t_show f ON a.client_id = f.client_id
-                       AND a.show_group_id = f.show_group_id
-                       AND b.show_no = f.show_no
-                       INNER JOIN v_show_sales_status g ON a.client_id = g.client_id
-                       AND a.show_group_id = g.show_group_id
-                       AND b.sales_no = g.sales_no
-                       AND b.show_no = g.show_no
-                       INNER JOIN t_sales h ON a.client_id = h.client_id
-                       AND a.show_group_id = h.show_group_id
-                       AND b.sales_no = h.sales_no
-                       INNER JOIN v_sales_handle_time i ON b.client_id = i.client_id
-                       AND b.show_group_id = i.show_group_id
-                       AND b.sales_no = i.sales_no
-                       AND b.show_no = i.show_no
-                       AND i.client_handle_kb = '2'
-                       LEFT OUTER JOIN
-                         (SELECT code_no,
-                                 code_nm
-                          FROM m_code
-                          WHERE code_type_cd = '0043' ) j ON a.list_image_kb = j.code_no
-                       INNER JOIN
-                         (SELECT client_id,
-                                 show_group_id,
-                                 min(seat_type_kb) AS min_seat_type_kb
-                          FROM t_seat_type
-                          GROUP BY client_id,
-                                   show_group_id) k ON a.client_id = k.client_id
-                       AND a.show_group_id = k.show_group_id
-                       WHERE 
-                        ${where}
-                       GROUP BY a.client_id,
-                                a.show_group_id,
-                                c.min_show
-                       ORDER BY a.client_id,
-                                c.min_show,
-                                a.show_group_id) ll ON a.client_id = ll.client_id
-                    AND a.show_group_id = ll.show_group_id
-                    WHERE
-                      ${where}
-                    ORDER BY a.client_id,
-                             disp_sort,
-                             a.show_group_id,
-                             b.sales_no,
-                             b.show_no`,
+      let wherePaginate = ' where number >= $min_no_show_group AND number <= $max_no_show_group';
+      var queryDb = this.helper.loadSql(this.config.SQL_LIST_SHOW)
+
+      if (!CommonClientId.checkExistsClientIdInRequest(req)) {
+        reject(Config.Common.MSG_REQUIRE_CLIENT_ID);
+      }
+      // If user search client id, replace string client id from client id in file
+      if (whereCondition && !_.isEmpty(whereCondition)) {
+        queryDb = queryDb.replace(/#where_condition+/g, whereCondition);
+      }
+
+      // Check paginate
+      if (condition.startPosition && condition.endPosition) {
+        queryDb = queryDb.replace(/#where_paginate+/g, wherePaginate)
+      }
+
+      // Replace all sub query in query string from file
+      queryDb = queryDb.replace('#where_paginate', '').replace('#where_condition', '')
+
+      // Execute query string
+      this.db.query(queryDb,
         {
           bind: bindValueQuery,
           type: this.db.QueryTypes.SELECT
         })
         .then(data => {
-          let response = {
-            result: {
-              record_num: data && data.length > 0 ? data[0].total : 0,
+          var response = {
+              record_num: data && data.length > 0 ? data[0].show_cnt : 0,
               show_list: data
-            }
           };
+          response.show_list = this.addSubSalesToShowGroup(response);
           resolve(response);
         })
         .catch(error => {
@@ -305,6 +138,40 @@ class ShowBusiness {
         });
 
     });
+  }
+
+  /**
+   * Merge same show to group show to a record
+   * @param {object} show
+   * @return {object}
+   */
+  addSubSalesToShowGroup(show){
+    if (show.record_num > 0) {
+      var tmpShow = [];
+      show.show_list.forEach(function (el, i) {
+        var tex = Object.assign({}, el);
+        delete tex['show_cnt'];
+        delete tex['number'];
+        el.sales_list = [tex]
+
+        let indexExistsShow = tmpShow.findIndex(function (te) {
+          return te.show_group_id == el.show_group_id
+        })
+
+        tmpShow.push(el)
+        if (indexExistsShow >= 0) {
+          if (!tmpShow[indexExistsShow].sales_list) {
+            tmpShow[indexExistsShow].sales_list = [tex]
+          } else {
+            tmpShow[indexExistsShow].sales_list.push(tex)
+          }
+          tmpShow.splice(tmpShow.length - 1, 1);
+        }
+      });
+
+      return tmpShow;
+    }
+    return show.show_list;
   }
 
   /**
@@ -338,7 +205,8 @@ class ShowBusiness {
       showDate: this.addQueryShowDate(req),
       salesDate: this.addQuerySalesDate(req),
       keySearch: this.addQueryKeySearch(req),
-      showGroupId: this.addQueryShowGroupId(req)
+      showGroupId: this.addQueryShowGroupId(req),
+      adminTime: this.addQueryAdminTime(req)
     }
   }
 
@@ -373,7 +241,7 @@ class ShowBusiness {
    * @returns {boolean}
    */
   hasSearchKey(req) {
-    if (req && req.q && !_.isEmpty(req.q)) {
+    if (req && req.key_search && !_.isEmpty(req.key_search)) {
       return true;
     }
     return false;
@@ -416,9 +284,21 @@ class ShowBusiness {
     return false;
   }
 
+  /**
+   * Check when user search with sales date
+   * @param req
+   * @returns {boolean}
+   */
+  hasSearchAdminTime(req) {
+    if (req && req.admin_time) {
+      return true;
+    }
+    return false;
+  }
+
   addQueryClientId(req) {
     if (this.hasSearchClientId(req)) {
-      return ' a.client_id = $clientId';
+      return ` a.client_id = $client_id`;
     }
     return '';
   }
@@ -431,9 +311,9 @@ class ShowBusiness {
   addQueryShowGroupId(req) {
     if (this.hasSearchShowGroupId(req)) {
       if (!this.hasSearchClientId(req)) {
-        return ' a.show_group_id = $showGroupId';
+        return ' a.show_group_id = $show_group_id';
       }
-      return ' AND a.show_group_id = $showGroupId';
+      return ' AND a.show_group_id = $show_group_id';
     }
     return '';
   }
@@ -445,7 +325,7 @@ class ShowBusiness {
    */
   addQueryGenreNo(req) {
     if (this.hasSearchGenreNo(req)) {
-      return ' AND a.genre_no = ANY($genreNo)';
+      return ' AND a.genre_no = ANY($genre_no)';
     }
     return '';
   }
@@ -458,11 +338,11 @@ class ShowBusiness {
   addQueryShowDate(req) {
     let query = '';
     if (this.hasSearchShowDate(req) && req.from_show_date) {
-      query += ' AND f.show_date >= $fromShowDate';
+      query += ' AND f.show_date >= $from_show_date';
     }
 
     if (this.hasSearchShowDate(req) && req.to_show_date) {
-      query += ' AND f.show_date <= $toShowDate';
+      query += ' AND f.show_date <= $to_show_date';
     }
 
     return query;
@@ -474,18 +354,27 @@ class ShowBusiness {
    * @returns {String}
    */
   addQuerySalesDate(req) {
-    let query = '';
+    var query = '';
+
     if (this.hasSearchSalesDate(req) && req.from_sales_date) {
-      query += " AND to_char(to_date(h.salesinfo_start_dtime,'YYYYMMDDHH24MI'),'YYYYMMDD') >= $fromSalesDate"
-        + " AND to_char(to_date(h.salesinfo_end_dtime,'YYYYMMDDHH24MI'),'YYYYMMDD') <= $fromSalesDate";
+      query += ` /*%if form.from_sales_date != "" */
+               AND to_char(to_date(i.reserve_start, 'YYYYMMDDHH24MI'), 'YYYYMMDD') >= /* form.from_sales_date */$from_sales_date
+              /*%end*/`;
     }
 
     if (this.hasSearchSalesDate(req) && req.to_sales_date) {
-      query += " AND to_char(to_date(h.salesinfo_start_dtime,'YYYYMMDDHH24MI'),'YYYYMMDD') >= $toSalesDate"
-        + " AND to_char(to_date(h.salesinfo_end_dtime,'YYYYMMDDHH24MI'),'YYYYMMDD') <= $toSalesDate";
+      query += ` /*%if form.to_sales_date != "" */
+                and to_char(to_date(i.reserve_limit, 'YYYYMMDDHH24MI'), 'YYYYMMDD') <= /* form.to_sales_date */$to_sales_date
+                /*%end*/`;
     }
 
-    return query;
+    return ` and a.show_group_id in (
+                  select distinct i.show_group_id from v_sales_handle_time i
+                  where i.client_handle_kb = '2'
+                  and i.reserve_start != ''
+                  and i.reserve_limit != ''
+                  and i.client_id = /* client_id */$client_id
+                  ${query} )`;
   }
 
   /**
@@ -499,15 +388,15 @@ class ShowBusiness {
       // When user input search key with space halsize, full size,...
       // Join string search condition
       let keyWhere = [];
-      let key = req.q.trim().replace(/\s+/g, ' ')
+      let key = req.key_search.trim().replace(/\s+/g, ' ')
 
       if (key.indexOf(' ') >= 0) {
         for (var i = 0; i < key.split(' ').length; i++) {
-          keyWhere.push('LOWER($keySearch)')
+          keyWhere.push('LOWER($key_search)')
         }
       } else {
         // When user input key search not include space fullsize, halfsize, ...
-        keyWhere = ['LOWER($keySearch)'];
+        keyWhere = ['LOWER($key_search)'];
       }
 
       return ' AND LOWER(a.show_group_main_title || a.show_group_sub_title || a.list_explanation || a.detail_explanation)'
@@ -517,7 +406,21 @@ class ShowBusiness {
   }
 
   /**
-   * Setting bind pẩm with condition was setting
+   * Add sub query sql to filter admin time
+   * @param req
+   */
+  addQueryAdminTime(req) {
+    if (this.hasSearchAdminTime(req) && req.admin_time) {
+      return ` AND to_char(to_date(h.salesinfo_start_dtime, 'YYYYMMDDHH24MI'), 'YYYYMMDD') <= to_char(to_timestamp($admin_time, 'YYYY/MM/DD HH24:MI'), 'YYYYMMDDHH24MI')
+        AND to_char(to_date(h.salesinfo_end_dtime, 'YYYYMMDDHH24MI'), 'YYYYMMDD') >= to_char(to_timestamp($admin_time, 'YYYY/MM/DD HH24:MI'), 'YYYYMMDDHH24MI')`;
+    } else {
+      return ` AND to_char(to_date(h.salesinfo_start_dtime, 'YYYYMMDDHH24MI'), 'YYYYMMDD') <= to_char(/* admin_time */now(), 'YYYYMMDDHH24MI')
+          AND to_char(to_date(h.salesinfo_end_dtime, 'YYYYMMDDHH24MI'), 'YYYYMMDD') >= to_char(/* admin_time */now(), 'YYYYMMDDHH24MI')`;
+    }
+  }
+
+  /**
+   * Setting bind param with condition was setting
    *
    * @param conditionFromReq
    * @return void
@@ -527,43 +430,43 @@ class ShowBusiness {
     // When user search with genre no
     if (!_.isNil(conditionFromReq.clientId) && !_.isNull(conditionFromReq.clientId)
       && !_.isEmpty(conditionFromReq.clientId)) {
-      bindParam.clientId = conditionFromReq.clientId;
+      bindParam.client_id = conditionFromReq.clientId;
     }
 
     // When user search with show group
     if (!_.isNil(conditionFromReq.showGroupId) && !_.isNull(conditionFromReq.showGroupId)
       && !_.isEmpty(conditionFromReq.showGroupId)) {
-      bindParam.showGroupId = conditionFromReq.showGroupId;
+      bindParam.show_group_id = conditionFromReq.showGroupId;
     }
 
     // When user search with genre no
     if (!_.isNil(conditionFromReq.genreNo) && !_.isNull(conditionFromReq.genreNo)
       && !_.isEmpty(conditionFromReq.genreNo)) {
-      bindParam.genreNo = conditionFromReq.genreNo;
+      bindParam.genre_no = conditionFromReq.genreNo;
     }
 
     // When user input from show date
     if (!_.isNil(conditionFromReq.fromShowDate) && !_.isNull(conditionFromReq.fromShowDate)
       && !_.isEmpty(conditionFromReq.fromShowDate)) {
-      bindParam.fromShowDate = conditionFromReq.fromShowDate;
+      bindParam.from_show_date = conditionFromReq.fromShowDate;
     }
 
     // When user input to show date
     if (!_.isNil(conditionFromReq.toShowDate) && !_.isNull(conditionFromReq.toShowDate)
       && !_.isEmpty(conditionFromReq.toShowDate)) {
-      bindParam.toShowDate = conditionFromReq.toShowDate;
+      bindParam.to_show_date = conditionFromReq.toShowDate;
     }
 
     // When user input from sales date
     if (!_.isNil(conditionFromReq.fromSalesDate) && !_.isNull(conditionFromReq.fromSalesDate)
       && !_.isEmpty(conditionFromReq.fromSalesDate)) {
-      bindParam.fromSalesDate = conditionFromReq.fromSalesDate;
+      bindParam.from_sales_date = conditionFromReq.fromSalesDate;
     }
 
     // When user input to sales date
     if (!_.isNil(conditionFromReq.toSalesDate) && !_.isNull(conditionFromReq.toSalesDate)
       && !_.isEmpty(conditionFromReq.toSalesDate)) {
-      bindParam.toSalesDate = conditionFromReq.toSalesDate;
+      bindParam.to_sales_date = conditionFromReq.toSalesDate;
     }
 
     // When user input key word then add condition with key word and bind param resposible
@@ -580,16 +483,21 @@ class ShowBusiness {
         keyBind = `%${conditionFromReq.key}%`
       }
       // Bind param into key search
-      bindParam.keySearch = keyBind
+      bindParam.key_search = keyBind
     }
 
-    if (!_.isNil(conditionFromReq.offset) && !_.isNull(conditionFromReq.offset)) {
-      bindParam.minNoShowGroup = Number(conditionFromReq.offset) + 1;
+    if (!_.isNil(conditionFromReq.startPosition) && !_.isNull(conditionFromReq.startPosition)
+      && _.isNumber(conditionFromReq.startPosition) && conditionFromReq.startPosition > 0) {
+      bindParam.min_no_show_group = conditionFromReq.startPosition;
     }
 
-    if (!_.isNil(conditionFromReq.limit) && !_.isNull(conditionFromReq.limit)
-      && _.isNumber(conditionFromReq.limit) && conditionFromReq.limit > 0) {
-      bindParam.maxNoShowGroup = Number(conditionFromReq.offset) + Number(conditionFromReq.limit) + 1;
+    if (!_.isNil(conditionFromReq.endPosition) && !_.isNull(conditionFromReq.endPosition)
+      && _.isNumber(conditionFromReq.endPosition) && conditionFromReq.endPosition > 0) {
+      bindParam.max_no_show_group = conditionFromReq.endPosition;
+    }
+
+    if (!_.isNil(conditionFromReq.adminTime) && !_.isNull(conditionFromReq.adminTime)) {
+      bindParam.admin_time = conditionFromReq.adminTime;
     }
 
     // When user search with key word
@@ -597,7 +505,10 @@ class ShowBusiness {
   }
 
   /**
+   * Get list show schedule base on
    *
+   * @param {event} request
+   * @return {Promise}
    */
   getScheduleShow(request) {
     let params = this.retrieveParams(request)
@@ -605,54 +516,65 @@ class ShowBusiness {
     let queryCondition = this.addSubQueryBaseOnRequest(params)
     let bindValueQuery = this.bindValueToQuery(condition)
     return new Promise((resolve, reject) => {
-      var queryDb = this.helper.loadSql('SQL027.sql')
-
+      // Check exists client id from client
       if (!CommonClientId.checkExistsClientIdInRequest(request)) {
-        reject('Required client_id ')
+        reject(Config.Common.MSG_REQUIRE_CLIENT_ID)
       }
-      // If user search client id, replace string client id from client id in file
-      if (queryCondition.clientId && !_.isNil(queryCondition.clientId)) {
-        queryDb = queryDb.replace('#replace_client_id', queryCondition.clientId)
-      }
-      // If user search with show group id, replace sub query from query string in file
-      if (queryCondition.showGroupId && !_.isNil(queryCondition.showGroupId)) {
-        queryDb = queryDb.replace('#replace_show_group_id', queryCondition.showGroupId)
-      }
-      // Replace all sub query in query string from file
-      queryDb = queryDb.replace('#replace_client_id', '').replace('#replace_show_group_id', '').replace('#replace_hide_show_flag')
+      let queryDb = this.getSqlStringScheduleShow(condition, queryCondition);
+
       // Execute query string
       this.db.query(queryDb, {
         type: this.db.QueryTypes.SELECT,
         bind: bindValueQuery
       })
-      .then(data => {
-        let res = {
-          record_num: data ? data.length : 0,
-          schedule_list: data
-        }
-        if (res && res.record_num > 0) {
-          res = Object.assign(res, data[0])
-          res.schedule_list = this.addSubSalesToSchedule(res)
-        }
-        resolve(res)
-      })
-      .catch(error => {
-        reject(error)
-      })
+        .then(data => {
+          let res = {
+            record_num: data ? data.length : 0,
+            schedule_list: data
+          }
+          if (res && res.record_num > 0) {
+            res = Object.assign(res, data[0])
+            res.schedule_list = this.addSubSalesToSchedule(res)
+          }
+          resolve(res)
+        })
+        .catch(error => {
+          reject(error)
+        })
     });
   }
 
   /**
-   *
+   * Process load string SQL from file and replace condition where
+   * @return {String}
+   */
+  getSqlStringScheduleShow(condition, queryCondition) {
+    // Load file SQL
+    var queryDb = this.helper.loadSql(this.config.SQL_LIST_SHOW_SCHEDULE);
+
+    // If user search with show group id, replace sub query from query string in file
+    if (condition.adminTime && !_.isNil(condition.adminTime)) {
+      queryDb = queryDb.replace('#replace_admin_time', `to_timestamp($adminTime, 'YYYY/MM/DD HH24:MI')`);
+    } else {
+      queryDb = queryDb.replace('#replace_admin_time', `now()`)
+    }
+    // Replace all sub query in query string from file
+    queryDb = queryDb.replace('#replace_admin_time', '')
+
+    return queryDb;
+  }
+
+  /**
+   * Convert data to format response
    * @param show
    * @return {Array}
    */
-  addSubSalesToSchedule(show){
+  addSubSalesToSchedule(show) {
     var tmpShow = []
     show.schedule_list.forEach(function (el, i) {
       var tex = Object.assign({}, el);
       el.sales_list = [tex]
-      let indexExistsShow = tmpShow.findIndex(function(te){
+      let indexExistsShow = tmpShow.findIndex(function (te) {
         return te.show_no == el.show_no
       })
 
@@ -671,4 +593,6 @@ class ShowBusiness {
   }
 }
 
-export {ShowBusiness}
+export {
+  ShowBusiness
+}

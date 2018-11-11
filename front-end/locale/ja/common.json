@@ -1,11 +1,14 @@
 {
   "btn_next": "次へ",
-  "btn_back": "戻る",
+	"btn_back": "戻る",
+	"btn_ok": "はい",
+	"btn_no": "NO",
   "btn_close": "閉じる",
   "btn_search": "検索",
   "btn_login" : "ログイン",
+  "btn_back_show": "公演一覧へ",
 	"links": {
-		"help": "ご利用ガイド",
+		"guide": "ご利用ガイド",
 		"search": "公演検索",
 		"list_show": "公演一覧",
 		"register": "利用登録",
@@ -41,5 +44,14 @@
     "lbl_show_date": "公演日",
     "lbl_sales_date": "受付期間",
     "lbl_genre_no": "ジャンル"
-  }
+  },
+  "lbl_loading": "少々お待ちください。データをダウンロード中。。。",
+  "title_qa": "問合せ先情報",
+  "client": {
+    "name": "問合せ先名称",
+    "phone": "問合せ先電話番号",
+    "url": "問合せ先URL",
+    "remark": "問合せ先備考"
+  },
+  "lb_dialog_confirm": "確認"
 }

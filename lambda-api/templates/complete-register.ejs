@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style lang="css">
+    .head {
+      font-size: 20px;
+    }
+
+    .content {
+      margin: 10px;
+    }
+
+    .signature {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="head">
+    <p>
+      <%- name + (nameFlg == '1' ? '様' : '') %>
+    </p>
+    <%- contents %>
+  </div>
+  <div class="content">
+    <div>
+      <label>ご登録日時：<%= year %>年<%= month %>月<%= day %>日 <%= time %></label>
+    </div>
+    <div>
+      <label>
+        ご登録者名：<%= name %>
+      </label>
+    </div>
+    <div>
+      <label>
+        ご登録メールアドレス：<%= mail %>
+      </label>
+    </div>
+
+    <div>
+      <p>ログインの際は、メールアドレスとパスワードを入力してください。</p>
+    </div>
+  </div>
+
+  <div class="signature">
+    <%- signature %>
+  </div>
+</body>
+</html>

@@ -7,7 +7,7 @@ select
 from
   m_member 
 where
-  client_id = $clientId
+  client_id = $client_id
   and password_ninsyou_key = $key
   and now() between password_reset_dtime and password_reset_dtime + interval '1day' 
   and admission_kb = '1' 

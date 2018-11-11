@@ -30,7 +30,7 @@
   </div>
 </template>
 <script src="@/business/show/ListShowBusiness.js"></script>
-<style lang="scss">
+<style lang="scss" scoped>
   @import "./assets/scss/show"
 </style>
 

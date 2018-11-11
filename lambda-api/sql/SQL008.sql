@@ -14,3 +14,6 @@ from
     m_member
 where
     client_id = $client_id
+    /*%if f.member_id != '' */
+    $condition
+    /*%end*/

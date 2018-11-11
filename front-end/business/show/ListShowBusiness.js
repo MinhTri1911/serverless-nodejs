@@ -12,24 +12,39 @@ export default {
     ItemShow,
     NotifyList
   },
+  head() {
+    return {
+      title: this.$t('show.title')
+    }
+  },
   data() {
     return {
-      // data: '123',
-      bottom: false,
-      page: 1,
-      offset: 0,
-      limit: Config.RECORD_PER_PAGE,
+      constant: {
+        WITH_SELECT_SEAT: Config.LAYOUT_WITH_SEAT,
+        NO_SELECT_SEAT: Config.LAYOUT_NO_SEAT,
+        BUTTON_SELECT_SHOW: 1,
+        BUTTON_SELECT_HIDE: 0
+      },
       notifyList: [],
       notify_page: {
         currentPage: 1,
         totalItems: 1,
         itemsPerPage: Config.RECORD_PER_PAGE
+      },
+      showPage: {
+        page: 1,
+        bottom: false,
+        limit: Config.RECORD_PER_PAGE
       }
     }
   },
+  created() {
+    this.initPrepareData()
+  },
   computed: {
     ...mapState({
-      show: state => state.show
+      show: state => state.show,
+      admin_time: state => state.auth.admin_time
     }),
     ...mapGetters({
       totalRecord: 'show/getTotalRecordShow'
@@ -39,17 +54,21 @@ export default {
     },
     searching() {
       return this.show.searching
+    },
+    isRefresh() {
+      return this.show.refresh
+    },
+    isClickBtnSearch(){
+      return this.show.isClickBtnSearch;
     }
   },
-  mounted() {
+  mounted: async function() {
     // Add event scroll window
     window.addEventListener('scroll', () => {
-      this.bottom = this.bottomVisible();
+      this.showPage.bottom = this.bottomVisible();
     });
-    // When on url not include query search, access homepage normal, else handle search with query string
-    this.$store.dispatch('show/changeIsSearch', this)
     // nextTick to call back after DOM already
-    this.$nextTick(() => {
+    await this.$nextTick(() => {
       // If not search, select show from database
       this.getNotifies(1);
       this.addShow();
@@ -57,29 +76,32 @@ export default {
   },
   methods: {
     ...mapActions('show', ['searchShow', 'listShow']),
-    // When scroll on bottom
-    bottomVisible() {
-      const scrollY = window.scrollY;
-      const visible = document.documentElement.clientHeight;
-      // const pageHeight = document.documentElement.scrollHeight;
-      const showItemEl = $('#eventListWrap .show-item')
-      if (showItemEl.length > 0) {
-        const lastShowItem = document.querySelector('#eventListWrap .show-item:last-child')
 
-        const posScroll = lastShowItem.offsetTop + lastShowItem.clientHeight
+    /**
+     * Check bottom visible scroll loading
+     * @return {*}
+     */
+    bottomVisible() {
+      const scrollY = window.pageYOffset;
+      const visible = document.documentElement.clientHeight;
+      const showItemEl = $('#eventListWrap .show-item');
+      if (showItemEl.length > 0) {
+        const lastShowItem = document.querySelector('#eventListWrap .show-item:last-child');
+
+        const posScroll = lastShowItem.offsetTop + lastShowItem.clientHeight;
         const bottomOfPage = visible + scrollY >= posScroll;
 
         // Check fixed footer scroll when loading
         if (showItemEl.length >= Config.MAX_RECORD_FIXED_FOOTER) {
-          const posElementFixed = $('#eventListWrap .show-item:nth-child(' + (Config.MAX_RECORD_FIXED_FOOTER - 1) + ')')
+          const posElementFixed = $('#eventListWrap .show-item:nth-child(' + (Config.MAX_RECORD_FIXED_FOOTER - 1) + ')');
           if (posElementFixed) {
-            let ps = $("#eventListWrap .show-item:nth-child("+(Config.MAX_RECORD_FIXED_FOOTER - 1)+")")[0].offsetTop + $("#eventListWrap .show-item:nth-child("+(Config.MAX_RECORD_FIXED_FOOTER - 1)+")")[0].clientHeight;
+            let ps = $("#eventListWrap .show-item:nth-child(" + (Config.MAX_RECORD_FIXED_FOOTER - 1) + ")")[0].offsetTop + $("#eventListWrap .show-item:nth-child(" + (Config.MAX_RECORD_FIXED_FOOTER - 1) + ")")[0].clientHeight;
             // When load max item show >= 15 item, then fixed footer
             if ($('#eventListWrap .show-item').length >= Config.MAX_RECORD_FIXED_FOOTER
-              && ( ps <= visible + scrollY)) {
-              $('#mainFooter').addClass('rs-fixed')
+              && (ps <= visible + scrollY)) {
+              $('#mainFooter').addClass('rs-fixed');
             } else {
-              $('#mainFooter').removeClass('rs-fixed')
+              $('#mainFooter').removeClass('rs-fixed');
             }
           }
         }
@@ -87,7 +109,6 @@ export default {
         // Check scroll to load more show
         return scrollY && (bottomOfPage || posScroll < visible);
       }
-
       return false
     },
 
@@ -95,8 +116,43 @@ export default {
      * Add show when scroll
      * @return {mapActions}
      */
-    addShow() {
-      this.$store.dispatch('show/listShow', this)
+    async addShow() {
+      let data = this.setData();
+      this.$nuxt.$loading.start();
+      await this.$store.dispatch('show/listShow', data)
+        .then(res => {
+          this.$nuxt.$loading.finish();
+        })
+        .catch(err => {
+          this.$nuxt.$loading.finish();
+        })
+    },
+
+    /**
+     * Config data to search show
+     * @return {object}
+     */
+    setData() {
+      return {
+        client_id: this.$route.params.client_id || null,
+        key_search: this.$route.query.key_search || null,
+        genre_no: this.$route.query.genre_no || null,
+        from_show_date: this.$route.query.from_show_date || null,
+        to_show_date: this.$route.query.to_show_date || null,
+        from_sales_date: this.$route.query.from_sales_date || null,
+        to_sales_date: this.$route.query.to_sales_date || null,
+        showPage: this.showPage || null,
+        admin_time: this.getAdminTime()
+      }
+    },
+
+    /**
+     * Prepare data to init page
+     * @return void
+     */
+    initPrepareData() {
+      this.showPage.page = 1;
+      this.$store.dispatch('show/updatePage', this.showPage.page)
     },
 
     /**
@@ -104,8 +160,9 @@ export default {
      * @return {Promise}
      */
     getNotifies(pageNum) {
-      post(_api.NOTIFY_LIST, {
+      get(_api.NOTIFY_LIST, {
         client_id: this.$route.params.client_id,
+        admin_time: this.getAdminTime(),
         page: pageNum
       }).then(res => {
         const notifiesArray = [];
@@ -115,35 +172,57 @@ export default {
         this.notifyList = notifiesArray;
         this.notify_page.totalItems = Number(res.data.data.record_num);
       }).catch(err => {
-
+        console.log(err)
       })
     },
     pageChanged(pageNum) {
       // event change page , get posts in page
       this.notify_page.currentPage = pageNum;
       this.getNotifies(pageNum);
+    },
+    /**
+     * Get time admin when user login admin screen
+     * @return {*}
+     */
+    getAdminTime(){
+      if (this.admin_time) {
+        let adDate = this.admin_time.date ? this.admin_time.date : '';
+        let adHour = this.admin_time.hour ? this.admin_time.hour : '';
+        let adMinute = this.admin_time.minute ? this.admin_time.minute : '';
+        let adDateTime = adDate + ' ' + adHour + ':' + adMinute;
+        let fmReg = new RegExp(/^(([0-9]{4})\/([0-9]{1,2})\/([0-9]{1,2})\s([0-9]{1,2})\:([0-9]{1,2}))$/);
+        if (fmReg.test(adDateTime)) {
+          return adDateTime
+        }
+      }
+      return null;
     }
   },
   watch: {
-    // totalRecord(totalRecord){
-    //   if (totalRecord) {
-    //     this.totalRecord = totalRecord
+    // searching(searching) {
+    //   if (searching) {
+    //     this.initPrepareData()
+    //     this.addShow();
     //   }
     // },
-    searching(searching) {
-      if (searching) {
-        this.page = 1;
-        this.offset = 0;
+    'showPage.bottom'(bottom) {
+      if (bottom) {
+        this.showPage.page++;
+        this.$store.dispatch('show/updatePage', this.showPage.page);
         this.addShow();
       }
     },
-    bottom(bottom) {
-      if (bottom) {
-        this.page++;
-        this.offset++;
-        this.offset = (this.page - 1) * this.limit;
+    isRefresh(refresh) {
+      if (refresh) {
+        this.initPrepareData()
         this.addShow();
-        console.log(this.shows)
+      }
+    },
+    isClickBtnSearch(isClick) {
+      if (isClick) {
+        this.initPrepareData();
+        this.addShow();
+        this.$store.dispatch('show/updateClickBtnSearch', false);
       }
     }
   }

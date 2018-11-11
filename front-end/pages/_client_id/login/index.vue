@@ -1,17 +1,15 @@
 <template>
-  <div class="container">
+  <div id="MainC">
     <div class="login">
-      <div class="login-head">
-        {{ $t('login.lb_login_head') }}
-      </div>
+      <h1 class="rs-title-pg"><span id="Pagetitle">{{ $t('login.lb_login_head') }}</span></h1>
       <div class="login-form">
         <div>
-          <h3>{{ $t('login.lb_login_guide_1') }}</h3>
-          <h3>{{ $t('login.lb_login_guide_2') }}</h3>
+          <p>{{ $t('login.lb_login_guide_1') }}</p>
+          <p>{{ $t('login.lb_login_guide_2') }}</p>
         </div>
           <div class="col-xl-12 block">
             <div class="col-xl-12 block-inner">
-              <div class="col-xl-4">
+              <div class="col-xl-4 max-width">
                 {{ $t('login.lb_login_email') }}
                 <br>
                 {{ $t('login.lb_login_ID') }}
@@ -29,7 +27,7 @@
               </div>
             </div>
             <div class="col-xl-12 block-inner">
-              <div class="col-xl-4">
+              <div class="col-xl-4 max-width">
                 {{ $t('login.lb_login_password') }}
               </div>
               <div class="col-xl-8 input-center">
@@ -53,20 +51,10 @@
                 {{ $t('login.lb_forgotpassword') }}<nuxt-link :to="{name: 'client_id-login-forgot-password' }">{{ $t('login.link_here') }}</nuxt-link>
               </div>
             </div>
-            <div class="col-xl-12 block-inner">
-              <div class="col-xl-4">
-              </div>
-            </div>
-            <div class="col-xl-12 block-inner">
-              <div class="col-xl-6"  v-if="!selectChair">
-                <button type="button" v-on:click="list">{{ $t('login.btn_listbutton') }}</button>
-              </div>
-              <div class="col-xl-6"  v-if="selectChair">
-                <button type="button" v-on:click="back">{{ $t('login.btn_back') }}</button>
-              </div>
-              <div class="col-xl-6 input-center">
-                <button type="button" @click="onSubmit()" >{{ $t('login.btn_login') }}</button>
-              </div>
+            <div class="col-xl-6 offset-xl-3 block-inner">
+              <button type="button" v-if="selectChair" class="mr-3" v-on:click="back">{{ $t('login.btn_back') }}</button>
+              <button type="button" v-if="!selectChair"  class="mr-3" v-on:click="list">{{ $t('login.btn_listbutton') }}</button>
+              <button type="button" class="ml-3" @click="onSubmit()" >{{ $t('login.btn_login') }}</button>
             </div>
         </div>
       </div>

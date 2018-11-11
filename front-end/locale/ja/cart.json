@@ -1,0 +1,36 @@
+{
+  "lb_cart": "カート",
+  "lb_choose_pay_type": "支払・受取方法選択",
+  "lb_confirm_detail": "申込内容確認",
+  "lb_finish": "申込完了",
+  "title": "ヘッダー",
+  "lbl_desc_cart": "カートに入れてから～分以内にお申込み手続きが完了しない場合、お申込み内容が取消されますのでご注意ください。お申込み内容に問題が無ければ支払・受取選択画面へボタンを押してください。",
+  "btn_booking": "同じ公演を予約する",
+  "lbl_seat_type": "席種",
+  "lbl_ticket_type": "券種",
+  "lbl_seat": "座席名",
+  "lbl_price": "定価",
+  "lbl_price_discount": "割引後金額",
+  "lbl_ticket_count": "枚数",
+  "btn_cancel": "取消",
+  "btn_change": "変更",
+  "lbl_total_amount": "合計枚数",
+  "lbl_total_price": "合計金額",
+  "btn_cont_booking": "続けて予約する",
+  "btn_go_payment": "支払・受取選択画面へ",
+  "btn_reset_cart": "カートを空にする",
+  "lbl_name_fee": "手数料名",
+  "lbl_price_fee": "手数料金額",
+  "lbl_total_payment_amount": "支払合計",
+  "btn_back": "戻る",
+  "btn_confirm": "予約確定",
+  "lbl_info_receive": "配送先情報",
+  "lbl_payment_type": "支払受取方法",
+  "lb_info_in_ticket" : "券面にて通知",
+  "lb_info_after_book": "予約後に通知",
+  "lb_cart_exit":{
+    "line1" : "カートに入れてから～分以内にお申込み手続きが完了しない場合、お申込み内容が取消されますのでご注意ください。",
+    "line2" : "お申込み内容に問題が無ければ支払・受取選択画面へボタンを押してください。"
+    
+  }
+}

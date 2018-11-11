@@ -1,13 +1,9 @@
 <template>
   <div class="container">
     <div class="login-head">
-      {{ $t('common.links.help') }}
+      {{ $t('common.links.guide') }}
     </div>
-    <div>
-      <h3></h3>
-    </div>
-    <div class="center-align">
-      <hr>
+    <div class="content" v-html="content">
     </div>
   </div>
 </template>

@@ -1,7 +1,63 @@
-<h3>
-  <%= head %>
-</h3>
-<p>
-  <%= content %>
-</p>
-<a href="<%= link %>"><%= link %></a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style lang="css">
+    .head {
+      font-size: 20px;
+    }
+
+    .content {
+      margin: 10px;
+    }
+
+    .signature {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="head">
+    <p>
+      <%- memberNm + (nameFlg == '1' ? '様' : '') %>
+    </p>
+    <%- contents %>
+  </div>
+  <div class="content">
+    <div>
+      <label>ご登録日時：<%= year %>年<%= month %>月<%= day %>日 <%= time %></label>
+    </div>
+    <div>
+      <label>
+        ご登録メールアドレス：<%= mail %>
+      </label>
+    </div>
+
+    <div>
+      <p>現在の状態は仮登録の状態となっております。</p>
+      <p>本登録するには、下記のURLにアクセスし、本登録作業を行ってください。</p>
+      <p></p>
+      <p>お客様の環境によっては、一部の文字列がURLとして認識されていない</p>
+      <p>場合があります。</p>
+      <p>その場合は下記のURLを全てコピーし、ブラウザのアドレス欄に貼り付け</p>
+      <p>てからアクセスください。</p>
+    </div>
+
+    <div>
+      <a href="<%= link %>"><%= link %></a>
+    </div>
+
+    <div>
+      <p>このページは仮登録から24時間有効です。
+      </p>
+      <p>それ以降は仮登録が無効となりますので、24時間以内に本登録をお願いします。</p>
+    </div>
+  </div>
+  <div class="signature">
+    <%- signature %>
+  </div>
+</body>
+</html>

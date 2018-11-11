@@ -3,7 +3,7 @@ select
 from
   m_member
 where
-  client_id = $clientid
+  client_id = $client_id
   and LOWER(mail_address) = LOWER($email)
   and (
 replace (tel_no, '-', '') = replace ($phone, '-', '')

@@ -1,4 +1,5 @@
 import { Account, Member } from '../models/Account';
+import { Helper } from '../common/Helper';
 const secretKey = process.env.SECRET_KEY;
 import crypto from 'crypto';
 class AccountBussiness {
@@ -13,6 +14,7 @@ class AccountBussiness {
   constructor(db) {
     this.db = db;
     let account = new Account();
+    this.helper = new Helper();
     let member = new Member();
     this.accountModel = account.defineAccountSchema(this.db)
 
@@ -115,19 +117,20 @@ class AccountBussiness {
   }
 
   getUserByEmail(data) {
-    let { mail, password } = data
-     password = crypto.createHash('sha256').update(secretKey + password).digest('hex')
+    let { client_id, member_pass, mail_address } = data;
     return new Promise((resolve, reject) => {
-      this.db.query(`
-
-      `, {bind: { idlogin: mail, password: password }, type: this.db.QueryTypes.SELECT})
-      .then(result => {
-        //console.log(result);
-        resolve(result);
+      let sql = this.helper.loadSql('SQLCheckToken.sql');
+      this.db.query(sql, {
+        bind: {
+          clientid: client_id, idlogin: mail_address, password: member_pass
+        }, type: this.db.QueryTypes.SELECT
       })
-      .catch(err => {
-        reject(new Error(`Something Went Wrong ${err}`));
-      });
+        .then(result => {
+          resolve(result);
+        })
+        .catch(err => {
+          reject(new Error(`Something Went Wrong ${err}`));
+        });
     });
   }
 

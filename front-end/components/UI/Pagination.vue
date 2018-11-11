@@ -3,26 +3,26 @@
         <ul>
             <li><a href="#" @click.prevent="pageChanged(1)" aria-label="First">&lt;&lt; </a></li>
             <li>
-                <a v-show="paginationRange[0] != 1" href="#" @click.prevent="pageChanged(1)" aria-label="First">1 </a>
+              <a v-show="paginationRange[0] != 1" href="#" @click.prevent="pageChanged(1)" aria-label="First">1 </a>
             </li>
             <li>
-                <span v-show="paginationRange[0] != 1">...</span>
+              <span v-show="paginationRange[0] != 1">...</span>
             </li>
 
-            <li v-for="(pageNum,index) in paginationRange" :class="activePage(pageNum)">
-                <a href="#" v-show="!activePage(pageNum)" @click.prevent="pageChanged(pageNum)">{{ pageNum }} </a>
-                <span v-show="activePage(pageNum)">{{ pageNum }}</span>
+            <li v-for="(pageNum,index) in paginationRange" :key="index" :class="activePage(pageNum)">
+              <a href="#" v-show="!activePage(pageNum)" @click.prevent="pageChanged(pageNum)">{{ pageNum }} </a>
+              <span v-show="activePage(pageNum)">{{ pageNum }}</span>
             </li>
 
             <li>
                 <span v-show="paginationRange[paginationRange.length -1] != lastPage">...</span>
             </li>
             <li>
-                <a href="#" v-show="paginationRange[paginationRange.length -1] != lastPage"
-                   @click.prevent="pageChanged(lastPage)" aria-label=""> {{lastPage}}</a>
+              <a href="#" v-show="paginationRange[paginationRange.length -1] != lastPage"
+                @click.prevent="pageChanged(lastPage)" aria-label=""> {{lastPage}}</a>
             </li>
             <li>
-                <a href="#" @click.prevent="pageChanged(lastPage)" aria-label="Last">>></a>
+              <a href="#" @click.prevent="pageChanged(lastPage)" aria-label="Last">>></a>
             </li>
         </ul>
     </div>

@@ -16,13 +16,15 @@ export default {
   	data() {
       return {
         error: false,
-        clickLogin: false,
+        click_login: false,
 
         // Variable to replace button "List Perform" with button "Back"
         selectChair: this.$store.state.auth.redirectURL?true:false,
         mail: '',
         password: '',
         client_id: '',
+        // Variable of login admin mode
+        web_permission_kb: this.$store.state.auth.admin_flag
       }
     },
     created() {
@@ -62,7 +64,8 @@ export default {
           let user = {
             mail: this.mail,
             password: this.password,
-            client_id: this.$route.params.client_id
+            client_id: this.$route.params.client_id,
+            web_permission_kb: this.web_permission_kb
           };
           this.error = false;
           this.clickLogin = true;
@@ -91,6 +94,7 @@ export default {
               this.$nuxt.$loading.finish();
             })
             .catch(err => {
+
               this.$nuxt.$loading.finish();
               this.error = true;
               this.clickLogin = false;

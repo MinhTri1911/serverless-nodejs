@@ -9,10 +9,10 @@ const getListShow = async (event, context, callback) => {
   try {
     return show.getShows(event)
       .then(res => {
-          return service.createSuccessCallback(HttpCode.SUCCESS, res.result );
+          return service.createSuccessCallback(HttpCode.SUCCESS, res);
       })
       .catch(err => {
-        return service.createErrorCallback(HttpCode.ERROR, err + "Internal Server Error!!!");
+        return service.createErrorCallback(HttpCode.ERROR, err);
       });
   } catch (err) {
     return service.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");

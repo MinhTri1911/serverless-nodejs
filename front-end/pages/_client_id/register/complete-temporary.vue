@@ -1,6 +1,7 @@
 <template lang="html">
   <div id="MainC" class="register-step-3">
     <main id="ContentsPane">
+      <h1 class="rs-title-pg"><span id="Pagetitle">{{ $t('register.lb_title_complete_temporary') }}</span></h1>
       <div class="container">
         <div class="col-md-12">
           {{ $t('register.lb_guide_complete_temporary') }}
@@ -18,17 +19,12 @@
       </div>
 
       <div class="container">
-        <div class="col-md-6 offset-3">
-          <div class="block-center">
-            <label class="lb-question">{{ model.inquiryNm }}</label><br/>
-            <label class="lb-question">{{ model.inquiryTelNo }}</label><br/>
-            <a class="lb-question" :href="model.inquiryUrl">{{ model.inquiryUrl }}</a><br/>
-            <label class="lb-question">{{ model.inquiryNote }}</label>
-          </div>
+        <div class="col-md-6 offset-md-3">
+          <ClientInfo :clientInfo="model"/>
         </div>
 
-        <div class="col-md-4 offset-4">
-          <button class="rs-btn btn-large btn-green-dark btn-center">{{ $t('register.btn_go_to_list_show') }}</button>
+        <div class="col-md-4 offset-md-4">
+          <nuxt-link class="btn rs-btn btn-large btn-green-dark btn-center" :to="pathToHomePage">{{ $t('register.btn_go_to_list_show') }}</nuxt-link>
         </div>
       </div>
     </main>

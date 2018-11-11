@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import auth from './modules/auth'
-import post from './modules/post'
 import show from './modules/show'
 import register from './modules/register'
 import booking from './modules/booking'
-
+import error from './modules/error'
+import client from './modules/client'
 
 Vue.use(Vuex)
 
@@ -14,10 +14,11 @@ const createStore = () => {
 		// Assign the modules to the store
 		modules: {
 			auth,
-			post,
 			register,
       show,
-      booking
+      booking,
+      error,
+      client
 		},
 		// #root state
 		state: {

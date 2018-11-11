@@ -19,7 +19,12 @@ const GET = 1;
 const NOT_GET = 0;
 
 export default {
-  middleware: 'guest',
+  middleware: 'redirect_if_authenticated',
+  head() {
+    return {
+      title: this.$t('register.lb_title_register')
+    }
+  },
   data: () => ({
     message: '',
     dataInit: {
@@ -68,7 +73,8 @@ export default {
     },
     flagValidate: false,
     flagRequiredWith: true,
-    errorsMsg: []
+    errorsMsg: [],
+    now: new Date().toISOString().replace(/T[0-9a-zA-Z:.]+/g, '')
   }),
   beforeRouteEnter(to, from, next) {
     // Reload or go from other page != page 130
@@ -119,14 +125,12 @@ export default {
     initPage: function() {
       this.dataInit.clientId = this.$route.params.client_id;
 
-      get(constant.api.INIT_PAGE_REGISTER, { clientId: this.$route.params.client_id })
+      get(constant.api.INIT_PAGE_REGISTER, { client_id: this.$route.params.client_id })
         .then(result => {
-          this.dataInit.city = result.data.data.listCity;
+          this.dataInit.city = result.data.data.list_city;
 
           if (result.data.data.genre.length) {
             this.model.flagShowGenre = true;
-
-            this.dataInit.countLineGenre = Math.round(parseFloat(result.data.data.genre.length / DEFAULT_GENRE_INLINE));
 
             let data = result.data.data.genre;
             let from = 0;
@@ -164,9 +168,10 @@ export default {
 
             this.dataInit.listGenre = arrGenre;
             this.model.listGenre = arrGenre;
+            this.dataInit.countLineGenre = this.dataInit.listGenre.length;
           }
 
-          let hanlderResult = result.data.data.flgHandler;
+          let hanlderResult = result.data.data.flg_handler;
 
           if (hanlderResult.length) {
             this.model.flagShowMagazineMail = hanlderResult[0].mail_send_disp_kb == 1;
@@ -217,21 +222,23 @@ export default {
           let result = res.data.data;
 
           // Api response have result
-          if (result.errors === undefined && result.listAddress.length) {
-            let city = this.dataInit.city.find(element => element.code_nm === result.listAddress[0].todofuken_nm);
+          if (result.errors === undefined && result.list_address.length) {
+            let city = this.dataInit.city.find(element => element.code_nm === result.list_address[0].todofuken_nm);
 
             this.model.slbCity = city.code_nm;
-            this.model.district = result.listAddress[0].shikuchoson_nm;
-            this.model.address = result.listAddress[0].choiki_nm;
+            this.model.district = result.list_address[0].shikuchoson_nm;
+            this.model.address = result.list_address[0].choiki_nm;
           } else {
             // Api response empty result
-            this.model.slbCity = 0;
+            this.model.slbCity = '';
             this.model.district = '';
+            this.model.address = '';
           }
         })
         .catch(err => {
-          this.model.slbCity = 0;
+          this.model.slbCity = '';
           this.model.district = '';
+          this.model.address = '';
         });
     },
 
@@ -254,6 +261,9 @@ export default {
           return;
         }
 
+        // Reset validator is false to hidden error
+        this.flagValidate = false;
+
         let path = this.$router.resolve({
           name: constant.router.REGISTER_CONFIRM,
           params: { client_id: this.$route.params.client_id }
@@ -261,6 +271,10 @@ export default {
 
         this.$store.dispatch('register/setModel', this.model);
         this.$store.dispatch('register/updateStepOne', true);
+
+        if (this.model.memberCode == '') {
+          localStorage.removeItem('member_inf');
+        }
 
         this.$router.push(path.href);
       });
@@ -311,6 +325,15 @@ export default {
                 ? this.$t('message.msg014_remote_dash')
                 : this.$t('validation.format', { field: this.$t('register.lb_cell_phone') })
               )
+          },
+          post_code: {
+            length: this.$t('validation.length', { field: this.$t('register.lb_zipcode'), number: 7 }),
+          },
+          post_code_1: {
+            length: this.$t('validation.length', { field: this.$t('register.lb_zipcode_3'), number: 3 }),
+          },
+          post_code_2: {
+            length: this.$t('validation.length', { field: this.$t('register.lb_zipcode_4'), number: 4 }),
           },
           district: {
             fullsize: this.$t('validation.fullsize', { field: this.$t('register.lb_district') }),

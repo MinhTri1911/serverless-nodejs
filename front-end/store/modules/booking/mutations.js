@@ -116,4 +116,16 @@ export default {
     return true;
   },
 
+  /**
+   * set cart id
+   * @param state
+   * @param data
+   * @returns {boolean}
+   */
+  [types.SET_CART](state, data) {
+
+    state.cartId = data;
+    return true;
+  },
+
 }

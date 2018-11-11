@@ -1,0 +1,1 @@
+select auto_alloc_reserve_unreserved_seat($in_client_id::varchar, $in_show_group_id::varchar, $in_sales_no::bigint,$in_show_no::bigint, $in_seat_type_no::bigint, $in_member_kb_no::bigint, $in_seat_count::integer, $in_reserve_type::varchar, $in_cart_id::varchar,$in_hall_view_flg::varchar,  $in_pgid::varchar, $accountid::varchar)

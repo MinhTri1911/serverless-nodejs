@@ -32,13 +32,13 @@ class RegisterRequest {
    * @memberof RegisterRequest
    */
   constructor(data) {
-    this.clientId = data.clientId;
+    this.clientId = data.client_id;
     this.mail = data.mail;
-    this.memberCode = data.memberCode;
-    this.memberNm = data.fullName;
+    this.memberCode = data.member_code;
+    this.memberNm = data.full_name;
     this.memberKn = data.furigana;
-    this.telNo = data.telNo;
-    this.mobileNo = data.mobileNo;
+    this.telNo = data.tel_no;
+    this.mobileNo = data.mobile_no;
 
     let serviceModel = new ServiceModel(config.DatabaseConfig);
     this.registerBusiness = new RegisterBusiness(serviceModel.getDb());
@@ -64,26 +64,26 @@ class RegisterRequest {
 
         return {
           mail: 'required|email|unique_mail|max:200',
-          fullName: 'required|max:200|' + (data.member_nm_kb == ENTER_SPACE || data.member_nm_kb == REMOVE_SPACE
+          full_name: 'required|max:200|' + (data.member_nm_kb == ENTER_SPACE || data.member_nm_kb == REMOVE_SPACE
             ? `space_fullsize:${data.member_nm_kb}`
             : 'fullsize'),
           furigana: 'required|max:200|' + (data.member_nm_kb == ENTER_SPACE || data.member_nm_kb == REMOVE_SPACE
             ? `space_fullsize:${data.member_nm_kb}`
             : 'fullsize'),
           password: 'required|max:16|password_regex',
-          postNo: "required|digits:7",
+          post_no: "required|digits:7",
           prefecture: "required|max:100",
           municipality: "required|max:200|fullsize",
           address1: "required|max:400|fullsize",
           address2: "fullsize|max:400",
-          telNo: `required_without:mobileNo|max:20|phone_number:${data.tel_no_kb}`,
-          mobileNo: `required_without:telNo|max:20|phone_number:${data.tel_no_kb}`,
-          mailSendFlg: "boolean",
-          postSendFlg: "boolean",
-          sexType: "required|boolean",
+          tel_no: `required_without:mobile_no|max:20|phone_number:${data.tel_no_kb}`,
+          mobile_no: `required_without:tel_no|max:20|phone_number:${data.tel_no_kb}`,
+          mail_send_flg: "boolean",
+          post_send_flg: "boolean",
+          sex_type: "required|integer|between:1,2",
           birthday: `required|date|after_date:1900-01-01|before_date:${now}`,
-          listGenre: "array|exists_genre",
-          memberCode: "max:16|regex:/^([a-zA-Z0-9])+$/g|exists_member_net"
+          list_genre: "array|exists_genre",
+          member_code: "max:16|regex:/^([a-zA-Z0-9])+$/g|exists_member_net"
         }
       }) .catch(err => {
         throw new Error(err);
@@ -117,11 +117,11 @@ class RegisterRequest {
 
     let data = {
       code: this.memberCode,
-      clientId: this.clientId,
-      memberNm: this.memberNm,
-      memberKn: this.memberKn,
-      mobileNo: this.mobileNo,
-      telNo: this.telNo
+      client_id: this.clientId,
+      member_nm: this.memberNm,
+      member_kn: this.memberKn,
+      mobile_no: this.mobileNo,
+      tel_no: this.telNo
     }
 
     let member = await this.registerBusiness.checkExistsMemberCode(data)

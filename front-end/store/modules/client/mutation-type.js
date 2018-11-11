@@ -1,0 +1,4 @@
+export default {
+  CLIENT_SET: 'CLIENT_SET',
+  CLIENT_CLEAR: 'CLIENT_CLEAR'
+}

@@ -1,7 +1,20 @@
+/**
+ * File TermBusiness.js
+ * Handler business in page terms
+ *
+ * @author Rikkei.TriHNM
+ * @date 2018-09-28
+ */
+
 import constant from '@/constant';
 
 export default {
-  middleware: 'guest',
+  middleware: 'redirect_if_authenticated',
+  head() {
+    return {
+      title: this.$t('terms.lb_title_terms')
+    }
+  },
   data: () => ({
     protectPerInf : false,
     termsUse: false,
@@ -10,7 +23,9 @@ export default {
     pathToPageHome: {
       name: constant.router.LISTPERFORM,
       params: { client_id: '' }
-    }
+    },
+    routerNameKiyaku: constant.router.KIYAKU,
+    routerNamePrivate: constant.router.PRIVATE
   }),
   created() {
     this.pathToPageHome.params.client_id = this.$route.params.client_id;

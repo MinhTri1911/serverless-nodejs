@@ -14,6 +14,11 @@ import register from '@/locale/ja/register.json';
 import booking from '@/locale/ja/booking.json';
 import validation from '@/locale/ja/validation.json';
 import show from '@/locale/ja/show.json';
+import myPage from '@/locale/ja/my_page.json';
+import historyOrder from '@/locale/ja/history_order.json';
+import booking_detail from '@/locale/ja/booking_detail.json';
+import cart from '@/locale/ja/cart.json';
+import updateInfomation from '@/locale/ja/update_infomation.json';
 
 export default {
   common,
@@ -23,5 +28,10 @@ export default {
   register,
   booking,
   validation,
-  show
+  show,
+  booking_detail,
+  myPage,
+  historyOrder,
+  cart,
+  updateInfomation
 }

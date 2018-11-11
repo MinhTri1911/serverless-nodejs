@@ -1,22 +1,21 @@
 <template>
-  <div class="error-page">
-    <h1>Oops, something went wrong!</h1>
-    <p>Back to <a href="/">safety</a>!</p>
+  <div class="error-page error-system">
+    <div v-if="statusCode == 404">
+      <Page404 :statusCode="statusCode" :message="message"/>
+    </div>
+    <div v-else-if="statusCode == 500">
+      <Page500 :statusCode="statusCode" :message="message"/>
+    </div>
+    <div v-else-if="statusCode == 412 || statusCode == 402">
+      <Page41x :statusCode="statusCode" :message="message"/>
+    </div>
+    <div v-else>
+      <PageError :statusCode="statusCode" :message="message"/>
+    </div>
   </div>
 </template>
-
-<style scoped>
-.error-page {
-  text-align: center;
-}
-
-.error-page a {
-  text-decoration: none;
-  color: red;
-}
-
-.error-page a:hover,
-.error-page a:active {
-  color: salmon;
-}
+<style lang="scss" scoped>
+  @import "assets/scss/error"
 </style>
+<script src="@@/business/error/ErrorSystemBusiness.js"></script>
+

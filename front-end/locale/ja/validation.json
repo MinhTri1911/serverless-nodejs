@@ -34,5 +34,6 @@
   "fullsize": "{field}は全角文字で入力してください。",
   "passwordRegex": "{field}は正しい形式で、8文字以上、16文字以下とし、小文字、大文字、数字、記号のうち少なくとも２種類以上を含めてください。",
   "textNumberHaftSize": "{field}は半角英数字で入力してください。",
-  "unique": "{field}は重複しないでください。"
+  "unique": "{field}は重複しないでください。",
+  "length": "{field}を{number}数字で入力してください。"
 }

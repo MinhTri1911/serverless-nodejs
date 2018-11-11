@@ -18,9 +18,9 @@ class LogoutBusiness {
    */
   constructor(db) {
     this.db = db;
-	this.helper = new Helper();
+    this.helper = new Helper();
     return this;
-	}
+  }
 
   /**
    * Function will insert table h_login
@@ -29,7 +29,7 @@ class LogoutBusiness {
    * @param {*} ip
    * @returns {result query}
    */
-  logout(data, clientIp ) {
+  logout(data, clientIp) {
     let { client_id, member_id } = data;
     let ip = clientIp;
     return new Promise((resolve, reject) => {
@@ -37,17 +37,17 @@ class LogoutBusiness {
       this.db.query(sqlInsert, {
         bind: {
           result_kb: '1',
-          loginkb: '2',
-          clientid: client_id,
-          memberid: member_id,
+          login_kb: '2',
+          client_id: client_id,
+          member_id: member_id,
           ip_address: ip
         },
         type: this.db.QueryTypes.INSERT
       })
-        .then(result =>{
+        .then(result => {
           resolve(result);
         })
-        .catch(function(err) {
+        .catch(function (err) {
           console.error(err);
           reject(new Error(`Something Went Wrong ${err}`));
         });
@@ -56,7 +56,7 @@ class LogoutBusiness {
         console.error(err);
         reject(new Error(`Something Went Wrong ${err}`));
       });
-	}
+  }
 }
 
 export { LogoutBusiness }

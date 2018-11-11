@@ -28,20 +28,20 @@ const settingPassword = async (event, context, callback) => {
   let req = JSON.parse(event.body);
 
   try {
+    // Reset env
+    process.env.INS_PG_ID = context.functionName;
+    process.env.UPD_PG_ID = context.functionName;
+
     return account.settingPassword(req)
       .then(data => {
         if (!data) {
           return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Incorrect Information!!!");
         } else {
           let helper = new Helper(serviceModel.getDb());
-          return helper.sendEmail('takuya.mori@pastorale.jp', data.received, 'complete setting password', '', 'successfull')
-            .then(res => {
+          return helper.setApiKey(serviceModel.getDb())
+            .then(result => {
               return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { status: HttpCode.SUCCESS });
             })
-            .catch(err => {
-              console.log(err);
-              reject(new Error(`Something Went Wrong ${err}`));
-            });
         }
       })
       .catch(err => {
@@ -49,8 +49,8 @@ const settingPassword = async (event, context, callback) => {
         return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
       });
   } catch (err) {
-      console.error(err);
-      return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
+    console.error(err);
+    return serviceModel.createErrorCallback(HttpCode.ERROR, "Internal Server Error!!!");
   }
 }
 
@@ -75,7 +75,7 @@ const checkKey = async (event, context, callback) => {
           if (data[0].valid_flg === '0') {
             return serviceModel.createErrorCallback(HttpCode.NOT_FOUND, "Incorrect Information!!!");
           } else {
-            return serviceModel.createSuccessCallback(HttpCode.SUCCESS,{ "result":"true" });
+            return serviceModel.createSuccessCallback(HttpCode.SUCCESS, { "result": "true" });
           }
         })
         .catch(err => {

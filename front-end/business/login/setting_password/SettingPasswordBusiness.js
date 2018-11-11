@@ -18,11 +18,11 @@ export default {
     return {
       error: false,
       valid: false,
-      clickLogin: false,
+      click_login: false,
       key: this.$route.params.key,
       password: '',
       password_confirm: '',
-      clientId: this.$route.params.client_id,
+      client_id: this.$route.params.client_id,
     }
   },
   created() {
@@ -47,7 +47,7 @@ export default {
       this.$validator.validateAll().then((valid) => {
         if (valid) {
           this.$nuxt.$loading.start()
-          this.clickLogin = true,
+          this.click_login = true,
           this.error = false;
           Axios.defaults.headers.common = {
             'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export default {
           return post(constant.api.SETTING_PASSWORD_API, {
             key: this.key,
             password: this.password,
-            clientId: this.clientId,
+            client_id: this.client_id,
           })
           .then(result => {
             this.$nuxt.$loading.finish();
@@ -68,7 +68,7 @@ export default {
           })
           .catch(err => {
             this.$nuxt.$loading.finish();
-            this.clickLogin = false,
+            this.click_login = false,
             this.error = true;
           });
         }
@@ -83,7 +83,7 @@ export default {
 
       // Post key to API by Axios
       return post(constant.api.CHECK_KEY, {
-        key: this.$route.params.key, clientId: this.clientId
+        key: this.$route.params.key, client_id: this.client_id
       })
       .then(result => {
         this.$nuxt.$loading.finish();

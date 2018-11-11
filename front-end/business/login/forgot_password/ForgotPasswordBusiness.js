@@ -17,10 +17,10 @@ export default {
   data() {
     return {
       error: false,
-      clickLogin: false,
+      click_login: false,
       email: '',
       phone: '',
-      clientId: '',
+      client_id: '',
     }
   },
   created() {
@@ -46,7 +46,7 @@ export default {
         if (result) {
           this.$nuxt.$loading.start()
           this.error = false;
-          this.clickLogin = true;
+          this.click_login = true;
           Axios.defaults.headers.common = {
             'Content-Type': 'application/json',
             Authorization: "",
@@ -60,14 +60,14 @@ export default {
           })
           .then(result => {
             this.$nuxt.$loading.finish();
-            this.clickLogin = false;
+            this.click_login = false;
             if (result.data.data.result||result.status) {
               this.$router.push({name: constant.router.COMPLETE_SEND_EMAIL_PASS});
             }
           })
           .catch(e => {
             this.$nuxt.$loading.finish();
-            this.clickLogin = false;
+            this.click_login = false;
             this.error = true;
           });
         }

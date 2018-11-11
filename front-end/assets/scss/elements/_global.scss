@@ -1,76 +1,98 @@
-/* CSS Document */
+//colors
+$red: #ff0000;
+$white: #fff;
+
+//@extend-elements
+//original selectors
+//a:hover img, #MainC a:hover
+%extend_global {
+  text-decoration: none;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+}
+
+
 * {
-  -webkit-box-sizing: border-box;
+  //Instead of the line below you could use @include box-sizing($bs)
   box-sizing: border-box;
 }
 body {
-	margin: 0 0 0 0;
-	padding: 0 0 0 0;
-	width: 100%;
-	margin: auto;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  margin: auto;
 }
-
-.clearfix:after {
-  content: "."; 
-  display: block; 
-  height: 0; 
-  clear: both; 
-  visibility: hidden;
-}
-
-/* テキスト配色 */
 a {
-	text-decoration: none;
-}
-a:hover img,#MainC a:hover {
-	text-decoration: none;
-  opacity: 0.7;
-  filter: alpha(opacity=70);
-  -ms-filter: "alpha(opacity=70)";
+  text-decoration: none;
+  &:hover img {
+    @extend %extend_global;
+  }
 }
 .red {
-	color: #ff0000;
+  color: $red;
 }
 .redbold {
-	color: #ff0000;
-	font-weight: bold;
+  color: $red;
+  font-weight: bold;
 }
-/* ページトップボタン */
-.page_top{
+.page_top {
   width: 60px;
   height: 60px;
   position: fixed;
-  right: 50px ;
+  right: 50px;
   bottom: 30px;
   opacity: 0.6;
+  z-index: 200;
+  a {
+    width: 60px;
+    height: 60px;
+    font-size: 60px;
+    text-decoration: none;
+    &:before {
+      font-size: 60px;
+    }
+  }
 }
-.page_top a {
-  width: 60px;
-  height: 60px;
-  font-size: 60px;
-  text-decoration: none;
-}
-.page_top a:before{
-  font-size: 60px;
-}
-/* ボタン一般 */
-#MainC a span.linkBtn {
-	color: #fff;
-	text-align: center;
-	width: auto;
-	padding: 10px;
-	margin: 10px;
-	text-decoration: none;
-}
-
-/* 配置 */
 .centerfix {
-	text-align: center;
+  text-align: center;
 }
 .rightfix {
-	text-align: right;
+  text-align: right;
 }
-/* マージン */
+.mid-page {
+  text-align: center;
+  padding: 10px 0;
+  .rs-btn {
+    display: inline-block;
+  }
+}
 .marginBottomfix {
-	margin-bottom: 25px;
+  margin-bottom: 25px;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+#MainC a {
+  &:hover {
+    @extend %extend_global;
+  }
+  span.linkBtn {
+    color: $white;
+    text-align: center;
+    width: auto;
+    padding: 10px;
+    margin: 10px;
+    text-decoration: none;
+  }
+}
+
+.page-enter-active, .page-leave-active {
+  transition: opacity .5s;
+}
+.page-enter, .page-leave-to {
+  opacity: 0;
 }

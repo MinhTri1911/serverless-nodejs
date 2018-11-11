@@ -8,7 +8,7 @@
 
 import constant from '@/constant';
 import Axios from 'axios';
-import { post } from '@/plugins/api';
+import { get } from '@/plugins/api';
 
 export default {
   name: 'MaintenanceBusiness',
@@ -17,10 +17,7 @@ export default {
   data() {
     return {
       messenge_error: '',
-      inquiry_nm: '',
-      inquiry_tel_no: '',
-      inquiry_url: '',
-      inquiry_notes: '',
+      content: '',
       clientId: '',
     }
   },
@@ -36,7 +33,7 @@ export default {
     },
 
     /**
-     * Function load info client to display
+     * Function load info client then display
      *
      * @returns {void}
      */
@@ -47,14 +44,12 @@ export default {
       };
 
       // Post data to API by Axios
-      return post(constant.api.GET_CLIENT_INFO, {
+      return get(constant.api.READS3, {
         client_id: this.$route.params.client_id,
+        file: this.$route.params.client_id + '/' + constant.api.GUIDE
       })
       .then(result => {
-        this.inquiry_nm = result.data.data.inquiry_nm;
-        this.inquiry_url = result.data.data.inquiry_url;
-        this.inquiry_notes = result.data.data.inquiry_notes;
-        this.inquiry_tel_no = result.data.data.inquiry_tel_no;
+        this.content = result.data.data;
       })
       .catch(e => {
         console.log(e)
@@ -62,5 +57,6 @@ export default {
     }
   },
   beforeMount(){
+    this.onLoad();
   }
 }

@@ -10,10 +10,12 @@
                 </h2>
             </div>
             <div id="TicketTypeDetail" class="collapse show info--paddingX pt-2">
-                <div class="d-flex flex-md-row flex-column pb-2 border-bottom ticket--marginT"
-                     v-for="(seat, seatIndex) in seats">
+                <div class="d-flex flex-md-row flex-column pb-2  ticket--marginT"
+                     v-for="(seat, seatIndex) in seats"
+                     v-bind:class="{ 'border-bottom': seatIndex != Object.keys(seats)[Object.keys(seats).length-1] }  " >
                     <div class="d-flex align-items-center info__title--medium">
                         <div>
+
                             {{ seat.seat_type_nm}}
                         </div>
                     </div>
@@ -56,6 +58,12 @@
                     </div>
                 </div>
 
+                <div id="BookTicketValidate" class="collapse show mt-3 align-items-center red">
+
+                    <p class="align-items-center text-center" v-if="sumMoneyTicket ==0 && nextBtnCLick ==true">
+                        {{$t("message.msg034_validate_require_number_ticket")}}</p>
+                </div>
+
             </div>
         </section>
         <!--Ticket Type End-->
@@ -76,20 +84,40 @@ export default {
       ticket_price: 0,
       ticket_type_no: 0,
       seat_type_no: 0,
-      seat_type_kb: 0
+      seat_type_kb: 0,
+      nextBtnCLick : ''
     }
   },
   computed: {
     ...mapGetters({
       myTickets: 'booking/myTickets',
-      isLogin: 'auth/isLogin'
+      isLogin: 'auth/isLogin',
     }),
+    sumMoneyTicket() {
+      let totalMoney = 0;
+      let route = this.$route ;
+      this.myTickets.forEach(function (el) {
+          if (el.client_id == route.params.client_id
+            && el.show_group_id == route.query.show_group_id
+            && el.show_no == route.query.show_no
+            && el.ticket_price > 0) {
+            totalMoney += el.number_ticket * el.ticket_price;
+          }
+        }
+      )
+      return totalMoney;
+    }
 
   },
   mounted: function () {
-
+    // click next btn
+    this.$parent.$on('nextBtnClick', this.validate);
     },
   methods: {
+    validate() {
+      this.nextBtnCLick = true;
+
+    },
     /**
      * Function init page get ticket info
      *
@@ -108,7 +136,8 @@ export default {
         show_group_id: this.$route.query.show_group_id,
         show_no: this.$route.query.show_no,
         client_id: this.$route.params.client_id,
-        sales_no: this.$route.query.sales_no
+        sales_no: this.$route.query.sales_no,
+        auto_alloc: true
 
       }
 
@@ -119,10 +148,17 @@ export default {
         this.$store.dispatch("booking/deleteTicket", ticketInfo);
       }
     },
+
+
     loadMyTicket(seat_type_no, ticket_type_no, ticketNumber) {
       let result = false;
       this.myTickets.forEach(function (el) {
-        if (el.seat_type_no == seat_type_no && el.ticket_type_no == ticket_type_no && el.number_ticket == ticketNumber) {
+        if (el.seat_type_no == seat_type_no
+          && el.ticket_type_no == ticket_type_no
+          && el.number_ticket == ticketNumber
+          && el.auto_alloc == true
+
+        ) {
           result = true;
           return true;
         }

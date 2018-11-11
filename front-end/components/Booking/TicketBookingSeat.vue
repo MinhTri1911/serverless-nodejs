@@ -87,7 +87,7 @@
                         <select v-for="(seatInfo, seatInfoIndex) in seats"
                                 v-if="seat.seat_type_no == seatInfo.seat_type_no "
                                 @change="onChooseTicket(seat.seat_no ,$event.target )"
-                                class="w-100" >
+                                class="w-100">
                             <option v-bind:value="0" v-bind:data-ticket_price="0">{{$t('booking.lb_please_select')}}
                             </option>
                             <option v-for="(ticket, ticketIndex) in seatInfo.tickets"
@@ -123,22 +123,25 @@
                     </button>
                 </div>
             </div>
-            <div id="BookTicketValidate" class="collapse show mt-3 align-items-center" >
-                <p class="align-items-center text-center" v-if="selectSeats.length ==0">{{$t("message.msg029_empty_designate_seat")}}</p>
-                <p class="align-items-center text-center" v-if="!validTicketType ">{{$t("message.msg030_require_select_ticket_type")}}</p>
+            <!--validate booking seat -->
+            <div id="BookTicketValidate" class="collapse show mt-3 align-items-center red">
+                <p class="align-items-center text-center" v-if="selectSeats.length ==0">
+                    {{$t("message.msg029_empty_designate_seat")}}</p>
+                <p class="align-items-center text-center" v-if="validTicketType == false && nextBtnCLick">
+                    {{$t("message.msg030_require_select_ticket_type")}}</p>
             </div>
 
             <input type="hidden" id="select-seat" v-bind:value="selectSeatString"
                    @change="selectSeats=$event.target.value">
         </section>
         <!--BookTicket End-->
-        <LoginModal/>
+
     </div>
 </template>
 
 <script>
 import Config from "@/constant/config"
-import LoginModal from "@/components/Navigation/TheLoginModal"
+
 import diagram from "@/static/js/build-diagram-seat.js"
 import {mapActions, mapGetters} from 'vuex'
 import constant from '@/constant';
@@ -147,7 +150,7 @@ import {get} from '@/plugins/api';
 export default {
   name: "ticket-booking-seat",
   components: {
-    LoginModal
+
   },
   props: ['seats'],
   head: {
@@ -156,18 +159,21 @@ export default {
     ]
   },
   data() {
+    // TODO : valid member
     return {
       selectSeats: "",
-      validTicketType : "",
-      validMember : ""
+      validTicketType: "",
+      validMember: "",
+      nextBtnCLick : false
     }
   },
   computed: {
     ...mapGetters({
-      myTickets : 'booking/myTickets',
-      isLogin : 'auth/isLogin',
-      memberId : 'auth/getMemberId',
-      checkMemberValid : 'auth/checkMemberValid'
+      myTickets: 'booking/myTickets',
+      isLogin: 'auth/isLogin',
+      memberId: 'auth/getMemberId',
+      memberKbNo: 'auth/getMemberKbNo',
+      checkMemberValid: 'auth/checkMemberValid'
     }),
     selectSeatString() {
       let selectSeatJson = [];
@@ -199,7 +205,7 @@ export default {
   },
   created() {
 
-    this.validateMemberTime();
+    // this.validateMemberTime();
   },
   mounted: function () {
 
@@ -208,27 +214,28 @@ export default {
     let hallLayoutNo = 1;
     let isLogin = this.isLogin;
     let srcImage = process.env.baseS3Url + Config.PATH_IMG_SEAT_MAP
-                                                .replace(':client_id', clientId)
-                                                .replace(':hall_no', hallNo)
-                                                .replace(':hall_layout_no', hallLayoutNo);
-    get(constant.api.BOOKING_SEAT_DETAIL, {   clientId: this.$route.params.client_id,
-                                              showGroupId :this.$route.query.show_group_id,
-                                              showNo :this.$route.query.show_no,
-                                              salesNo :this.$route.query.sales_no
-                                            })
+                  .replace(':client_id', clientId)
+                  .replace(':hall_no', hallNo)
+                  .replace(':hall_layout_no', hallLayoutNo);
+    get(constant.api.BOOKING_SEAT_DETAIL, {
+          client_id: this.$route.params.client_id,
+          show_group_id: this.$route.query.show_group_id,
+          show_no: this.$route.query.show_no,
+          sales_no: this.$route.query.sales_no,
+          member_kb_no: this.memberKbNo
+        })
       .then(result => {
         const matrix = result.data.data;
-
-        diagram.initDiagram(srcImage,matrix);
+        // Disable event click choose seat
+        $(document).off('click', 'rect,text');
+        diagram.initDiagram(srcImage, matrix);
         // check seat svg exit for load selected seat
         var checkExist = setInterval(function () {
           if ($('#diagram').find('#map-bg')) {
             $(document).trigger('load-select-seat');
             if (!isLogin) {
-
-              $(document).off('click', 'rect');
-              $(document).off('click', 'text');
-              $(document).on('click', 'rect', function () {
+              $(document).off('click', 'rect,text');
+              $(document).on('click', 'rect,text', function () {
                 $('#theLoginModal').modal('show');
               });
             }
@@ -252,29 +259,33 @@ export default {
   },
 
   methods: {
-    validate(){
-      alert("next2");
-      this.$emit('validate', false);
+    validate() {
+      this.nextBtnCLick = true;
+      this.validateTicketType();
+      // alert("next2");
+      // this.$emit('validate', false);
     },
-    validateTicketType(){
-      let result = true ;
+    validateTicketType() {
+      let result = true;
       var that = this;
+
       this.myTickets.forEach(function (itemSeat) {
         //{"seat_no":215,"seat_nm":"9列 25版","seat_type_nm":"S席"}
         if (
           itemSeat.client_id == that.$route.params.client_id
           && itemSeat.show_group_id == that.$route.query.show_group_id
           && itemSeat.show_no == that.$route.query.show_no
-          && (typeof(itemSeat.ticket_type_no) === "undefined"  || itemSeat.ticket_type_no == 0)
+          && (typeof(itemSeat.ticket_type_no) === "undefined" || itemSeat.ticket_type_no == 0)
         ) {
 
           result = false;
         }
       });
+      this.validTicketType = result;
       return result;
     },
-    validateMemberTime(){
-      get(constant.api.BOOKING_MEMBERSHIP, {clientId: this.$route.params.client_id,memberId : this.memberId})
+    validateMemberTime() {
+      get(constant.api.BOOKING_MEMBERSHIP, {clientId: this.$route.params.client_id, memberId: this.memberId})
         .then(result => {
 
           this.validMember = result.data.isValidMember;
@@ -285,6 +296,7 @@ export default {
         });
 
     },
+
     isDesignatedSeat(seat) {
       return (
         seat.client_id == this.$route.params.client_id
@@ -344,7 +356,8 @@ export default {
         show_group_id: this.$route.query.show_group_id,
         show_no: this.$route.query.show_no,
         client_id: this.$route.params.client_id,
-        sales_no: this.$route.query.sales_no
+        sales_no: this.$route.query.sales_no,
+        auto_alloc: false
 
       }
 
@@ -367,7 +380,7 @@ export default {
       };
       // save choose ticket
       this.$store.dispatch("booking/chooseTicketType", ticketInfo);
-      this.validTicketType = this.validateTicketType();
+      this.validateTicketType();
     }
   },
   // watch:{

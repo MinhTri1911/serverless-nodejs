@@ -1,6 +1,15 @@
+/**
+ * NotifyBusiness.js
+ * Define handler business with Notify
+ * *********************************************************************
+ * @class NotifyBusiness
+ * @author Rikkei.DungLV
+ * @date 2018-10-01
+ */
+
 import Config from "../config/Constant";
-import _ from "lodash"
 import Common from "../common/ClientId"
+import {Helper} from "../common/Helper"
 
 class NotifyBusiness {
   /**
@@ -10,7 +19,21 @@ class NotifyBusiness {
    */
   constructor(db) {
     this.db = db;
+    this.helper = new Helper();
     return this;
+  }
+
+  /**
+   * Check when user search with sales date
+   * @param req
+   * @returns {boolean}
+   */
+  hasSearchAdminTime(event) {
+    let fmReg = new RegExp(/^(([0-9]{4})\/([0-9]{1,2})\/([0-9]{1,2})\s([0-9]{1,2})\:([0-9]{1,2}))$/);
+    if (event.queryStringParameters && event.queryStringParameters.admin_time && fmReg.test(event.queryStringParameters.admin_time)) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -19,41 +42,38 @@ class NotifyBusiness {
    * @return {Promise}
    */
   getNotifies(event) {
-    console.log(event)
     return new Promise((resolve, reject) => {
       // Check exists client id from request user to API
       if (!Common.checkExistsClientIdInRequest(event)) {
-        return reject('Not found client Id from request');
+        return reject(Config.Common.MSG_REQUIRE_CLIENT_ID);
+      }
+      // Get offset that get position of record
+      let page = event.queryStringParameters && event.queryStringParameters.page ? event.queryStringParameters.page : 1;
+      let offset = page > 1 ? (page - 1) * Config.NotifyConfig.RECORD_SHOW_PER_PAGE : Config.NotifyConfig.RECORD_SHOW_PER_PAGE;
+      // Config data biding to query SQL base on event from client
+      const objBindQuery = {
+        page: page,
+        offset: offset
+      }
+      // Binding client id of event from client request
+      if (event.queryStringParameters.client_id) {
+        objBindQuery.clientId = event.queryStringParameters.client_id;
+      }
+      // Load String query SQL from file SQL
+      var queryDB = this.helper.loadSql(Config.NotifyConfig.SQL_LIST_NOTIFY);
+      if (this.hasSearchAdminTime(event)) {
+        objBindQuery.adminTime = event.queryStringParameters.admin_time;
+        queryDB = queryDB.replace(/(#replace_admin_time)+/g, ` to_char(to_timestamp($adminTime, 'YYYY/MM/DD HH24:MI'), 'YYYYMMDDHH24MI') >= apply_start_dtime 
+                                                            and to_char(to_timestamp($adminTime, 'YYYY/MM/DD HH24:MI'), 'YYYYMMDDHH24MI') <= apply_end_dtime`);
+      } else {
+        queryDB = queryDB.replace(/(#replace_admin_time)+/g, ` to_char(now(), 'YYYYMMDDHH24MI') >= apply_start_dtime 
+                                                            and to_char(now(), 'YYYYMMDDHH24MI') <= apply_end_dtime`);
       }
 
-      let clientId = JSON.parse(event.body).client_id;
-      let page = event.body && JSON.parse(event.body).page ? JSON.parse(event.body).page : 1;
-      let offset = page > 1 ? (page - 1) * Config.NotifyConfig.RECORD_SHOW_PER_PAGE : 0;
-
-      return this.db.query(`SELECT
-          count(*) over() as total,
-          client_id
-          , to_char(to_date(apply_start_dtime, 'YYYYMMDDHH24MI'), 'yyyy/FMMM/FMdd' )
-           || '(' || (ARRAY ['日','月','火','水','木','金','土']) [extract('dow' FROM to_timestamp(apply_start_dtime,'YYYYMMDDHH24MI')) + 1]
-           || ')' as apply_start_dtime
-          , information_title
-          , information_contents 
-        FROM
-          m_information 
-        WHERE
-          client_id = $clientId
-          AND to_char(now(), 'YYYYMMDDHH24MI') >= apply_start_dtime 
-          AND to_char(now(), 'YYYYMMDDHH24MI') <= apply_end_dtime 
-        ORDER BY
-          apply_start_dtime DESC
-          offset $offset limit $limit`,
+      return this.db.query(queryDB,
         {
           type: this.db.QueryTypes.SELECT,
-          bind: {
-            clientId: clientId,
-            offset: offset,
-            limit: Config.NotifyConfig.RECORD_SHOW_PER_PAGE
-          }
+          bind: objBindQuery
         })
         .then(result => {
           let res = {

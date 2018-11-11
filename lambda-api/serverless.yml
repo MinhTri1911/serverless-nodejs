@@ -5,8 +5,11 @@ service: ticket-service
 plugins:
   - serverless-webpack
   - serverless-offline
+#  - serverless-nested-stack
+  - serverless-plugin-split-stacks
 
 provider:
+  versionFunctions: false
   name: aws
   runtime: nodejs8.10
   stage: dev
@@ -18,6 +21,9 @@ provider:
 custom:
   serverless-offline:
     port: 4000
+  splitStacks:
+    perFunction: false
+    perType: true
   webpack:
     webpackConfig: ./webpack.config.js
 #    includeModules: true
@@ -29,38 +35,6 @@ functions:
   authorize:
     handler: middleware/Authentication.handler
 
-  getAllMembers:
-    handler: controller/MemberController.getAllMembers
-    name: getAllMembers
-    events:
-      - http:
-          path: member
-          method: get
-
-  postMember:
-    handler: controller/MemberController.postMember
-    name : postMember
-    events:
-      - http:
-          path: member
-          method: post
-
-  deleteMember:
-    handler: controller/MemberController.deleteMember
-    name: deleteMember
-    events:
-      - http:
-          path: member/{Id}
-          method: delete
-
-  updateMember:
-    handler: controller/MemberController.updateMember
-    name: updateMember
-    events:
-      - http:
-          path: member/{Id}
-          method: put
-
   # This is Login API to check email and password valid - DucVN
   login:
     handler: controller/login/LoginController.login
@@ -70,6 +44,7 @@ functions:
           path: login
           method: post
           cors: true
+
   # Check token everytime client send request to API- DucVN
   getInfUserByToken:
     handler: controller/login/LoginController.getInfUserByToken
@@ -140,6 +115,26 @@ functions:
           method: post
           cors: true
 
+  # Login Admin - DucVN
+  loginAdmin:
+    handler: controller/login/admin/LoginAdminController.loginAdmin
+    name: loginAdmin
+    events:
+      - http:
+          path: login/admin
+          method: post
+          cors: true
+
+  # ReadS3 - DucVN
+  ReadS3:
+    handler: controller/ReadS3Controller.readS3
+    name: ReadS3
+    events:
+      - http:
+          path: reads3
+          method: get
+          cors: true
+
   searchPostCode:
     handler: controller/RegisterController.searchPostCode
     name: searchPostCode
@@ -147,7 +142,7 @@ functions:
       - http:
           path: search-post-code
           method: get
-          cros: true
+          cors: true
 
   existsEmail:
     handler: controller/RegisterController.existsEmail
@@ -156,7 +151,7 @@ functions:
       - http:
           path: exists-mail-register
           method: get
-          cros: true
+          cors: true
 
   exsistsMemberCode:
     handler: controller/RegisterController.exsistsMemberCode
@@ -165,7 +160,7 @@ functions:
       - http:
           path: exists-member-code
           method: get
-          cros: true
+          cors: true
 
   initRegister:
     handler: controller/RegisterController.initPage
@@ -174,7 +169,7 @@ functions:
       - http:
           path: init-page
           method: get
-          cros: true
+          cors: true
 
   getListAccount:
     handler: controller/AccountController.getListAccount
@@ -185,77 +180,125 @@ functions:
           method: get
           cors: true
 #          authorizer: authorize
-  testApi:
-    handler: controller/MemberController.testApi
-    name: testApi
-    events:
-      - http:
-          path: test-api
-          method: get
+
   getListShow:
     handler: controller/ShowController.getListShow
     name: getListShow
+    description: Get list show base on request client
     events:
       - http:
-          path: shows
+          path: show/get-list
           method: post
           cors: true
+          request:
+            parameters:
+              querystrings:
+                client_id: true
+                admin_time: false
+                genre_no: false
+                from_show_date: false
+                to_show_date: false
+                from_sales_date: false
+                to_sales_date: false
+                key_search: false
+                start_position: false
+                end_position: false
   getListGenre:
     handler: controller/GenreController.getListGenre
     name: getListGenre
     events:
     - http:
-        path: genres
-        method: post
+        path: genre/get-list
+        method: get
         cors: true
+
   getListNotify:
     handler: controller/NotifyController.getListNotify
     name: getListNotify
     events:
     - http:
-        path: notifies
-        method: post
+        path: notify/get-list
+        method: get
         cors: true
-#  booking
+#  Booking
   getShowInfo:
-      handler: controller/BookingController.getShowInfo
-      name: getShowInfo
-      events:
-        - http:
-            path: booking-show-info
-            method: get
-            cros: true
-  getSeatDetail:
-        handler: controller/BookingController.getSeatDetail
-        name: getSeatDetail
-        events:
-          - http:
-              path: booking-seat-detail
-              method: get
-              cros: true
-  getTicketType:
-          handler: controller/BookingController.getTicketType
-          name: getTicketType
-          events:
-            - http:
-                path: booking-ticket-type
-                method: get
-                cros: true
-
-  demoSendMail:
-    handler: controller/RegisterController.demoSendMail
-    name: demoSendMail
+    handler: controller/BookingController.getShowInfo
+    name: getShowInfo
     events:
-    - http:
-        path: demo
-        method: post
-        cors: true
+      - http:
+          path: booking-show-info
+          method: get
+          cors: true
+  getSeatDetail:
+    handler: controller/BookingController.getSeatDetail
+    name: getSeatDetail
+    events:
+      - http:
+          path: booking-seat-detail
+          method: get
+          cors: true
+  getTicketType:
+    handler: controller/BookingController.getTicketType
+    name: getTicketType
+    events:
+      - http:
+          path: booking-ticket-type
+          method: get
+          cors: true
+  getCheckSalesTerm:
+    handler: controller/BookingController.getCheckSalesTerm
+    name: getCheckSalesTerm
+    events:
+      - http:
+          path: booking-sales-term
+          method: get
+          cors: true
+  getCheckLimitTicket:
+     handler: controller/BookingController.getCheckLimitTicket
+     name: getCheckLimitTicket
+     events:
+       - http:
+           path: booking-check-limit
+           method: get
+           cors: true
+  getCartId:
+     handler: controller/BookingController.getCartId
+     name: getCartId
+     events:
+       - http:
+           path: booking-get-cart
+           method: get
+           cors: true
+#  postCheckDesignateSeat:
+#     handler: controller/BookingController.postCheckDesignateSeat
+#     name: postCheckDesignateSeat
+#     events:
+#       - http:
+#           path: booking-check-designate-seat
+#           method: post
+#           cors: true
+  postCheckFreeSeat:
+     handler: controller/BookingController.postCheckSeat
+     name: postCheckFreeSeat
+     events:
+       - http:
+           path: booking-check-seat
+           method: post
+           cors: true
+  getCartDetail:
+       handler: controller/CartController.getCartDetail
+       name: getCartDetail
+       events:
+         - http:
+             path: cart-detail
+             method: get
+             cors: true
   getScheduleShow:
     handler: controller/ShowController.getScheduleShow
     name: getScheduleShow
     events:
     - http:
-        path: shows/schedule
+        path: shows/schedule/get-list
         method: post
         cors: true
   createUser:
@@ -266,6 +309,22 @@ functions:
         path: register
         method: post
         cors: true
+  showDetail:
+    handler: controller/ShowDetailController.getDetail
+    name: showDetail
+    events:
+    - http:
+        path: shows/detail
+        method: get
+        cors: true
+  checkIsExpiredUrl:
+    handler: controller/RegisterController.checkIsExpiredUrl
+    name: checkIsExpiredUrl
+    events:
+    - http:
+        path: init-complete-register
+        method: get
+        cors: true
   activeAccount:
     handler: controller/RegisterController.activeAccount
     name: activeAccount
@@ -274,3 +333,78 @@ functions:
         path: active-account
         method: post
         cors: true
+  sendMailBookingComplete:
+    handler: controller/SendMailController.sendMailBookingComplete
+    name: sendMailBookingComplete
+    events:
+    - http:
+        path: sendmail-complete
+        method: post
+        cors: true
+  myPageIndex:
+    handler: controller/MyPageController.myPageIndex
+    name: myPageIndex
+    events:
+    - http:
+        path: my-page
+        method: get
+        cors: true
+        authorizer: authorize
+  historyOrder:
+    handler: controller/MyPageController.historyOrder
+    name: historyOrder
+    events:
+    - http:
+        path: my-page/history-order
+        method: get
+        cors: true
+        authorizer: authorize
+  detailOrder:
+    handler: controller/MyPageController.detailOrder
+    name: detailOrder
+    events:
+    - http:
+        path: my-page/detail-order
+        method: get
+        cors: true
+        authorizer: authorize
+
+  initUpdateProfile:
+    handler: controller/MyPageController.initUpdateProfile
+    name: initUpdateProfile
+    events:
+    - http:
+        path: my-page/init-update-profile
+        method: get
+        cors: true
+        authorizer: authorize
+
+  checkExistsMailUpdate:
+    handler: controller/MyPageController.checkExistsMailUpdate
+    name: checkExistsMailUpdate
+    events:
+    - http:
+        path: my-page/exists-mail-update
+        method: get
+        cors: true
+        authorizer: authorize
+
+  checkExistsLoginId:
+    handler: controller/MyPageController.checkExistsLoginId
+    name: checkExistsLoginId
+    events:
+    - http:
+        path: my-page/exists-login-id
+        method: get
+        cors: true
+        authorizer: authorize
+
+  checkExistsOrder:
+    handler: controller/MyPageController.checkExistsOrder
+    name: checkExistsOrder
+    events:
+    - http:
+        path: my-page/exists-order
+        method: get
+        cors: true
+        authorizer: authorize

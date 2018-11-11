@@ -1,9 +1,9 @@
-import _ from 'lodash';
-import jwt from 'jsonwebtoken';
-import policy from './IAMPolicy';
+import _ from "lodash";
+import jwt from "jsonwebtoken";
+import policy from "./IAMPolicy";
 import { LoginBusiness } from "../business/login/LoginBusiness";
 import ServiceModel from "../models/ServiceModel";
-import ServiceModelConfig from "../config/Constant";
+import Constant from "../config/Constant";
 
 /*
  * Returns a boolean whether or not a user is allowed to call a particular method
@@ -22,15 +22,18 @@ import ServiceModelConfig from "../config/Constant";
 /*
  * Check valid user
  */
-const authenUser = async (data) => {
-  let serviceModel = new ServiceModel(ServiceModelConfig);
-  let account = new AccountBussiness(serviceModel.getDb());
+const authenUser = async data => {
+  let serviceModel = new ServiceModel(Constant.DatabaseConfig);
+  let account = new LoginBusiness(serviceModel.getDb());
   let hasValidUser = false;
 
-  await account.getUserByEmail(data)
+  await account
+    .getUserByToken(data)
     .then(response => {
-      if (!_.isEmpty(response.result)) {
+      if (response != "") {
         hasValidUser = true;
+      } else {
+        hasValidUser = false;
       }
     })
     .catch(err => {
@@ -38,47 +41,63 @@ const authenUser = async (data) => {
     });
 
   return hasValidUser;
-}
+};
 
 /**
-  * Authorizer functions are executed before your actual functions.
-  * @method authorize
-  * @param {String} event.authorizationToken - JWT
-  * @throws Returns 401 if the token is invalid or has expired.
-  * @throws Returns 403 if the token does not have sufficient permissions.
-  * @return { Object } IAMPolicy
-  */
+ * Authorizer functions are executed before your actual functions.
+ * @method authorize
+ * @param {String} event.authorizationToken - JWT
+ * @throws Returns 401 if the token is invalid or has expired.
+ * @throws Returns 403 if the token does not have sufficient permissions.
+ * @return { Object } IAMPolicy
+ */
 const handler = async (event, context, callback) => {
-  const token = event.authorizationToken;
-
   try {
-    // Verify JWT
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    //console.log(decoded)
-
-    const user = {
-      accountId: decoded.account_id,
-      clientId: decoded.client_id,
-      password: decoded.account_password,
-      mail: decoded.mail_address,
+    let decodeToken = "";
+    let token_client = event.authorizationToken;
+    if (token_client) {
+      let decode = jwt.verify(token_client, process.env.JWT_SECRET);
+      if (decode) {
+        decodeToken = decode;
+      }
     }
 
     // const isAllowed = authorizeUser(user.scopes, event.methodArn);
-    const isAllowed = await authenUser(user);
+    let isAllowed = await authenUser(decodeToken);
 
     // Return an IAM policy document for the current endpoint
-    const effect = isAllowed ? 'Allow' : 'Deny';
-
-    const userId = user.accountId;
-    const authorizerContext = { user: JSON.stringify(user) };
-    const policyDocument = policy.buildIAMPolicy(userId, effect, event.methodArn, authorizerContext);
+    let effect = isAllowed ? "Allow" : "Deny";
+    let user = "";
+    user = decodeToken ? decodeToken : "";
+    let userId = "";
+    userId = decodeToken.mail_address
+      ? decodeToken.mail_address
+      : decodeToken.account_id
+        ? decodeToken.account_id
+        : "";
+    let authorizerContext = { user: JSON.stringify(user) };
+    let policyDocument = policy.buildIAMPolicy(
+      userId,
+      effect,
+      event.methodArn,
+      authorizerContext
+    );
 
     return policyDocument;
   } catch (err) {
-    // Return a 401 Unauthorized response
-    return "Unauthorized";
-  }
-}
+    console.log(err);
+    let effect = "Deny";
+    let userId = "Not Authorizer";
+    let authorizerContext = { user: JSON.stringify("") };
+    let policyDocument = policy.buildIAMPolicy(
+      userId,
+      effect,
+      event.methodArn,
+      authorizerContext
+    );
 
-export { handler }
+    return policyDocument;
+  }
+};
+
+export { handler };

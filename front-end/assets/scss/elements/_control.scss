@@ -271,3 +271,34 @@
 .require {
   color: red;
 }
+
+.rs-datepicker {
+  $w-icon: 30px;
+  position: relative;
+  width: 100%;
+  height: auto;
+  border: 1px solid #888;
+  border-radius: 5px;
+  // overflow: hidden;
+
+  .rs-input-datepicker {
+    padding-right: $w-icon;
+    text-align: left;
+    border: none;
+    box-shadow: none;
+    border-radius: 5px !important;
+  }
+  .rs-ico-datepicker {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: $w-icon;
+    height: 100%;
+    text-align: center;
+    background: $color-white;
+    color: $color-green-dark;
+    font-size: 90%;
+    line-height: 40px;
+    border-radius: 5px !important;
+  }
+}

@@ -28,12 +28,30 @@ export default {
 
     // Remove header common
     axios.defaults.headers.common['Authorization'];
+    return true;
   },
 
   [types.SET_USER](state, data) {
     // Reset state in local
     state.authenticated = true;
     state.user = data;
+  },
+
+  [types.SET_ADMIN](state, data) {
+    // Set admin data
+    state.admin = data.info;
+    state.admin_flag = 1;
+    state.admin_time = data.admin_time;
+  },
+
+  [types.LOGOUT_ADMIN](state) {
+    // Setting admin data is logout
+    state.admin = '';
+    state.admin_flag='';
+    state.admin_time = '';
+
+    // Remove header common
+    axios.defaults.headers.common['Authorization'];
   },
 
   [types.SET_URL](state, data) {

@@ -96,9 +96,10 @@ export default {
         ticket_price: ticket.ticket_price,
         number_ticket: numTicket,
         seat_type_kb: Config.SEAT_FREE,
-        client_id: this.$route.query.client_id,
+        client_id: this.$route.params.client_id,
         show_group_id: this.$route.query.show_group_id,
-        show_no: this.$route.query.show_no
+        show_no: this.$route.query.show_no,
+        auto_alloc: true
 
       }
 
@@ -112,7 +113,12 @@ export default {
     loadMyTicket(seat_type_no, ticket_type_no, ticketNumber) {
       let result = false;
       this.myTickets.forEach(function (el) {
-        if (el.seat_type_no == seat_type_no && el.ticket_type_no == ticket_type_no && el.number_ticket == ticketNumber) {
+        if (el.seat_type_no == seat_type_no
+          && el.ticket_type_no == ticket_type_no
+          && el.number_ticket == ticketNumber
+          && el.auto_alloc == true
+
+        ) {
           result = true;
           return true;
         }

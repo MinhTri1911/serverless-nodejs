@@ -34,8 +34,12 @@ export default {
     }),
     sumNumberTicket() {
       let numTicket = 0;
+      let route = this.$route ;
       this.myTickets.forEach(function (el) {
-        if (el.ticket_price > 0) {
+        if (el.client_id == route.params.client_id
+          && el.show_group_id == route.query.show_group_id
+          && el.show_no == route.query.show_no
+          && el.ticket_price > 0) {
           numTicket += el.number_ticket * 1;
         }
       });
@@ -43,8 +47,12 @@ export default {
     },
     sumMoneyTicket() {
       let totalMoney = 0;
+      let route = this.$route ;
       this.myTickets.forEach(function (el) {
-          if (el.ticket_price > 0) {
+          if (el.client_id == route.params.client_id
+            && el.show_group_id == route.query.show_group_id
+            && el.show_no == route.query.show_no
+            && el.ticket_price > 0) {
             totalMoney += el.number_ticket * el.ticket_price;
           }
         }

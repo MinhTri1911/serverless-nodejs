@@ -13,13 +13,15 @@
       </div>
 
       <div id="LowerContents">
+
         <div v-if="searching">{{ totalRecord ? $t('show.lbl_record_num', {'record': totalRecord}) : $t('show.lbl_record_zero')}}</div>
+        <div v-else>{{ totalRecord == 0 ? $t('show.lbl_no_show') : ''}}</div>
         <!-- 公演一覧トップリスト -->
         <section id="EventList">
           <h2 class="rs-title-main">{{$t('show.lbl_h_show')}}</h2>
           <!-- 公演一覧テーブル -->
           <div id="eventListWrap" class="show-list">
-            <ItemShow v-for="show in shows" v-bind:show="show" v-bind:key="show.id"/>
+            <ItemShow v-for="show in shows" v-bind:constant="constant" v-bind:show="show" v-bind:key="show.id" v-bind:searching="searching"/>
           </div>
           <!-- 公演一覧テーブルend -->
         </section>
@@ -98,7 +100,7 @@
     <!--</div>-->
 </template>
 <script src="@/business/show/ListShowBusiness.js"></script>
-<style lang="scss">
-  @import "./assets/scss/show"
+<style lang="scss" scoped>
+  @import "assets/scss/show"
 </style>
 

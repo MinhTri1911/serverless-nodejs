@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize';
-
+import cls  from 'continuation-local-storage';
 
 class ServicesModel {
 
@@ -19,6 +19,8 @@ class ServicesModel {
    * @return {object} sequelize db object
    */
   createDb(config) {
+    let namespace = cls.createNamespace('AutoTransaction');
+    Sequelize.useCLS(namespace);
     return new Sequelize(config.dbName, config.dbUser, config.dbPass, {
       host: config.dbHost,
       dialect: 'postgres',
@@ -61,9 +63,9 @@ class ServicesModel {
       body: JSON.stringify({ status: 'success', data }),
     };
 
-    if ((data == null) || (data == '')) {
-      response.body = '';
-    }
+    // if ((data == null) || (data == '')) {
+    //   response.body = '';
+    // }
 
     return response;
 

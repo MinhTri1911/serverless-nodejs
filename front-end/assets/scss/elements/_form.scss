@@ -219,3 +219,31 @@
     }
   }
 }
+.form-control{
+  position: relative;
+  padding-left: 20px;
+  &:before{
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100px;
+    width: 30px;
+    background: #333;
+    font: normal normal normal 14px/1 FontAwesome;
+    z-index: 100000;
+    display: block;
+  }
+  &:after{
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100px;
+    width: 30px;
+    background: #333;
+    font: normal normal normal 14px/1 FontAwesome;
+    z-index: 100000;
+    display: block;
+  }
+}
